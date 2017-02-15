@@ -1,0 +1,35 @@
+<section>
+  <label>Chart Type:&nbsp;</label>
+  <span class="btn btn-success" ng-click="ca('lineWithFocusChart')"><i class="fa fa-line-chart"></i></span>
+  <span class="btn btn-info" ng-click="ca('boxPlotChart')"><i class="fa fa-i-cursor"></i></span>
+
+  <br>
+  <br>
+
+  <label>DB:&nbsp;</label>
+  <button type="button" class="btn btn-default" ng-model="selectedDB" data-html="1"
+    data-toggle="true" bs-options="db as db.name for db in dbList" bs-select>
+    Action <span class="caret"></span>
+  </button> &nbsp;
+
+  <label>Layer:&nbsp;</label>
+  <button type="button" class="btn btn-default" ng-model="selectedLayer" data-html="1"
+    data-toggle="true" bs-options="layer.lid as layer.name for layer in layerList" bs-select>
+    Action <span class="caret"></span>
+  </button> &nbsp;
+
+  <br>
+  <br>
+
+  <label>Type:&nbsp;</label>
+  <button type="button" class="btn btn-default" ng-model="selectedType.value" data-html="1"
+    data-toggle="true" bs-options="type as type for type in typeList" bs-select>
+    Action <span class="caret"></span>
+  </button> &nbsp;
+
+  <button type="button" class="btn btn-success" ng-click="render()">add</button>
+  <button type="button" class="btn btn-danger" ng-click="clean()">clean</button>
+
+  <div style="margin: 50px 0 0 0"></div>
+  <nvd3 options="options" data="data" config="config" api="api"></nvd3>
+</section>

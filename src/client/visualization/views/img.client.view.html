@@ -1,0 +1,37 @@
+<section>
+  <label>DB:&nbsp;</label>
+  <button type="button" class="btn btn-default" ng-model="selectedDB" data-html="1" data-toggle="true"
+    bs-options="db as db.name for db in dbList" bs-select>
+    Action <span class="caret"></span>
+  </button> &nbsp;
+
+  <!--<label>Type:&nbsp;</label>
+  <div class="btn-group" ng-model="selectedType.value" bs-radio-group>
+    <label ng-repeat-start="type in typeList" class="btn btn-default" ng-repeat-end>
+        <input type="radio" class="btn btn-default" value="{{type}}">{{type}}
+    </label>
+  </div>-->
+
+  <label>Iter: &nbsp;</label>
+  <div style="position: relative; display: inline-block">
+    <input type="text" class="form-control" ng-model="range.start" style="width: 150px" placeholder="0 - 80,000">
+    <input type="text" class="form-control" ng-model="range.end" style="width: 150px" placeholder="0 - 80,000">
+  </div>
+
+  <label>Cls?:&nbsp;</label>
+  <button type="button" class="btn btn-default" ng-model="selectedCls" data-html="1" data-multiple="1"
+    data-toggle="true" bs-options="cls as cls for cls in clsList"
+    max-length="1" bs-select>
+    Action <span class="caret"></span>
+  </button> &nbsp;
+
+  <button type="button" class="btn btn-success" style="margin-left: 50px" ng-click="render()">render</button>
+
+  <div style="margin: 50px 0 0 0"></div>
+
+  <nvd3 options="optionsOutlier" data="dataOutlierLeft" class="with-3d-shadow with-transitions"></nvd3>
+  <nvd3 options="optionsOutlier" data="dataOutlierRight" class="with-3d-shadow with-transitions"></nvd3>
+  <nvd3 options="optionsEvent" data="dataEvent" config="config_flow"></nvd3>
+  <!--<div img-info options="options" data="data" style="position: relative"></div>-->
+
+</section>

@@ -1,0 +1,287 @@
+<section ng-controller="HeaderController">
+
+  <div id="navbar" class="navbar navbar-default ace-save-state">
+
+    <!-- navbar-containner -->
+    <div class="navbar-container ace-save-state" id="navbar-container">
+
+      <!-- begin of left -->
+      <div class="navbar-header pull-left">
+        <a ui-sref="home" class="navbar-brand">
+          <span class="icon-android-brain" style="font-size: x-large"> </span>
+          <small class="header-title">
+            VizNet
+          </small>
+        </a>
+      </div>
+      <!-- end of left -->
+
+      <!-- begin of right -->
+      <div class="navbar-buttons navbar-header pull-right" role="navigation">
+        <ul class="nav ace-nav">
+          <li class="grey dropdown-modal">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+              <i class="ace-icon fa fa-tasks"></i>
+              <span class="badge badge-grey">4</span>
+            </a>
+
+            <ul class="dropdown-menu-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
+              <li class="dropdown-header">
+                <i class="ace-icon fa fa-check"></i> 4 Models in Training
+              </li>
+
+              <li class="dropdown-content">
+                <ul class="dropdown-menu dropdown-navbar">
+                  <li>
+                    <a href="#">
+                      <div class="clearfix">
+                        <span class="pull-left">cifar-resnet164-sgd-1P4G-1x</span>
+                        <span class="pull-right">65%</span>
+                      </div>
+
+                      <div class="progress progress-mini progress-striped active">
+                        <div style="width:65%" class="progress-bar"></div>
+                      </div>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="#">
+                      <div class="clearfix">
+                        <span class="pull-left">cifar-resnet164-sgd-1P4G-4x</span>
+                        <span class="pull-right">35%</span>
+                      </div>
+
+                      <div class="progress progress-mini progress-striped active">
+                        <div style="width:35%" class="progress-bar progress-bar-danger"></div>
+                      </div>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="#">
+                      <div class="clearfix">
+                        <span class="pull-left">imagenet-resnet50-sgd-1P4G-8x</span>
+                        <span class="pull-right">15%</span>
+                      </div>
+
+                      <div class="progress progress-mini progress-striped active">
+                        <div style="width:15%" class="progress-bar progress-bar-warning"></div>
+                      </div>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="#">
+                      <div class="clearfix">
+                        <span class="pull-left">imagenet-resnet50-sgd-1P4G-2x</span>
+                        <span class="pull-right">90%</span>
+                      </div>
+
+                      <div class="progress progress-mini progress-striped active">
+                        <div style="width:90%" class="progress-bar progress-bar-success"></div>
+                      </div>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="dropdown-footer">
+                <a href="#">
+                    See tasks with details
+                    <i class="ace-icon fa fa-arrow-right"></i>
+                  </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="purple dropdown-modal">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+              <i class="ace-icon fa fa-bell"></i>
+              <span class="badge badge-important">3</span>
+            </a>
+
+            <ul class="dropdown-menu-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
+              <li class="dropdown-header">
+                <i class="ace-icon fa fa-exclamation-triangle"></i> 3 Notifications
+              </li>
+
+              <li class="dropdown-content">
+                <ul class="dropdown-menu dropdown-navbar navbar-pink">
+                  <li>
+                    <a href="#">
+                      <div class="clearfix">
+                        <span class="pull-left">
+                            <i class="btn btn-xs no-hover btn-pink fa fa-comment"></i>
+                            New Comments
+                          </span>
+                        <span class="pull-right badge badge-info">+12</span>
+                      </div>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="#">
+                      <div class="clearfix">
+                        <span class="pull-left">
+                            <i class="btn btn-xs no-hover btn-success fa fa-tasks"></i>
+                            Tasks Completed
+                          </span>
+                        <span class="pull-right badge badge-success">+8</span>
+                      </div>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="#">
+                      <div class="clearfix">
+                        <span class="pull-left">
+                            <i class="btn btn-xs no-hover btn-info fa fa-share-alt"></i>
+                            Followers
+                          </span>
+                        <span class="pull-right badge badge-info">+11</span>
+                      </div>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="dropdown-footer">
+                <a href="#">
+                    See all notifications
+                    <i class="ace-icon fa fa-arrow-right"></i>
+                  </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="green dropdown-modal">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+              <i class="ace-icon fa fa-envelope"></i>
+              <span class="badge badge-success">6</span>
+            </a>
+
+            <ul class="dropdown-menu-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
+              <li class="dropdown-header">
+                <i class="ace-icon fa fa-envelope-o"></i> 6 Messages
+              </li>
+
+              <li class="dropdown-content">
+                <ul class="dropdown-menu dropdown-navbar">
+                  <li>
+                    <a href="#" class="clearfix">
+                      <img src="assets/images/avatars/avatar.png" class="msg-photo" alt="Alex's Avatar" />
+                      <span class="msg-body">
+                          <span class="msg-title">
+                            <span class="blue">Chuck:</span> The result of the second model is pretty ...
+                      </span>
+
+                      <span class="msg-time">
+                            <i class="ace-icon fa fa-clock-o"></i>
+                            <span>a moment ago</span>
+                      </span>
+                      </span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="#" class="clearfix">
+                      <img src="assets/images/avatars/avatar3.png" class="msg-photo" alt="Susan's Avatar" />
+                      <span class="msg-body">
+                          <span class="msg-title">
+                            <span class="blue">Sarah:</span> I just found an interesting pattern ...
+                      </span>
+
+                      <span class="msg-time">
+                            <i class="ace-icon fa fa-clock-o"></i>
+                            <span>20 minutes ago</span>
+                      </span>
+                      </span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="#" class="clearfix">
+                      <img src="assets/images/avatars/avatar4.png" class="msg-photo" alt="Bob's Avatar" />
+                      <span class="msg-body">
+                          <span class="msg-title">
+                            <span class="blue">Scott:</span> Why you set the parameters like this ...
+                      </span>
+
+                      <span class="msg-time">
+                            <i class="ace-icon fa fa-clock-o"></i>
+                            <span>3:15 pm</span>
+                      </span>
+                      </span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="#" class="clearfix">
+                      <img src="assets/images/avatars/avatar2.png" class="msg-photo" alt="Kate's Avatar" />
+                      <span class="msg-body">
+                          <span class="msg-title">
+                            <span class="blue">Kate:</span> Can you help me ...
+                      </span>
+
+                      <span class="msg-time">
+                            <i class="ace-icon fa fa-clock-o"></i>
+                            <span>1:33 pm</span>
+                      </span>
+                      </span>
+                    </a>
+                  </li>
+
+                </ul>
+              </li>
+
+              <li class="dropdown-footer">
+                <a href="#">
+                    See all messages
+                    <i class="ace-icon fa fa-arrow-right"></i>
+                  </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="light-blue dropdown-modal">
+            <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+              <img class="nav-user-photo" src="assets/images/avatars/avatar2.png" alt="User's Photo" />
+              <span class="user-info">
+                  <small>Welcome,</small>
+                  Devon
+              </span>
+              <i class="ace-icon fa fa-caret-down"></i>
+            </a>
+
+            <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+              <li>
+                <a href="#">
+                  <i class="ace-icon fa fa-cog"></i> Settings
+                </a>
+              </li>
+
+              <li>
+                <a href="#">
+                  <i class="ace-icon fa fa-user"></i> Profile
+                </a>
+              </li>
+
+              <li class="divider"></li>
+
+              <li>
+                <a href="#">
+                  <i class="ace-icon fa fa-power-off"></i> Logout
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <!-- end of right -->
+    </div>
+    <!-- nav-container -->
+
+  </div>
+
+</section>

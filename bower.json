@@ -1,0 +1,37 @@
+{
+  "name": "ts_proj",
+  "description": "Full-Stack Typescript with MongoDB, Express, AngularJS and Node.js",
+  "main": "server.js",
+  "authors": [
+    "dongyu"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "Mean",
+    "Typescript"
+  ],
+  "homepage": "https://bitbucket.org/liudy/ts_mean",
+  "private": true,
+  "ignore": [
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "font-awesome": "^4.6.3",
+    "jquery": "^3.1.0",
+    "lodash": "^4.14.2",
+    "d3": "^3.5.1",
+    "nvd3": "^1.8.4",
+    "angular": "^1.5.8",
+    "angular-animate": "^1.5.8",
+    "angular-resource": "^1.5.8",
+    "angular-ui-router": "^0.3.1",
+    "angular-strap": "^2.3.9",
+    "angular-motion": "^0.4.4",
+    "angular-sanitize": "^1.5.8",
+    "angular-nvd3": "^1.0.9"
+  }
+}

@@ -1,0 +1,188 @@
+namespace application {
+  'use strict';
+
+  class RatioMatrix {
+
+    constructor(svgEle: d3.Selection<any, any, any, any>, public options: any) {
+      let this_ = this;
+      let color = this_.options.color;
+      let h = (mul: number) => this_.options.gHeight * mul;
+
+      let offset = 0, lastH = this_.options.gHeight, nowH = 0;
+      _.each(this_.options.data[1], (d: any, key: string) => {
+        nowH = h(d);
+        svgEle
+          .append('rect')
+           .attr('width', this_.options.cellWidth)
+           .attr('height', lastH - nowH)
+           .attr('x', 0)
+           .attr('y', offset)
+           .attr('fill', color[key])
+          .append('title')
+           .text(this_.options.data[0]);
+        offset += lastH - nowH;
+        lastH = nowH;
+      });
+
+      // append last one
+      svgEle
+        .append('rect')
+         .attr('width', this_.options.cellWidth)
+         .attr('height', lastH)
+         .attr('x', 0)
+         .attr('y', offset)
+         .attr('fill', _.last<any>(color))
+        .append('title')
+          .text(this_.options.data[0]);
+
+    }
+
+    private row(idx: number) {
+      return Math.floor(idx / this.options.kernelSize);
+    };
+
+    private column(idx: number) {
+      return Math.floor(idx % this.options.kernelSize);
+    };
+
+  }
+
+  class SeqSvg {
+    private svg: d3.Selection<any, any, any, any>;
+    private data: IFilterMatrixDataEle[];
+    private width: number;
+    private height: number;
+
+    constructor(ele: ng.IAugmentedJQuery, public options: any) {
+
+      // initialize svg configuration
+      this.svg = d3.select(ele[0])
+        .style('width', options.width ? options.width + 'px' : '100%')
+        .style('height', options.height ? options.height + 'px' : '500px')
+       .append('g')
+        .attr('transform', 'translate(' + options.margin.left + ',' +
+        options.margin.top + ')');
+
+      this.width = ele.width() - options.margin.left - options.margin.right;
+      this.height = ele.height() - options.margin.top - options.margin.bottom;
+    }
+
+    public render(data: ISeqDataType) {
+      let this_ = this;
+      // let colorMappingTable = {
+      //   '3': ['#fee8c8', '#fdbb84', '#e34a33'],
+      //   '4': ['#fef0d9', '#fdcc8a', '#fc8d59', '#d7301f'],
+      //   '5': ['#fef0d9', '#fdcc8a', '#fc8d59', '#e34a33', '#b30000'],
+      //   '6': ['#fef0d9', '#fdd49e', '#fdbb84', '#fc8d59', '#e34a33', '#b30000'],
+      //   '7': ['#fef0d9', '#fdd49e', '#fdbb84', '#fc8d59', '#ef6548', '#d7301f', '#990000'],
+      //   '8': ['#fff7ec', '#fee8c8', '#fdd49e', '#fdbb84', '#fc8d59', '#ef6548', '#d7301f', '#990000'],
+      //   '9': ['#fff7ec', '#fee8c8', '#fdd49e', '#fdbb84', '#fc8d59', '#ef6548', '#d7301f', '#b30000', '#7f0000']
+      // };
+
+      let colorMappingTable = {
+        '3': ['#fc8d59', '#ffffbf', '#91cf60'],
+        '4': ['#d7191c', '#fdae61', '#a6d96a', '#1a9641'],
+        '5': ['#d7191c', '#fdae61', '#ffffbf', '#a6d96a', '#1a9641'],
+        '6': ['#d73027', '#fc8d59', '#fee08b', '#d9ef8b', '#91cf60', '#1a9850'],
+        '7': ['#d73027', '#fc8d59', '#fee08b', '#ffffbf', '#d9ef8b', '#91cf60', '#1a9850'],
+        '8': ['#d73027', '#f46d43', '#fdae61', '#fee08b', '#d9ef8b', '#a6d96a', '#66bd63', '#1a9850'],
+        '9': ['#d73027', '#f46d43', '#fdae61', '#fee08b', '#ffffbf', '#d9ef8b', '#a6d96a', '#66bd63', '#1a9850'],
+        '10': ['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee08b', '#d9ef8b', '#a6d96a', '#66bd63', '#1a9850', '#006837'],
+        '11': ['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee08b', '#ffffbf', '#d9ef8b', '#a6d96a', '#66bd63', '#1a9850', '#006837']
+      };
+      // let color = _.reverse(colorMappingTable[data.ratios.length + 1]);
+      let color = colorMappingTable[data.ratios.length + 1];
+      // let color = _.reverse(colorMappingTable[data.ratios.length]);
+      // color.push('#dcdcdc');
+      let h = d3.scaleLinear<any, any>()
+        .range([this_.options.groupMinHeight, this_.options.groupMaxHeight])
+        .domain(d3.extent(data, (d: any) => d.size));
+
+      // append color map legends
+
+      console.log(data.ratios);
+      this_.svg.append('g')
+        .selectAll('rect')
+        .data(color)
+       .enter().append('rect')
+        .attr('width', 30)
+        .attr('height', 30)
+        .attr('x', (d, i) => i * 32)
+        .attr('y', 0)
+        .attr('fill', (d: string) => d);
+
+      let hOffSet = 50, wOffSet = 30;
+      // append matrix
+      _.each(data, (d: ISeqDataEle, idx: string) => {
+        let gHeight = (this_.options.groupMaxHeight + this_.options.groupMinHeight) / 2;
+        // let gHeight = h(d.size);
+        wOffSet = 30;
+        hOffSet += gHeight + this_.options.groupSpacing;
+        let group = this_.svg.append('g')
+          .attr('transform', 'translate(' + wOffSet + ',' + hOffSet + ')');
+
+        group.append('text')
+          .attr('dy', 16)
+          .text(d.key);
+        for (let o of d.values) {
+          // to do
+          let rectGroup = group.append('g')
+            .attr('transform', 'translate(' + wOffSet + ',0)');
+          let drawingParams = _.merge({ 'data': o, color, gHeight }, this_.options);
+          new RatioMatrix(rectGroup, drawingParams);
+          wOffSet += this_.options.cellWidth + this_.options.cellSpacing;
+        };
+      });
+    }
+
+  }
+
+  interface ISeqChangeRatioDirectiveScope extends ng.IScope {
+    options: any;
+    data: ISeqDataType;
+  }
+
+  class SeqDirective {
+
+    public link: (scope: ng.IScope, element: ng.IAugmentedJQuery,
+      attrs: ng.IAttributes) => void;
+    public restrict = 'E';
+    public template = '<svg id="seq"></svg>';
+    public scope = {
+      options: '=',
+      data: '='
+    };
+
+    public static factory() {
+      let directive = () => { return new SeqDirective(); };
+      directive.$inject = [];
+      return directive;
+    }
+
+    constructor() {
+      this.link = function (scope: ISeqChangeRatioDirectiveScope,
+        element: ng.IAugmentedJQuery, attrs: ng.IAttributes) {
+
+        let start = () => {
+          let ele = element.find('#seq').empty();
+          let svg = new SeqSvg(ele, scope.options);
+          let tmpData: any = _.chain(scope.data)
+            // .sampleSize(30)
+            .sortBy( o => +o.key)
+            .value();
+          console.log(tmpData[0]);
+          tmpData.ratios = scope.data.ratios;
+          svg.render(tmpData);
+        };
+
+        scope.$watch('data', (n, o) => { if (n !== o) { start(); } }, true);
+        scope.$watch('options', (n, o) => { if (n !== o) { start(); } }, true);
+
+      };
+    }
+  }
+
+  angular
+    .module('vis')
+    .directive('seq', SeqDirective.factory());
+}

@@ -1,0 +1,44 @@
+<section>
+	<label>DB:&nbsp;</label>
+	<button type="button" class="btn btn-default" ng-model="selectedDB" data-html="1" data-toggle="true" bs-options="db as db.name for db in dbList"
+		bs-select>
+    Action <span class="caret"></span>
+  </button> &nbsp;
+
+	<label>Layer:&nbsp;</label>
+	<button type="button" class="btn btn-default" ng-model="selectedLayer" data-html="1" data-toggle="true" bs-options="layer.lid as layer.label for layer in layerList"
+		bs-select>
+    Action <span class="caret"></span>
+  </button> &nbsp;
+
+	<br>
+	<br>
+
+	<label>x-axis-Attr:&nbsp;</label>
+	<button type="button" class="btn btn-default" ng-model="xAttr" data-html="1" data-toggle="true" bs-options="attr as attr for attr in attrList"
+		bs-select>
+    Action <span class="caret"></span>
+  </button> &nbsp;
+
+	<label>y-axis-Attr:&nbsp;</label>
+	<button type="button" class="btn btn-default" ng-model="yAttr" data-html="1" data-toggle="true" bs-options="attr as attr for attr in attrList"
+		bs-select>
+    Action <span class="caret"></span>
+  </button> &nbsp;
+
+	<button type="button" class="btn btn-success" ng-click="add()">add</button>
+	<button type="button" class="btn btn-danger" ng-click="clean()">clean</button>
+
+	<div style="margin: 50px 0 0 0"></div>
+	<time-path options="options" data="data"></time-path>
+
+<!--	<svg width="960" height="500">
+		<path fill="none" stroke="black" stroke-width="10" d="
+      M86,388
+      L203,330
+      C320,272,554,156,673.8333333333334,165.83333333333334
+      C793.6666666666666,175.66666666666666,799.3333333333334,311.3333333333333,683.5,316.6666666666667
+      C567.6666666666666,322,330.3333333333333,197,211.66666666666666,134.5
+      L93,72"></path>
+	</svg>-->
+</section>
