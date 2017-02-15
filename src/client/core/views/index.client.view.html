@@ -1,0 +1,19 @@
+<div ui-view="header" id="navbar" class="navbar navbar-default ace-save-state"> </div>
+
+<div class="main-container ace-save-state" id="main-container">
+
+  <!-- dashboard on the left -->
+  <div ui-view="dashboard" id="sidebar" class="sidebar responsive ace-save-state menu-min"> </div>
+
+  <!-- visualization content -->
+  <div ui-view="content" class="main-content"> </div>
+
+  <!-- footer -->
+  <div ui-view="footer" class="footer"> </div>
+
+  <!-- scroll to top -->
+  <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+    <i class="ace-icon fa fa-angle-double-up bigger-110" aria-hidden="true"></i>
+  </a>
+
+</div>

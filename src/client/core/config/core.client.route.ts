@@ -1,7 +1,7 @@
 'use strict';
 
 namespace application {
-  class CoreRouteConfig {
+  class Config {
     public static $inject = [
       '$stateProvider',
       '$urlRouterProvider'
@@ -19,19 +19,38 @@ namespace application {
         }
       });
 
-      // redirect to /home when route not found
-      $urlRouterProvider.otherwise('/home');
+      // redirect to / when route not found
+      $urlRouterProvider.otherwise('/');
 
       $stateProvider
-        .state('home', {
-          url: '/home',
-          templateUrl: 'src/client/core/views/home.client.view.html',
-          controller: 'HomeController'
+        .state('index', {
+          url: '/',
+          views: {
+            '': {
+              templateUrl: 'src/client/core/views/index.client.view.html',
+              controller: 'IndexController',
+            },
+            'header@index': {
+              templateUrl: 'src/client/core/views/sub-views/header.client.view.html'
+              // controller: 'HeaderController'
+            },
+            'dashboard@index': {
+              templateUrl: 'src/client/core/views/sub-views/dashboard.client.view.html'
+              // controller: 'DashboardController'
+            },
+            'content@index': {
+              templateUrl: 'src/client/core/views/sub-views/content.client.view.html'
+              // controller: 'ContentController'
+            },
+            'footer@index': {
+              templateUrl: 'src/client/core/views/sub-views/footer.client.view.html'
+            }
+          }
         });
     }
   }
 
   angular
     .module('core')
-    .config(CoreRouteConfig);
+    .config(Config);
 }

@@ -25,13 +25,7 @@
 
 <body class="ng-cloak no-skin">
 
-  <header ng-include="'./src/client/core/views/header.client.view.html'" class="navbar navbar-fixed-top navbar-inverse"></header>
-
-  <section class="content">
-    <!--<section class="container">-->
-    {% block content %}{% endblock %}
-    <!--</section>-->
-  </section>
+  {% block content %}{% endblock %}
 
   <!--Application JavaScript Files-->
   {% for jsFile in jsFiles %}
