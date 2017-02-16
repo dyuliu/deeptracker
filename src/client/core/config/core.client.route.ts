@@ -35,8 +35,8 @@ namespace application {
               // controller: 'HeaderController'
             },
             'dashboard@index': {
-              templateUrl: 'src/client/core/views/sub-views/dashboard.client.view.html'
-              // controller: 'DashboardController'
+              templateUrl: 'src/client/core/views/sub-views/dashboard.client.view.html',
+              controller: 'DashboardController'
             },
             'content@index': {
               templateUrl: 'src/client/core/views/sub-views/content.client.view.html'

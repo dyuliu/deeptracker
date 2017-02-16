@@ -59,6 +59,8 @@ namespace application {
     getKernelTypeList(): IKernelTypeList;
     setImgTypeList(d: IImgTypeList): void;
     getImgTypeList(): IImgTypeList;
+    getImgDataset(): string[];
+    getModels(): any;
   }
 
   export class Global implements IGlobalService {
@@ -71,6 +73,8 @@ namespace application {
     public getKernelTypeList: () => IKernelTypeList;
     public setImgTypeList: (d: IImgTypeList) => void;
     public getImgTypeList: () => IImgTypeList;
+    public getImgDataset: () => string[];
+    public getModels: () => any;
 
     public static factory() {
       let service = () => {
@@ -154,6 +158,23 @@ namespace application {
         ]
       };
 
+      let imgDataset = [
+        'imagenet',
+        'cifar'
+      ];
+
+      let models = {
+        'imagenet': [
+          {label: 'resnet50-sgd-1P4G-1x-lr0.5', value: 'imagenet-1x-lr0.5'},
+          {label: 'resnet50-sgd-1P4G-1x-lr2', value: 'imagenet-1x-lr2'},
+          {label: 'resnet50-sgd-1P4G-2x-lr2', value: 'imagenet-2x-lr2'},
+          {label: 'resnet50-sgd-1P4G-8x-1', value: 'imagenet-8x-1'}
+        ],
+        'cifar': [
+          {label: 'resnet164-sgd-1P4G-1x', value: 'cifar-1x-1'},
+        ]
+      };
+
       this.setRecordTypeList = (d) => { record = d; };
       this.getRecordTypeList = () => record;
       this.setLayerTypeList = (d) => { layer = d; };
@@ -162,6 +183,9 @@ namespace application {
       this.getKernelTypeList = () => kernel;
       this.setImgTypeList = (d) => { img = d; };
       this.getImgTypeList = () => img;
+
+      this.getImgDataset = () => imgDataset;
+      this.getModels = () => models;
     }
   }
 

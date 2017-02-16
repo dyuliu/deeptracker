@@ -1,38 +1,203 @@
 <div class="sidebar-shortcuts" id="sidebar-shortcuts">
   <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
     <button class="btn btn-success">
-              <i class="ace-icon fa fa-signal"></i>
-            </button>
+      <i class="ace-icon fa fa-print"></i>
+    </button>
 
     <button class="btn btn-info">
-              <i class="ace-icon fa fa-pencil"></i>
-            </button>
+      <i class="ace-icon fa fa-cloud-upload"></i>
+    </button>
 
-    <button class="btn btn-warning">
-              <i class="ace-icon fa fa-users"></i>
-            </button>
+    <button class="btn btn-purple">
+      <i class="ace-icon fa fa-floppy-o"></i>
+    </button>
+    <!--<button class="btn btn-warning">
+      <i class="ace-icon fa fa-users"></i>
+    </button>-->
 
     <button class="btn btn-danger">
-              <i class="ace-icon fa fa-cogs"></i>
-            </button>
-  </div>
-
-  <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-    <span class="btn btn-success"></span>
-
-    <span class="btn btn-info"></span>
-
-    <span class="btn btn-warning"></span>
-
-    <span class="btn btn-danger"></span>
+      <i class="ace-icon fa fa-pencil"></i>
+    </button>
   </div>
 </div>
-<!-- end: sidebar-shortcuts -->
+
+Image Dataset:
+<select class="form-control" ng-model="selected.imgDataset">
+  <option ng-repeat-start="d in imgDataset" value="{{d}}" ng-repeat-end>
+    {{d}}
+  </option>
+</select> Model:
+<select class="form-control" ng-model="selected.model">
+  <option ng-repeat-start="d in models" value="{{d.value}}" ng-repeat-end>
+    {{d.label}}
+  </option>
+</select>
+
+<!--<hr/>-->
 
 <ul class="nav nav-list">
+  <li ng-class="{'active': actives.info}">
+    <a ui-sref="index.info">
+      <i class="menu-icon fa fa-info"></i>
+      <span class="menu-text"> Info </span>
+    </a>
+    <b class="arrow"></b>
+  </li>
+
+  <li ng-class="{'active': actives.gallery}">
+    <a ui-sref="index.gallery">
+      <i class="menu-icon fa fa-picture-o"></i>
+      <span class="menu-text"> Gallery </span>
+    </a>
+    <b class="arrow"></b>
+  </li>
+
+  <li ng-class="{'active': actives.visualization}">
+    <a ui-sref="index.visualization" class="dropdown-toggle">
+      <i class="menu-icon fa fa-line-chart"></i>
+      <span class="menu-text"> Visualization </span>
+      <b class="arrow fa fa-angle-down"></b>
+    </a>
+
+    <b class="arrow"></b>
+
+    <div class="submenu">
+      <div style="margin-left: 20px">
+        time slider
+      </div>
+
+      <div style="margin-left: 20px">
+        <label class="control-label bolder blue">Record</label>
+        <label>
+          <input name="switch-field-1" class="ace ace-switch" type="checkbox" />
+          <span class="lbl"></span>
+        </label>
+
+        <div class="checkbox">
+          <label>
+            <input ng-model="selectedCheckbox.record.lr" name="form-field-checkbox" type="checkbox" class="ace" />
+            <span class="lbl"> global lr</span>
+            </label>
+        </div>
+
+        <div class="checkbox">
+          <label>
+            <input ng-model="selectedCheckbox.record.testError" name="form-field-checkbox" type="checkbox" class="ace" />
+            <span class="lbl"> test error</span>
+          </label>
+        </div>
+
+        <div class="checkbox">
+          <label>
+            <input ng-model="selectedCheckbox.record.trainError" name="form-field-checkbox" type="checkbox" class="ace" />
+            <span class="lbl"> train error</span>
+          </label>
+        </div>
+
+        <div class="checkbox">
+          <label>
+            <input ng-model="selectedCheckbox.record.testLoss" name="form-field-checkbox" class="ace ace-checkbox-2" type="checkbox" />
+            <span class="lbl"> test loss</span>
+          </label>
+        </div>
+
+        <div class="checkbox">
+          <label>
+            <input ng-model="selectedCheckbox.record.trainLoss" name="form-field-checkbox" class="ace ace-checkbox-2" type="checkbox" />
+            <span class="lbl"> train loss</span>
+          </label>
+        </div>
+
+        <label>
+          <input ng-model="selectedCheckbox.record.merge" name="switch-field-1" class="ace ace-switch ace-switch-2" type="checkbox" />
+          <span class="lbl">merge?</span>
+        </label>
+      </div>
+
+      <hr/>
+
+      <div style="margin-left: 20px">
+        Label
+        <label class="control-label bolder blue">Checkbox</label>
+
+        <div class="checkbox">
+          <label>
+        <input name="form-field-checkbox" type="checkbox" class="ace" />
+        <span class="lbl"> choice 1</span>
+      </label>
+        </div>
+
+        <div class="checkbox">
+          <label>
+        <input name="form-field-checkbox" type="checkbox" class="ace" />
+        <span class="lbl"> choice 2</span>
+      </label>
+        </div>
+
+      </div>
+
+      <hr/>
+
+      <div style="margin-left: 20px">
+        Layer
+        <label class="control-label bolder blue">Checkbox</label>
+
+        <div class="checkbox">
+          <label>
+        <input name="form-field-checkbox" type="checkbox" class="ace" />
+        <span class="lbl"> choice 1</span>
+      </label>
+        </div>
+
+        <div class="checkbox">
+          <label>
+        <input name="form-field-checkbox" type="checkbox" class="ace" />
+        <span class="lbl"> choice 2</span>
+      </label>
+        </div>
+
+      </div>
+
+    </div>
+    <!--<ul class="submenu">
+
+      <li>
+        as
+      </li>
+
+      <li>
+        as
+      </li>
+
+      <li>
+        as
+      </li>
+      <li>
+        <a>
+          <span>Label:</span>
+        </a>
+      </li>
+
+      <li>
+        <a>
+          <span>Layer:</span>
+        </a>
+      </li>
+
+    </ul>-->
+  </li>
+
+</ul>
+
+<div class="sidebar-toggle sidebar-collapse" hidden="True" id="sidebar-collapse">
+  <i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left"
+    data-icon2="ace-icon fa fa-angle-double-right"></i>
+</div>
+
+<!--<ul class="nav nav-list">
 
   <li ng-class="{'active': actives.overview}">
-    <a ui-sref="home.overview">
+    <a ui-sref="index.overview">
       <i class="menu-icon fa fa-table"></i>
       <span class="menu-text"> Overview </span>
     </a>
@@ -40,7 +205,7 @@
   </li>
 
   <li ng-class="{'active': actives.records}">
-    <a ui-sref="home.record">
+    <a ui-sref="index.record">
       <i class="menu-icon fa fa-list-alt"></i>
       <span class="menu-text"> Record </span>
     </a>
@@ -48,7 +213,7 @@
   </li>
 
   <li class="">
-    <a ui-sref="home.layer.stat" class="dropdown-toggle">
+    <a ui-sref="index.layer.stat" class="dropdown-toggle">
       <i class="menu-icon fa fa-align-justify"></i>
       <span class="menu-text"> Layer </span>
       <b class="arrow fa fa-angle-down"></b>
@@ -59,14 +224,14 @@
     <ul class="submenu">
 
       <li ng-class="{'active': actives.layers.lineWithFocusChart}">
-        <a ui-sref="home.layer.stat">
+        <a ui-sref="index.layer.stat">
           <i class="menu-icon fa fa-caret-right"></i> Stat
         </a>
         <b class="arrow"></b>
       </li>
 
       <li ng-class="{'active': actives.speed}">
-        <a ui-sref="home.layer.speed">
+        <a ui-sref="index.layer.speed">
           <i class="menu-icon fa fa-tachometer"></i>
           <span class="menu-text"> SpeedFlow </span>
         </a>
@@ -74,7 +239,7 @@
       </li>
 
       <li ng-class="{'active': actives.seq}">
-        <a ui-sref="home.layer.seq">
+        <a ui-sref="index.layer.seq">
           <i class="menu-icon fa fa-tachometer"></i>
           <span class="menu-text"> ChangeRatio </span>
         </a>
@@ -85,7 +250,7 @@
   </li>
 
   <li ng-class="{'active': actives.img}">
-    <a ui-sref="home.img">
+    <a ui-sref="index.img">
       <i class="menu-icon fa fa-file-image-o"></i>
       <span class="menu-text"> Img </span>
     </a>
@@ -94,16 +259,11 @@
   </li>
 
   <li ng-class="{'active': actives.kernel}">
-    <a ui-sref="home.kernel">
+    <a ui-sref="index.kernel">
       <i class="menu-icon fa fa-cube"></i>
       <span class="menu-text"> Kernel </span>
     </a>
 
     <b class="arrow"></b>
   </li>
-</ul>
-<!-- /.nav-list -->
-
-<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
-  <i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
-</div>
+</ul>-->

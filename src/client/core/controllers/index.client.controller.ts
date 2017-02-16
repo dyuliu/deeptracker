@@ -20,13 +20,6 @@ namespace application {
         kernel: false
       };
 
-      // to activate sidebar
-      setTimeout( () => {
-        $('#sidebar-collapse').trigger('click');
-        if ($('#sidebar').hasClass('menu-min')) {
-          $('#sidebar-collapse').trigger('click');
-        };
-      }, 100);
 
       $scope.$watch(function () {
         return $location.url();

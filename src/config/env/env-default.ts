@@ -19,7 +19,6 @@ export let assets: mean.IAssets = {
         'public/lib-my/icomoon/style.css'
       ],
       js: [
-        // 'public/lib-my/d3/d3.js',
         'public/lib-my/d3/d4.js',
         'public/lib-my/bson/bson.js',
         // bower:js
@@ -73,10 +72,10 @@ export let env: mean.IEnv = {
   },
   livereload: true,
   db: {
-    uri: 'mongodb://msraiv:5000/cifar-resnet164',
+    // uri: 'mongodb://msraiv:5000/cifar-resnet164',
     // uri: 'mongodb://msraiv:5000/imagenet',
     // uri: 'mongodb://localhost:27017/final',
-    // uri: 'mongodb://localhost:27017/valid',
+    uri: 'mongodb://localhost:27017/final',
     options: {
       user: '',
       pass: ''
