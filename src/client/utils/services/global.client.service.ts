@@ -61,6 +61,8 @@ namespace application {
     getImgTypeList(): IImgTypeList;
     getImgDataset(): string[];
     getModels(): any;
+    setSelectedDB(d: string): void;
+    getSelectedDB(): string;
   }
 
   export class Global implements IGlobalService {
@@ -75,6 +77,8 @@ namespace application {
     public getImgTypeList: () => IImgTypeList;
     public getImgDataset: () => string[];
     public getModels: () => any;
+    public setSelectedDB: (d: string) => void;
+    public getSelectedDB: () => string;
 
     public static factory() {
       let service = () => {
@@ -175,6 +179,8 @@ namespace application {
         ]
       };
 
+      let selectedDB = null;
+
       this.setRecordTypeList = (d) => { record = d; };
       this.getRecordTypeList = () => record;
       this.setLayerTypeList = (d) => { layer = d; };
@@ -186,6 +192,9 @@ namespace application {
 
       this.getImgDataset = () => imgDataset;
       this.getModels = () => models;
+
+      this.setSelectedDB = (d) => { selectedDB = d; };
+      this.getSelectedDB = () => selectedDB;
     }
   }
 

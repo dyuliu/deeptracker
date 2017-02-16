@@ -47,8 +47,11 @@ namespace application {
       $scope.optionsOutlier = this_._setOption('outlierChart');
 
       $scope.render = function () {
+        $scope.optionsEvent.chart.height = 250;
+        $scope.optionsOutlier.chart.height = 250;
+
         let opt0 = {
-          db: $scope.selectedDB.name,
+          db: Global.getSelectedDB(),
           type: 'outlier',
           parser: 'json'
         };
@@ -59,7 +62,7 @@ namespace application {
           });
 
         let opt1 = {
-          db: $scope.selectedDB.name,
+          db: Global.getSelectedDB(),
           type: 'event',
           parser: 'json'
         };
@@ -124,13 +127,14 @@ namespace application {
             type: 'lineChart',
             color: d3.scale.category10().range(),
             width: 964,
-            height: 300,
+            height: 20,
             margin: {
               top: 20,
               right: 40,
               bottom: 60,
               left: 170
             },
+            noData: ' ',
             x: function (d) { return d.x; },
             y: function (d) { return d.y; },
             useInteractiveGuideline: true,
@@ -156,13 +160,14 @@ namespace application {
             type: 'stackedAreaChart',
             color: d3.scale.category10().range(),
             width: 964,
-            height: 300,
+            height: 20,
             margin: {
               top: 20,
               right: 40,
               bottom: 60,
               left: 170
             },
+            noData: ' ',
             x: function (d) { return d[0]; },
             y: function (d) { return d[1]; },
             useVoronoi: true,

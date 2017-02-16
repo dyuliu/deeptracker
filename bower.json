@@ -29,9 +29,8 @@
     "angular-animate": "^1.5.8",
     "angular-resource": "^1.5.8",
     "angular-ui-router": "^0.3.1",
-    "angular-strap": "^2.3.9",
-    "angular-motion": "^0.4.4",
     "angular-sanitize": "^1.5.8",
-    "angular-nvd3": "^1.0.9"
+    "angular-nvd3": "^1.0.9",
+    "jquery-ui": "^1.12.1"
   }
 }

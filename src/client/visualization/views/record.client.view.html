@@ -1,36 +1,6 @@
 <section>
-  <label>Chart Type:&nbsp;</label>
-  <!--<div class="btn-group" ng-model="selectedChartType.value" bs-radio-group>
-    <label ng-repeat-start="type in chartTypeList" class="btn btn-default" ng-repeat-end>
-        <input type="radio" class="btn btn-default" value="{{type}}">{{type}}
-    </label>
-  </div>-->
-  <span class="btn btn-success" ng-click="ca('lineWithFocusChart')"><i class="fa fa-line-chart"></i></span>
-  <span class="btn btn-info" ng-click="ca('scatterChart')"><i class="fa fa-circle"></i></span>
-  <span class="btn btn-warning" ng-click="ca('multiBarChart')"><i class="fa fa-bar-chart"></i></span>
-  <span class="btn btn-danger" ng-click="ca('stackedAreaChart')"><i class="fa fa-area-chart"></i></span>
-  <br>
-  <br>
-  <label>DB:&nbsp;</label>
-  <button type="button" class="btn btn-default" ng-model="selectedDB" data-html="1" data-toggle="true" bs-options="db as db.name for db in dbList" bs-select>
-    Action <span class="caret"></span>
-  </button> &nbsp;
 
-  <label>Type:&nbsp;</label>
-  <button type="button" class="btn btn-default" ng-model="selectedType.value" data-html="1"
-    data-toggle="true" bs-options="type as type for type in typeList" bs-select>
-    Action <span class="caret"></span>
-  </button> &nbsp;
-
-  <br>
-  <br>
-
-  <button type="button" class="btn btn-success" ng-click="render()">render</button>
-  <button type="button" class="btn btn-danger" ng-click="clean()">clean</button>
-
-  <div style="margin: 50px 0 0 0"></div>
-  <nvd3 options="options"
-        data="data"
-        config="config"
-        api="api"></nvd3>
+  <nvd3 options="options" data="dataLr"></nvd3>
+  <nvd3 options="options" data="dataError"></nvd3>
+  <nvd3 options="options" data="dataLoss"></nvd3>
 </section>

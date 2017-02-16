@@ -9,7 +9,8 @@ namespace application {
       $stateProvider
         .state('index.visualization', {
           url: '/visualization',
-          templateUrl: 'src/client/visualization/views/visualization.client.view.html'
+          templateUrl: 'src/client/visualization/views/visualization.client.view.html',
+          controller: 'VisualizationController'
         });
 
       // $stateProvider

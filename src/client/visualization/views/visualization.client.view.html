@@ -1,3 +1,181 @@
 <section>
-  visualization part
+  <div class="invisible" id="main-widget-container">
+
+    <div class="row"  ng-controller="RecordController">
+      <div class="col-xs-1 col-sm-1"></div>
+      <div class="col-xs-10 col-sm-10 widget-container-col" id="widget-container-col-1">
+        <div class="widget-box widget-color-blue collapsed" id="widget-box-1">
+          <div class="widget-header widget-header-small">
+            <h6 class="widget-title">
+              <i class="ace-icon fa fa-sort"></i> Record Info
+            </h6>
+
+            <div class="widget-toolbar">
+              <div class="widget-menu">
+                <a href="#" data-action="settings" data-toggle="dropdown">
+                  <i class="ace-icon fa fa-bars"></i>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-right dropdown-light-blue dropdown-caret dropdown-closer">
+                  <li>
+                    <a data-toggle="tab" href="#dropdown1">lineWithFocusChart</a>
+                  </li>
+
+                  <li>
+                    <a data-toggle="tab" href="#dropdown2">scatterChart</a>
+                  </li>
+
+                  <li>
+                    <a data-toggle="tab" href="#dropdown3">multiBarChart</a>
+                  </li>
+
+                  <li>
+                    <a data-toggle="tab" href="#dropdown4">stackedAreaChart</a>
+                  </li>
+                </ul>
+              </div>
+
+              <a href="#" data-action="fullscreen" class="orange2">
+                <i class="ace-icon fa fa-expand"></i>
+              </a>
+
+              <a href="#" data-action="reload" ng-click="render()">
+                <i class="ace-icon fa fa-refresh"></i>
+              </a>
+
+              <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+              </a>
+
+              <a href="#" data-action="close">
+                <i class="ace-icon fa fa-times"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="widget-body">
+            <div class="widget-main">
+              <div ng-include="'src/client/visualization/views/record.client.view.html'"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" ng-controller="ImgController">
+      <div class="col-xs-1 col-sm-1"></div>
+      <div class="col-xs-10 col-sm-10 widget-container-col" id="widget-container-col-2">
+        <div class="widget-box widget-color-blue collapsed" id="widget-box-2">
+          <div class="widget-header widget-header-small">
+            <h6 class="widget-title">
+              <i class="ace-icon fa fa-sort"></i> Label Info
+            </h6>
+
+            <div class="widget-toolbar">
+              <div class="widget-menu">
+                <a href="#" data-action="settings" data-toggle="dropdown">
+                  <i class="ace-icon fa fa-bars"></i>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-right dropdown-light-blue dropdown-caret dropdown-closer">
+                  <li>
+                    <a data-toggle="tab" href="#dropdown1">lineWithFocusChart</a>
+                  </li>
+
+                  <li>
+                    <a data-toggle="tab" href="#dropdown2">scatterChart</a>
+                  </li>
+
+                  <li>
+                    <a data-toggle="tab" href="#dropdown2">multiBarChart</a>
+                  </li>
+
+                  <li>
+                    <a data-toggle="tab" href="#dropdown2">stackedAreaChart</a>
+                  </li>
+                </ul>
+              </div>
+
+              <a href="#" data-action="fullscreen" class="orange2">
+                <i class="ace-icon fa fa-expand"></i>
+              </a>
+
+              <a href="#" data-action="reload" ng-click="render()">
+                <i class="ace-icon fa fa-refresh"></i>
+              </a>
+
+              <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+              </a>
+
+              <a href="#" data-action="close">
+                <i class="ace-icon fa fa-times"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="widget-body">
+            <div class="widget-main">
+              <div ng-include="'src/client/visualization/views/img.client.view.html'"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row"  ng-controller="LayerController">
+      <div class="col-xs-1 col-sm-1"></div>
+      <div class="col-xs-10 col-sm-10 widget-container-col" id="widget-container-col-3">
+        <div class="widget-box widget-color-blue collapsed" id="widget-box-3">
+          <div class="widget-header widget-header-small">
+            <h6 class="widget-title">
+              <i class="ace-icon fa fa-sort"></i> Layer Info
+            </h6>
+
+            <div class="widget-toolbar">
+              <div class="widget-menu">
+                <a href="#" data-action="settings" data-toggle="dropdown">
+                  <i class="ace-icon fa fa-bars"></i>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-right dropdown-light-blue dropdown-caret dropdown-closer">
+                  <li>
+                    <a data-toggle="tab" href="#dropdown1">Option#1</a>
+                  </li>
+
+                  <li>
+                    <a data-toggle="tab" href="#dropdown2">Option#2</a>
+                  </li>
+                </ul>
+              </div>
+
+              <a href="#" data-action="fullscreen" class="orange2">
+                <i class="ace-icon fa fa-expand"></i>
+              </a>
+
+              <a href="#" data-action="reload">
+                <i class="ace-icon fa fa-refresh"></i>
+              </a>
+
+              <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+              </a>
+
+              <a href="#" data-action="close">
+                <i class="ace-icon fa fa-times"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="widget-body">
+            <div class="widget-main">
+              asdas
+              <div ng-include="'src/client/visualization/views/layer.client.view.html'"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </section>

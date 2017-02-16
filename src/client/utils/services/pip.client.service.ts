@@ -4,8 +4,10 @@ namespace application {
   export interface IPipService {
     emitHeatmapDataLoaded(msg: any): void;
     emitUrlChanged(msg: any): void;
+    emitRender(msg: any): void;
     onHeatmapDataLoaded(scope: ng.IScope, cb: (msg: any) => void): void;
     onUrlChanged(scope: ng.IScope, cb: (msg: any) => void): void;
+    onRender(scope: ng.IScope, cb: (msg: any) => void): void;
   }
 
   export class Pip {
@@ -47,6 +49,7 @@ namespace application {
       // adding events one by one
       this.addEvent('heatmapDataLoaded');
       this.addEvent('urlChanged');
+      this.addEvent('render');
     }
   }
 

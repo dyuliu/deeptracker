@@ -6,17 +6,17 @@ export let assets: mean.IAssets = {
   client: {
     lib: {
       css: [
-        // bower:css
-        'public/lib/nvd3/build/nv.d3.css',
-        'public/lib/angular-motion/dist/angular-motion.css',
-        // endbower
         'public/lib/bootstrap/dist/css/bootstrap.css',
+        'public/lib/jquery-ui/themes/base/jquery-ui.css',
         'public/lib/font-awesome/css/font-awesome.css',
         'public/assets/html-theme/css/fonts.googleapis.com.css',
         'public/assets/html-theme/css/theme.css',
         'public/assets/html-theme/css/theme-skins.css',
         'public/assets/html-theme/css/theme-rtl.css',
-        'public/lib-my/icomoon/style.css'
+        'public/lib-my/icomoon/style.css',
+        // bower:css
+        'public/lib/nvd3/build/nv.d3.css',
+        // endbower
       ],
       js: [
         'public/lib-my/d3/d4.js',
@@ -31,11 +31,12 @@ export let assets: mean.IAssets = {
         'public/lib/angular-animate/angular-animate.js',
         'public/lib/angular-resource/angular-resource.js',
         'public/lib/angular-ui-router/release/angular-ui-router.js',
-        'public/lib/angular-strap/dist/angular-strap.js',
-        'public/lib/angular-strap/dist/angular-strap.tpl.js',
         'public/lib/angular-sanitize/angular-sanitize.js',
         'public/lib/angular-nvd3/dist/angular-nvd3.js',
+        'public/lib/jquery-ui/jquery-ui.js',
         // endbower
+        'public/assets/html-theme/js/spinbox.min.js',
+        'public/assets/html-theme/js/jquery.nestable.min.js',
         'public/assets/html-theme/js/theme-extra.js',
         'public/assets/html-theme/js/theme-elements.js',
         'public/assets/html-theme/js/theme.js'
@@ -73,9 +74,9 @@ export let env: mean.IEnv = {
   livereload: true,
   db: {
     // uri: 'mongodb://msraiv:5000/cifar-resnet164',
-    // uri: 'mongodb://msraiv:5000/imagenet',
+    uri: 'mongodb://msraiv:5000/final',
     // uri: 'mongodb://localhost:27017/final',
-    uri: 'mongodb://localhost:27017/final',
+    // uri: 'mongodb://localhost:27017/final',
     options: {
       user: '',
       pass: ''

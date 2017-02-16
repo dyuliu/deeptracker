@@ -1,39 +1,50 @@
 <div class="sidebar-shortcuts" id="sidebar-shortcuts">
   <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-    <button class="btn btn-success">
-      <i class="ace-icon fa fa-print"></i>
+    <!-- refresh vis according to current setting-->
+    <button class="btn btn-success" ng-click="reset()">
+      <i class="ace-icon fa fa-refresh"></i>
     </button>
 
+    <!-- upload dataset-->
     <button class="btn btn-info">
       <i class="ace-icon fa fa-cloud-upload"></i>
     </button>
 
-    <button class="btn btn-purple">
+    <!-- save screen or current explore state-->
+    <!--<button class="btn btn-purple">-->
+    <button class="btn btn-warning">
       <i class="ace-icon fa fa-floppy-o"></i>
     </button>
-    <!--<button class="btn btn-warning">
-      <i class="ace-icon fa fa-users"></i>
-    </button>-->
 
+
+    <!-- toggle line  -->
     <button class="btn btn-danger">
       <i class="ace-icon fa fa-pencil"></i>
     </button>
+
+    <!-- toggle lr line? -->
   </div>
 </div>
 
-Image Dataset:
-<select class="form-control" ng-model="selected.imgDataset">
+<div class="space-6"></div>
+
+<div style="width: 90%; margin: auto">
+  Image Dataset:
+  <select class="form-control" ng-model="selected.imgDataset">
   <option ng-repeat-start="d in imgDataset" value="{{d}}" ng-repeat-end>
     {{d}}
   </option>
 </select> Model:
-<select class="form-control" ng-model="selected.model">
+  <select class="form-control" ng-model="selected.model">
   <option ng-repeat-start="d in models" value="{{d.value}}" ng-repeat-end>
     {{d.label}}
   </option>
 </select>
+</div>
+
 
 <!--<hr/>-->
+<div class="space-6"></div>
 
 <ul class="nav nav-list">
   <li ng-class="{'active': actives.info}">
@@ -62,98 +73,193 @@ Image Dataset:
     <b class="arrow"></b>
 
     <div class="submenu">
-      <div style="margin-left: 20px">
-        time slider
+
+      <div class="space-6"></div>
+
+      <div style="margin-left: 5px">
+        <label class="control-label bolder blue">Time Slider</label> (epoch)
+        <div id="timerange" class="timerange"></div>
       </div>
 
-      <div style="margin-left: 20px">
-        <label class="control-label bolder blue">Record</label>
-        <label>
-          <input name="switch-field-1" class="ace ace-switch" type="checkbox" />
-          <span class="lbl"></span>
-        </label>
+      <hr/>
+
+      <div style="margin-left: 5px">
+        <div class="row">
+          <div class="col-xs-6">
+            <label class="control-label bolder blue">Record Info</label>
+          </div>
+          <div class="col-xs-6">
+            <label>
+              <input ng-model="config.record.show" name="switch-field-1" class="ace ace-switch" type="checkbox" />
+              <span class="lbl">&nbsp;</span>
+            </label>
+          </div>
+        </div>
 
         <div class="checkbox">
           <label>
-            <input ng-model="selectedCheckbox.record.lr" name="form-field-checkbox" type="checkbox" class="ace" />
+            <input ng-model="config.record.lr" name="form-field-checkbox" type="checkbox" class="ace" />
             <span class="lbl"> global lr</span>
             </label>
         </div>
 
         <div class="checkbox">
           <label>
-            <input ng-model="selectedCheckbox.record.testError" name="form-field-checkbox" type="checkbox" class="ace" />
+            <input ng-model="config.record.testError" name="form-field-checkbox" type="checkbox" class="ace" />
             <span class="lbl"> test error</span>
           </label>
         </div>
 
         <div class="checkbox">
           <label>
-            <input ng-model="selectedCheckbox.record.trainError" name="form-field-checkbox" type="checkbox" class="ace" />
+            <input ng-model="config.record.trainError" name="form-field-checkbox" type="checkbox" class="ace" />
             <span class="lbl"> train error</span>
           </label>
         </div>
 
         <div class="checkbox">
           <label>
-            <input ng-model="selectedCheckbox.record.testLoss" name="form-field-checkbox" class="ace ace-checkbox-2" type="checkbox" />
+            <input ng-model="config.record.testLoss" name="form-field-checkbox" class="ace ace-checkbox-2" type="checkbox" />
             <span class="lbl"> test loss</span>
           </label>
         </div>
 
         <div class="checkbox">
           <label>
-            <input ng-model="selectedCheckbox.record.trainLoss" name="form-field-checkbox" class="ace ace-checkbox-2" type="checkbox" />
+            <input ng-model="config.record.trainLoss" name="form-field-checkbox" class="ace ace-checkbox-2" type="checkbox" />
             <span class="lbl"> train loss</span>
           </label>
         </div>
 
         <label>
-          <input ng-model="selectedCheckbox.record.merge" name="switch-field-1" class="ace ace-switch ace-switch-2" type="checkbox" />
+          <input ng-model="config.record.merge" name="switch-field-1" class="ace ace-switch ace-switch-2" type="checkbox" />
           <span class="lbl">merge?</span>
+        </label>
+
+        <label>
+          <input ng-model="config.record.lrMark" name="switch-field-1" class="ace ace-switch ace-switch-2" type="checkbox" />
+          <span class="lbl">lr marks?</span>
         </label>
       </div>
 
       <hr/>
 
-      <div style="margin-left: 20px">
-        Label
-        <label class="control-label bolder blue">Checkbox</label>
-
-        <div class="checkbox">
-          <label>
-        <input name="form-field-checkbox" type="checkbox" class="ace" />
-        <span class="lbl"> choice 1</span>
-      </label>
+      <div style="margin-left: 5px">
+        <div class="row">
+          <div class="col-xs-6">
+            <label class="control-label bolder blue">Labal Info</label>
+          </div>
+          <div class="col-xs-6">
+            <label>
+              <input ng-model="config.labelInfo.show" name="switch-field-1" class="ace ace-switch" type="checkbox" />
+              <span class="lbl">&nbsp;</span>
+            </label>
+          </div>
         </div>
 
         <div class="checkbox">
           <label>
-        <input name="form-field-checkbox" type="checkbox" class="ace" />
-        <span class="lbl"> choice 2</span>
-      </label>
+            <input name="form-field-checkbox" type="checkbox" class="ace" />
+            <span class="lbl"> choice</span>
+          </label>
         </div>
-
       </div>
 
       <hr/>
 
-      <div style="margin-left: 20px">
-        Layer
-        <label class="control-label bolder blue">Checkbox</label>
-
-        <div class="checkbox">
-          <label>
-        <input name="form-field-checkbox" type="checkbox" class="ace" />
-        <span class="lbl"> choice 1</span>
-      </label>
+      <div style="margin-left: 5px">
+        <div class="row">
+          <div class="col-xs-6">
+            <label class="control-label bolder blue">Layer Info</label>
+          </div>
+          <div class="col-xs-6">
+            <label>
+              <input ng-model="config.layerInfo.show" name="switch-field-1" class="ace ace-switch" type="checkbox" />
+              <span class="lbl">&nbsp;</span>
+            </label>
+          </div>
         </div>
 
-        <div class="checkbox">
+        <!--<div class="checkbox">
           <label>
-        <input name="form-field-checkbox" type="checkbox" class="ace" />
-        <span class="lbl"> choice 2</span>
-      </label>
+            <input name="form-field-checkbox" type="checkbox" class="ace" />
+            <span class="lbl"> choice</span>
+          </label>
+        </div>-->
+
+
+        <div class="control-group">
+          Types:
+          <div class="radio">
+            <label>
+              <input ng-model="config.layerInfo.type" name="form-field-radio" type="radio" value="norm1" class="ace" />
+              <span class="lbl"> norm1 </span>
+            </label>
+          </div>
+
+          <div class="radio">
+            <label>
+              <input ng-model="config.layerInfo.type" name="form-field-radio" type="radio" value="norm2" class="ace" />
+              <span class="lbl"> norm2 </span>
+            </label>
+          </div>
+
+          <div class="radio">
+            <label>
+              <input ng-model="config.layerInfo.type" name="form-field-radio" type="radio" value="mean" class="ace" />
+              <span class="lbl"> mean </span>
+            </label>
+          </div>
+
+          <div class="radio">
+            <label>
+              <input ng-model="config.layerInfo.type" name="form-field-radio" type="radio" value="min" class="ace" />
+              <span class="lbl"> min </span>
+            </label>
+          </div>
+
+          <div class="radio">
+            <label>
+              <input ng-model="config.layerInfo.type" name="form-field-radio" type="radio" value="max" class="ace" />
+              <span class="lbl"> max </span>
+            </label>
+          </div>
+
+          <div class="radio">
+            <label>
+              <input ng-model="config.layerInfo.type" name="form-field-radio" type="radio" value="cr" class="ace" />
+              <span class="lbl"> cr </span>
+            </label>
+          </div>
+
+          <div class="radio">
+            <label>
+              <input ng-model="config.layerInfo.type" name="form-field-radio" type="radio" value="kernel" class="ace" />
+              <span class="lbl"> kernel </span>
+            </label>
+          </div>
+
+        </div>
+
+        <div class="space-6"></div>
+
+        <div class="ace-spinner middle" style="width: 90%">
+          <div class="col-xs-3">
+            <h5>level:</h5>
+          </div>
+          <div class="col-xs-9">
+            <div class="input-group">
+              <input ng-model="config.layerInfo.level" type="text" id="levelSpin" class="spinbox-input form-control text-center">
+              <div class="spinbox-buttons input-group-btn btn-group-vertical">
+                <button ng-click="levelChange(1)" type="button" class="btn spinbox-up btn-sm btn-info">
+                <i class="ace-icon fa fa-chevron-up"></i>
+              </button>
+                <button ng-click="levelChange(-1)" type="button" class="btn spinbox-down btn-sm btn-info">
+                <i class="ace-icon fa fa-chevron-down"></i>
+              </button>
+              </div>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -190,8 +296,7 @@ Image Dataset:
 </ul>
 
 <div class="sidebar-toggle sidebar-collapse" hidden="True" id="sidebar-collapse">
-  <i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left"
-    data-icon2="ace-icon fa fa-angle-double-right"></i>
+  <i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
 </div>
 
 <!--<ul class="nav nav-list">

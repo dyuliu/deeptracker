@@ -8,7 +8,6 @@ namespace application {
         'ngResource',
         'ngAnimate',
         'ui.router',
-        'mgcrea.ngStrap',
         'nvd3'
     ];
 

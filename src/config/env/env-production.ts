@@ -4,17 +4,17 @@ export let assets: mean.IAssets = {
   client: {
     lib: {
       css: [
-        // bower:css
-        'public/lib/nvd3/build/nv.d3.min.css',
-        'public/lib/angular-motion/dist/angular-motion.min.css',
-        // endbower
         'public/lib/bootstrap/dist/css/bootstrap.min.css',
+        'public/lib/jquery-ui/themes/base/jquery-ui.min.css',
         'public/lib/font-awesome/css/font-awesome.min.css',
         'public/assets/html-theme/css/fonts.googleapis.com.css',
         'public/assets/html-theme/css/theme.min.css',
         'public/assets/html-theme/css/theme-skins.min.css',
         'public/assets/html-theme/css/theme-rtl.min.css',
         'public/lib-my/icomoon/style.css',
+        // bower:css
+        'public/lib/nvd3/build/nv.d3.min.css',
+        // endbower
       ],
       js: [
         'public/lib-my/d3/d4.min.js',
@@ -34,6 +34,8 @@ export let assets: mean.IAssets = {
         'public/lib/angular-sanitize/angular-sanitize.min.js',
         'public/lib/angular-nvd3/dist/angular-nvd3.min.js',
         // endbower
+        'public/assets/html-theme/js/spinbox.min.js',
+        'public/assets/html-theme/js/jquery.nestable.min.js',
         'public/assets/html-theme/js/theme-extra.min.js',
         'public/assets/html-theme/js/theme-elements.min.js',
         'public/assets/html-theme/js/theme.min.js'

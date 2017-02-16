@@ -28,6 +28,7 @@
   "license": "MIT",
   "homepage": "https://bitbucket.org/liudy/ts_mean",
   "dependencies": {
+    "@types/jqueryui": "^1.11.32",
     "body-parser": "^1.15.2",
     "bson": "^1.0.4",
     "chalk": "^1.1.3",
