@@ -1,0 +1,17 @@
+.iframe-container {
+  width: 100%;
+  height: 800px;
+}
+@media (min-width: 1200px) {
+  .modal-dialog {
+    width: 1080px;
+  }
+}
+.info-table a:hover {
+  cursor: pointer;
+}
+.verticalLine {
+  height: 100%;
+  position: absolute;
+  border-left: 2px dashed red;
+}

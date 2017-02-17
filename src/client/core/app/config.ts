@@ -8,7 +8,8 @@ namespace application {
         'ngResource',
         'ngAnimate',
         'ui.router',
-        'nvd3'
+        'nvd3',
+        'mgcrea.ngStrap'
     ];
 
     export function registerModule(moduleName: string, dependencies?: string[]) {
