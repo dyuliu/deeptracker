@@ -50,5 +50,5 @@ namespace application {
 
   angular
     .module('core')
-    .controller('IndexController', HomeController);
+    .controller('HomeController', HomeController);
 }

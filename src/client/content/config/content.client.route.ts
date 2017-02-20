@@ -7,12 +7,12 @@ namespace application {
 
     constructor($stateProvider) {
       $stateProvider
-        .state('index.info', {
+        .state('home.info', {
           url: '/info',
           templateUrl: 'src/client/content/views/info.client.view.html',
           controller: 'InfoController'
         })
-        .state('index.gallery', {
+        .state('home.gallery', {
           url: '/gallery',
           templateUrl: 'src/client/content/views/gallery.client.view.html',
           controller: 'GalleryController'

@@ -20,29 +20,29 @@ namespace application {
       });
 
       // redirect to / when route not found
-      $urlRouterProvider.otherwise('/');
+      $urlRouterProvider.otherwise('/home');
 
       $stateProvider
-        .state('index', {
-          url: '/',
+        .state('home', {
+          url: '/home',
           views: {
             '': {
-              templateUrl: 'src/client/core/views/index.client.view.html',
-              controller: 'IndexController',
+              templateUrl: 'src/client/core/views/home.client.view.html',
+              controller: 'HomeController',
             },
-            'header@index': {
+            'header@home': {
               templateUrl: 'src/client/core/views/sub-views/header.client.view.html'
               // controller: 'HeaderController'
             },
-            'dashboard@index': {
+            'dashboard@home': {
               templateUrl: 'src/client/core/views/sub-views/dashboard.client.view.html',
               controller: 'DashboardController'
             },
-            'content@index': {
+            'content@home': {
               templateUrl: 'src/client/core/views/sub-views/content.client.view.html'
               // controller: 'ContentController'
             },
-            'footer@index': {
+            'footer@home': {
               templateUrl: 'src/client/core/views/sub-views/footer.client.view.html'
             }
           }

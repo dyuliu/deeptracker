@@ -56,11 +56,50 @@ export function respondStream (options: IOption, res: Response) {
 };
 
 export function respond (options: IOption, res: Response) {
+  let colName = options.db + '_' + utils.tables.img.get(options.type);
+  let col = getModel(colName);
+  console.log(chalk.green('normal fetching ' + colName));
+
+  if (options.type === 'detail') {
+    let cond: any = {cls: {$in: options.cls} };
+    let project: any = {_id: 0};
+    col.find(cond, project)
+      .lean()
+      .sort({ cls: 1})
+      .exec((err, data: any[]) => {
+        if (err) { return console.log(chalk.bgRed(err)); }
+        res.json(data);
+      });
+  }
+  if (options.type === 'model_stat') {
+    let cond: any = {};
+    let project: any = {_id: 0, iter: 1, left: 1};
+    col.find(cond, project)
+      .lean()
+      .sort({ iter: 1})
+      .exec((err, data: any[]) => {
+        if (err) { return console.log(chalk.bgRed(err)); }
+        data = _.map(data, (d: any) => {
+          return { iter: d.iter, abLeft: d.left[50] };
+        });
+        res.json(data);
+      });
+  }
+  if (options.type === 'cls_stat') {
+    let cond: any = {cls: {$in: options.cls} };
+    let project: any = {_id: 0, iter: 1, abLeft: 1, testError: 1};
+    col.find(cond, project)
+      .lean()
+      .sort({ iter: 1})
+      .exec((err, data: any[]) => {
+        if (err) { return console.log(chalk.bgRed(err)); }
+        data = _.map(data, (d: any) => {
+          return { iter: d.iter, abLeft: d.abLeft[50], testError: d.testError };
+        });
+        res.json(data);
+      });
+  }
   if (options.type === 'outlier') {
-    // do some
-    let colName = options.db + '_' + utils.tables.img.get(options.type);
-    let col = getModel(colName);
-    console.log(chalk.green('normal fetching ' + colName + ' outlier'));
     let cond: any = {};
     let project: any = {_id: 0};
     col.find(cond, project)
@@ -71,9 +110,8 @@ export function respond (options: IOption, res: Response) {
         res.json(data);
       });
   } else if (options.type === 'event') {
-    let colName = options.db + '_' + utils.tables.img.get('testinfo');
-    let col = getModel(colName);
-    console.log(chalk.green('normal fetching ' + colName + ' event'));
+    colName = options.db + '_' + utils.tables.img.get('testinfo');
+    col = getModel(colName);
     let cond: any = {};
     let project: any = {_id: 0, iter: 1, event: 1};
     col.find(cond, project)
@@ -84,9 +122,6 @@ export function respond (options: IOption, res: Response) {
         res.json(data);
       });
   } else if (options.type === 'testinfo') {
-    let colName = options.db + '_' + utils.tables.img.get(options.type);
-    let col = getModel(colName);
-    console.log(chalk.green('normal fetching ' + colName));
     console.time('data get ready');
     let cond: any = {$and: [{iter: { $gte: options.range.start }}, {iter: { $lte: options.range.end }}]};
     let project: any = {_id: 0, prob: 0};
@@ -138,7 +173,8 @@ function postProcess(data: any[], cls: string[]): any[] {
 
 function getModel(collectionName: string): IModel {
   if (modelNames().indexOf(collectionName) === -1) {
-      model(collectionName, schema, collectionName);
+      // model(collectionName, schema, collectionName);
+      model(collectionName, new Schema({}), collectionName);
   }
   return model(collectionName);
 };

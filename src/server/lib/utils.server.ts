@@ -240,6 +240,9 @@ export let tables: ITables = {
     ['testinfo', 'ImgTestInfo'],
     ['traininfo', 'ImgTrainInfo'],
     ['outlier', 'ImgTestStat'],
+    ['model_stat', 'ImgTestStat'],
+    ['cls_stat', 'ImgTestClsStat'],
+    ['detail', 'ImgTestData'],
     ['event', 'ImgTestStat']
   ]),
   kernel: new Map<string, string>([

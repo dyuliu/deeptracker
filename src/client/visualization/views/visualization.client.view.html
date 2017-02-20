@@ -1,7 +1,117 @@
 <section>
-  <div class="invisible" id="main-widget-container">
+  <div class="row">
+    <div class="col-xs-1 col-sm-1">Left Panel</div>
+    <div id="main-widget-container" class="col-xs-10 col-sm-10 invisible">
 
-    <div class="row"  ng-controller="RecordController">
+      <!-- time brusher -->
+      <div class="row">
+      <!--<div class="row" ng-controller="TimeBoxController">-->
+        <div id="widget-container-timebox" class="col-xs-12 col-sm-12 widget-container-col">
+          <div class="widget-box transparent">
+            <div class="widget-header widget-header-small invisible">
+              <h6 class="widget-title lighter">Time Box</h6>
+              <div class="widget-toolbar">
+                <a href="#" data-action="close">
+                  <i class="ace-icon fa fa-times"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="widget-body">
+              <div class="widget-main">
+                <div id="timebox" class="timebox"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- record info -->
+
+      <!-- label info -->
+      <div class="row" ng-controller="LabelController">
+        <div id="widget-container-labelinfo" class="col-xs-12 col-sm-12 widget-container-col">
+          <div class="widget-box transparent">
+            <div id="labelinfo-header" class="widget-header widget-header-small invisible">
+              <h6 class="widget-title lighter">Label info</h6>
+              <div class="widget-toolbar">
+                <a href="#" data-action="close">
+                  <i class="ace-icon fa fa-times"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="widget-body">
+              <!--<div class="widget-main">-->
+                attach 3 widget here
+
+                <div id="widget-container-labelinfo-model" class="col-xs-12 col-sm-12 widget-container-col no-padding">
+                  <div class="widget-box transparent">
+                    <div class="widget-header widget-header-small invisible">
+                      <h6 class="widget-title lighter">model overview</h6>
+                      <div class="widget-toolbar">
+                        <a href="#" data-action="close">
+                          <i class="ace-icon fa fa-times"></i>
+                        </a>
+                      </div>
+                    </div>
+
+                    <div class="widget-body">
+                      <div heatline data="dataModel" options="optionsHeatLine" ></div>
+                    </div>
+                  </div>
+                </div>
+
+
+              <div id="widget-container-labelinfo-cls" class="col-xs-12 col-sm-12 widget-container-col  no-padding">
+                <div class="widget-box transparent">
+                  <div class="widget-header widget-header-small invisible">
+                    <h6 class="widget-title lighter">class overview</h6>
+                    <div class="widget-toolbar">
+                      <a href="#" data-action="close">
+                        <i class="ace-icon fa fa-times"></i>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="widget-body">
+                      <div heatline data="dataCls" options="optionsHeatLine"></div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div id="widget-container-labelinfo-detail" class="col-xs-12 col-sm-12 widget-container-col  no-padding">
+                <div class="widget-box transparent">
+                  <div class="widget-header widget-header-small invisible">
+                    <h6 class="widget-title lighter">detail view</h6>
+                    <div class="widget-toolbar">
+                      <a href="#" data-action="close">
+                        <i class="ace-icon fa fa-times"></i>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="widget-body">
+                      <div pchartwithline data="dataDetail" options="optionsDetail"></div>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <!--</div>-->
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-xs-1 col-sm-1">Right Panel</div>
+  </div>
+
+
+  <!--<div class="row"  ng-controller="RecordController">
       <div class="col-xs-1 col-sm-1"></div>
       <div class="col-xs-10 col-sm-10 widget-container-col" id="widget-container-col-1">
         <div class="widget-box widget-color-blue collapsed" id="widget-box-1">
@@ -63,7 +173,7 @@
     </div>
 
     <div class="row" ng-controller="ImgController">
-      <div class="col-xs-1 col-sm-1"></div>
+      <div class="col-xs-1 col-sm-1">Describe</div>
       <div class="col-xs-10 col-sm-10 widget-container-col" id="widget-container-col-2">
         <div class="widget-box widget-color-blue collapsed" id="widget-box-2">
           <div class="widget-header widget-header-small">
@@ -175,7 +285,6 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
 
-  </div>
 </section>

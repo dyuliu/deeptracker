@@ -22,7 +22,10 @@ export let assets: mean.IAssets = {
       ],
       js: [
         'public/lib-my/d3/d4.js',
+        'public/lib-my/d3/d3-scale-chromatic.js',
         'public/lib-my/bson/bson.js',
+        'public/lib-my/mds/numeric.js',
+        'public/lib-my/mds/mds.js',
         // bower:js
         'public/lib/jquery/dist/jquery.js',
         'public/lib/bootstrap/dist/js/bootstrap.js',
