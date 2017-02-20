@@ -15,8 +15,6 @@ namespace application {
       Global: IGlobalService
     ) {
 
-      console.log('visualization ctrl', d4.interpolateYlGn(0.5));
-
       /* tslint:disable */
       $('#simple-colorpicker-1').ace_colorpicker({ pull_right: true }).on('change', function () {
         let color_class = $(this).find('option:selected').data('class');
@@ -148,31 +146,7 @@ namespace application {
       // $('#myclose2').click(function(){
       //   $('#myclose').trigger('click');
       // });
-      $('#widget-container-timebox')
-        .mouseenter(function() {
-          $('#widget-container-timebox .widget-header').removeClass('invisible');
-        })
-        .mouseleave(function() {
-          $('#widget-container-timebox .widget-header').addClass('invisible');
-        });
-      $('#timebox')
-        .slider({
-          orientation: 'horizontal',
-          min: 0,
-          max: 120,
-          value: 0,
-          slide: function (event, ui: any) {
-            let val = ui.value;
-            if (!ui.handle.firstChild) {
-              $("<div class='tooltip right in' style='display:none;left:16px;top:-6px;'><div class='tooltip-arrow'></div><div class='tooltip-inner'></div></div>")
-                .prependTo(ui.handle);
-            }
-            $(ui.handle.firstChild).show().children().eq(1).text(val);
-          }
-        })
-        .find('span.ui-slider-handle').on('blur', function () {
-          $(this.firstChild).hide();
-        });
+
 
       $('#widget-container-labelinfo')
         .mouseenter(function() {

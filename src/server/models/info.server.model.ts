@@ -46,7 +46,7 @@ export function respond(options: IOption, res) {
 function getLayerInfo(options: IOption, res: Response) {
   console.log(chalk.green('normal fetching ' + options.db + '_LayerInfo'));
   let col: IModel = getLayerModel(options.db + '_LayerInfo');
-  let cond: any = {type: {$ne: 'batch_norm'}};
+  let cond: any = {type: {$in: ['conv', 'inner_product']}};
   let proj: any = {_id: 0};
   col.find(cond, proj)
     .lean()

@@ -61,7 +61,7 @@ export function respond (options: IOption, res: Response) {
   console.log(chalk.green('normal fetching ' + colName));
 
   if (options.type === 'detail') {
-    let cond: any = {cls: {$in: options.cls} };
+    let cond: any = {cls: options.cls };
     let project: any = {_id: 0};
     col.find(cond, project)
       .lean()
@@ -86,7 +86,7 @@ export function respond (options: IOption, res: Response) {
       });
   }
   if (options.type === 'cls_stat') {
-    let cond: any = {cls: {$in: options.cls} };
+    let cond: any = {cls: options.cls };
     let project: any = {_id: 0, iter: 1, abLeft: 1, testError: 1};
     col.find(cond, project)
       .lean()

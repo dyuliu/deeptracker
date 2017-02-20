@@ -37,12 +37,17 @@ namespace application {
         imgDataset: null,
         model: null
       };
+
+      $scope.selected.imgDataset = 'imagenet';
+
       $scope.$watch('selected.imgDataset', function (n: any, o) {
-        if (n === o) { return; }
+        if (n === null) { return; }
+        console.log(n);
         $scope.models = Global.getModels()[n];
-        console.log($scope.models);
+        $scope.selected.model = $scope.models[3].value;
       }, false);
       $scope.$watch('selected.model', function (n: any, o) {
+        console.log(n);
         Global.setSelectedDB(n);
       });
 

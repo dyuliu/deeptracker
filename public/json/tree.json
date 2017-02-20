@@ -1,0 +1,160 @@
+[
+  {
+    "name": "conv1"
+  },
+  {
+    "name": "conv2",
+    "nodes": [
+      {
+        "name": "interstellar2a",
+        "nodes": [
+          { "name": "interstellar2a_branch1" },
+          { "name": "interstellar2a_branch2a" },
+          { "name": "interstellar2a_branch2b" },
+          { "name": "interstellar2a_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b",
+        "nodes": [
+          { "name": "interstellar2b_branch2a" },
+          { "name": "interstellar2b_branch2b" },
+          { "name": "interstellar2b_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2c",
+        "nodes": [
+          { "name": "interstellar2c_branch2a" },
+          { "name": "interstellar2c_branch2b" },
+          { "name": "interstellar2c_branch2c" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "conv3",
+    "nodes": [
+      {
+        "name": "interstellar3a",
+        "nodes": [
+          { "name": "interstellar3a_branch1" },
+          { "name": "interstellar3a_branch2a" },
+          { "name": "interstellar3a_branch2b" },
+          { "name": "interstellar3a_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b",
+        "nodes": [
+          { "name": "interstellar3b_branch2a" },
+          { "name": "interstellar3b_branch2b" },
+          { "name": "interstellar3b_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3c",
+        "nodes": [
+          { "name": "interstellar3c_branch2a" },
+          { "name": "interstellar3c_branch2b" },
+          { "name": "interstellar3c_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3d",
+        "nodes": [
+          { "name": "interstellar3d_branch2a" },
+          { "name": "interstellar3d_branch2b" },
+          { "name": "interstellar3d_branch2c" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "conv4",
+    "nodes": [
+      {
+        "name": "interstellar4a",
+        "nodes": [
+          { "name": "interstellar4a_branch1" },
+          { "name": "interstellar4a_branch2a" },
+          { "name": "interstellar4a_branch2b" },
+          { "name": "interstellar4a_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b",
+        "nodes": [
+          { "name": "interstellar4b_branch2a" },
+          { "name": "interstellar4b_branch2b" },
+          { "name": "interstellar4b_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4c",
+        "nodes": [
+          { "name": "interstellar4c_branch2a" },
+          { "name": "interstellar4c_branch2b" },
+          { "name": "interstellar4c_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4d",
+        "nodes": [
+          { "name": "interstellar4d_branch2a" },
+          { "name": "interstellar4d_branch2b" },
+          { "name": "interstellar4d_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4e",
+        "nodes": [
+          { "name": "interstellar4e_branch2a" },
+          { "name": "interstellar4e_branch2b" },
+          { "name": "interstellar4e_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4f",
+        "nodes": [
+          { "name": "interstellar4f_branch2a" },
+          { "name": "interstellar4f_branch2b" },
+          { "name": "interstellar4f_branch2c" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "conv5",
+    "nodes": [
+      {
+        "name": "interstellar5a",
+        "nodes": [
+          { "name": "interstellar5a_branch1" },
+          { "name": "interstellar5a_branch2a" },
+          { "name": "interstellar5a_branch2b" },
+          { "name": "interstellar5a_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar5b",
+        "nodes": [
+          { "name": "interstellar5b_branch2a" },
+          { "name": "interstellar5b_branch2b" },
+          { "name": "interstellar5b_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar5c",
+        "nodes": [
+          { "name": "interstellar5c_branch2a" },
+          { "name": "interstellar5c_branch2b" },
+          { "name": "interstellar5c_branch2c" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "fc1000"
+  }
+]

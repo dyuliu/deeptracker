@@ -45,7 +45,16 @@ namespace application {
         console.log(n);
       });
 
-      $scope.render = function () {
+      $('#widget-container-recordinfo')
+        .mouseenter(function () {
+          $('#widget-container-recordinfo .widget-header').removeClass('invisible');
+        })
+        .mouseleave(function () {
+          $('#widget-container-recordinfo .widget-header').addClass('invisible');
+        });
+
+      setTimeout(render, 1000);
+      function render() {
 
         $scope.options.chart.height = 250;
 

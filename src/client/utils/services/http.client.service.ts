@@ -7,7 +7,7 @@ namespace application {
     layer?: number[];
     seqidx?: number[];
     parser?: string;
-    cls?: string[];
+    cls?: any; // string or string[]
   }
 
   export interface IHTTPOption {

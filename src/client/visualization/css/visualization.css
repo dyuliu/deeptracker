@@ -1,6 +1,63 @@
-.nodisp {
+.no-disp {
   display: none;
 }
 .no-padding {
   padding: 0 0 0 0;
+}
+.collapse-animation {
+  -webkit-transition-property: height;
+  transition-property: height;
+  -webkit-transition-duration: 2s;
+          transition-duration: 2s;
+  -webkit-transition-timing-function: ease;
+          transition-timing-function: ease;
+}
+.vl-div {
+  height: 100%;
+  position: absolute;
+  border-left: 2px dashed red;
+}
+.layerbox {
+  margin-top: -1px;
+  position: relative;
+  height: 60px;
+  padding: 12px 0 12px 0;
+  border: 1px dotted;
+  border-color: #DDD #FFF #FFF;
+  border-color: rgba(0, 0, 0, 0.11) transparent transparent;
+}
+.layerbox:hover {
+  background-color: #F7F7F7;
+  border-color: #D6E1EA;
+  border-style: solid;
+  z-index: 1;
+}
+.layerbox:last-child {
+  border-bottom-color: #DDD;
+}
+.layerbox:first-child:hover {
+  border-top-color: #D6E1EA;
+}
+.level2 {
+  margin-left: 15px;
+}
+.level3 {
+  margin-left: 30px;
+  height: 60px;
+}
+.tree:before {
+  visibility: hidden;
+}
+.no-height {
+  height: 0px;
+}
+.level1,
+.level2,
+.level3 {
+  -webkit-transition-property: height;
+  transition-property: height;
+  -webkit-transition-duration: 2s;
+          transition-duration: 2s;
+  -webkit-transition-timing-function: ease;
+          transition-timing-function: ease;
 }
