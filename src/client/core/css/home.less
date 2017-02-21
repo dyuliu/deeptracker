@@ -8,6 +8,16 @@
     display: none;
 }
 
+@sideWidth: 220px;
+
+.sidebar {
+    width: @sideWidth;
+}
+
+.sidebar+.main-content {
+    margin-left: @sideWidth;
+}
+
 .timerange {
     margin-top: 10px;
 }

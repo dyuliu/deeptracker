@@ -68,6 +68,7 @@ namespace application {
         layerInfo: {
           type: null,
           show: false,
+          sameScale: true,
           level: 0
         }
       };

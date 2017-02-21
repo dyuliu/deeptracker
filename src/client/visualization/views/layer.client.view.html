@@ -1,0 +1,68 @@
+<div class="widget-box transparent" ng-controller="LayerController">
+  <div class="widget-header widget-header-small invisible">
+    <h6 class="widget-title lighter">Layer Info</h6>
+    <div class="widget-toolbar">
+      <a href="#" data-action="close">
+        <i class="ace-icon fa fa-times"></i>
+      </a>
+    </div>
+  </div>
+
+  <div class="widget-body">
+    <div class="space-2"></div>
+
+    <div class="row">
+      <div class="col-xs-1 col-sm-1">
+        node graph
+      </div>
+
+      <div class="col-xs-11 col-sm-11">
+        <div ng-repeat-start="la in dataTree" id="{{la.name}}" class="tree level1 no-padding" ng-class="{'layerbox': (!opened[la.name] || !la.nodes)}" ng-repeat-end>
+
+          <div class="row">
+            <div class="col-xs-2 col-sm-2">
+              <span class="tree-branch-name" ng-click="open(la, 2)">
+              <i class="icon-folder ace-icon" ng-class="{'tree-minus': opened[la.name], 'tree-plus': !opened[la.name]}"></i>
+              <span class="tree-label">{{la.name}}</span>
+              </span>
+            </div>
+
+            <div ng-if="!opened[la.name] || !la.nodes" class="col-xs-10 col-sm-10">
+              <nvd3 options="options" data="data[la.name]"></nvd3>
+            </div>
+          </div>
+
+          <div ng-repeat-start="lan in la.nodes" id="{{lan.name}}" class="level2 no-padding" style="display: none" ng-class="{'layerbox': (!opened[lan.name] || !lan.nodes)}" ng-repeat-end>
+            <div class="row">
+              <div class="col-xs-2 col-sm-2">
+                <span class="tree-branch-name" ng-click="open(lan, 3)">
+                  <i class="icon-folder ace-icon" ng-class="{'invisible': !lan.nodes, 'tree-minus': opened[lan.name], 'tree-plus': !opened[lan.name]}"></i>
+                  <span class="tree-label">{{lan.name}}</span>
+                </span>
+              </div>
+              <div ng-if="!opened[lan.name] || !lan.nodes" class="col-xs-10 col-sm-10 counter-level2">
+                <nvd3 options="options" data="data[lan.name]"></nvd3>
+              </div>
+            </div>
+
+            <div ng-repeat-start="lann in lan.nodes" id="{{lann.name}}" class="level3 layerbox no-padding" style="display: none" ng-repeat-end>
+              <div class="row">
+                <div class="col-xs-2 col-sm-2">
+                  <span class="tree-branch-name" ng-click="open(lan, 3)">
+                    <i class="icon-folder ace-icon" ng-class="{'invisible': !lan.nodes, 'tree-minus': opened[lan.name], 'tree-plus': !opened[lan.name]}"></i>
+                    <span class="tree-label">{{lann.name}}</span>
+                  </span>
+                </div>
+                <div ng-if="!opened[lann.name] || !lann.nodes" class="col-xs-10 col-sm-10 counter-level3">
+                  <nvd3 options="options" data="data[lann.name]"></nvd3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

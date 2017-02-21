@@ -5,6 +5,12 @@
 .nav-list > li > .submenu:before {
   display: none;
 }
+.sidebar {
+  width: 220px;
+}
+.sidebar + .main-content {
+  margin-left: 220px;
+}
 .timerange {
   margin-top: 10px;
 }

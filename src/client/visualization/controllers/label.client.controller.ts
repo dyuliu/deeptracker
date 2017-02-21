@@ -21,6 +21,14 @@ namespace application {
     ) {
       let this_ = this;
 
+      $('#widget-container-labelinfo')
+        .mouseenter(function () {
+          $('#widget-container-labelinfo .widget-header:first-child').removeClass('invisible');
+        })
+        .mouseleave(function () {
+          $('#widget-container-labelinfo .widget-header:first-child').addClass('invisible');
+        });
+
       let optTestError: IHTTPOptionConfig = {
         db: Global.getSelectedDB(),
         type: 'test_error',
@@ -121,9 +129,9 @@ namespace application {
         cellWidth: 1,
         margin: {
           top: 10,
-          right: 20,
+          right: 0,
           bottom: 10,
-          left: 20
+          left: 0
         }
       };
       $scope.optionsDetail = {
@@ -132,9 +140,9 @@ namespace application {
         cellWidth: 1,
         margin: {
           top: 10,
-          right: 20,
+          right: 0,
           bottom: 10,
-          left: 20
+          left: 0
         }
       };
     }

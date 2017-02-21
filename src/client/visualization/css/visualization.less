@@ -18,10 +18,14 @@
   border-left: 2px dashed red;
 }
 
+.timebox {
+  width: 757px;
+}
+
 .layerbox {
   margin-top: -1px;
   position: relative;
-  height: 60px;
+  // height: 60px;
   padding: 12px 0 12px 0;
   border: 1px dotted;
   border-color: #DDD #FFF #FFF;
@@ -51,13 +55,22 @@
 //   height: 100px;
 // }
 
+@level-offset: 15px;
+
 .level2 {
-  margin-left: 15px;
+  margin-left: @level-offset;
 }
 
 .level3 {
-  margin-left: 30px;
-  height: 60px;
+  margin-left: @level-offset;
+}
+
+.counter-level2 {
+  margin-left: calc(-1 * @level-offset);
+}
+
+.counter-level3 {
+  margin-left: calc(-2 * @level-offset);
 }
 
 .tree:before {
