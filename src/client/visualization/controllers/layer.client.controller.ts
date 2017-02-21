@@ -3,11 +3,12 @@
 namespace application {
 
   interface IScope extends ng.IScope {
-    options: any;
+    options: {};
     data: {};
     dataTree: any[];
     opened: {};
     layers: {};
+    open: any;
   }
 
   class Controller {
@@ -34,18 +35,23 @@ namespace application {
         $scope.layers = _.keyBy(data[0], (o: any) => o.name); // turn array to object with key layername
         data[1] = data[1].data;
         $scope.opened = {};
+        $scope.options = {};
         for (let d of data[1]) {
           $scope.opened[d.name] = true;
+          $scope.options[d.name] = this_._setOptions('pixelChartWithLine');
           if (d.nodes) {
             $scope.opened[d.name] = false;
             for (let dn of d.nodes) {
               dn.parent = d.name;
               $scope.opened[dn.name] = false;
+              $scope.options[dn.name] = this_._setOptions('sparklinePlus');
               if (dn.nodes) {
                 for (let dnn of dn.nodes) {
                   dnn.parent = dn.name;
                   $scope.opened[dnn.name] = false;
-                }
+                  $scope.options[dnn.name] = this_._setOptions('pixelChartWithLine');
+                  $scope.options[dnn.name].height = $scope.layers[dnn.name].kernelNum + 20;
+                };
               }
             }
           }
@@ -54,22 +60,35 @@ namespace application {
 
         let opt: IHTTPOptionConfig = {
           db: Global.getSelectedDB(),
-          type: 'g_norm1',
-          layer: selectedLayers,
+          type: 'w_norm1',
+          layer: selectedLayers.slice(0, 3),
           parser: 'json'
         };
-
-        $scope.options = this_._setOptions('sparklinePlus');
-        DataManager.fetchLayer(opt, false)
-          .then((layerData: ILayerEle[]) => {
-            let tmpData = this_._processData(
-              $scope.layers,
-              $scope.dataTree,
-              layerData
-            );
-            $scope.data = tmpData[0];
-            // $scope.options.chart.yDomain = [tmpData[1], tmpData[2]];
+        DataManager
+          .fetchKernel(opt, true)
+          .then(dataKernel => {
+            $scope.data = this_._processData('kernel', $scope.layers, dataKernel);
+            console.log('$scope.data', $scope.data);
           });
+
+        // let opt: IHTTPOptionConfig = {
+        //   db: Global.getSelectedDB(),
+        //   type: 'g_norm1',
+        //   layer: selectedLayers,
+        //   parser: 'json'
+        // };
+
+        // $scope.options = this_._setOptions('sparklinePlus');
+        // DataManager.fetchLayer(opt, false)
+        //   .then((layerData: ILayerEle[]) => {
+        //     let tmpData = this_._processData(
+        //       'stat',
+        //       $scope.layers,
+        //       $scope.dataTree,
+        //       layerData
+        //     );
+        //     $scope.data = tmpData[0];
+        //   });
 
         // $scope.data = volatileChart(25.0, 0.09, 30);
       });
@@ -96,68 +115,47 @@ namespace application {
         $scope.opened[d.name] = !$scope.opened[d.name];
       };
 
-      function sine() {
-        let sin = [];
-        let now = +new Date();
-
-        for (let i = 0; i < 100; i++) {
-          sin.push({ x: now + i * 1000 * 60 * 60 * 24, y: Math.sin(i / 10) });
-        }
-
-        return sin;
-      }
-
-      function volatileChart(startPrice, volatility, numPoints) {
-        let rval = [];
-        let now = +new Date();
-        numPoints = numPoints || 100;
-        for (let i = 1; i < numPoints; i++) {
-
-          rval.push({ x: now + i * 1000 * 60 * 60 * 24, y: startPrice });
-          let rnd = Math.random();
-          let changePct = 2 * volatility * rnd;
-          if (changePct > volatility) {
-            changePct -= (2 * volatility);
-          }
-          startPrice = startPrice + startPrice * changePct;
-        }
-        return rval;
-      }
-
     }
 
-    private _processData(layers, dataTree, dataLayer) {
+    private _processData(type, ...rest: any[]) {
       let this_ = this;
-      let [min, max] = [9999999, -9999999];
       let result = {};
-      _.each(layers, (v) => {
-        result[v.name] = _.map(dataLayer, (dv: any) => {
-          min = dv.value[v.lid] < min ? dv.value[v.lid] : min;
-          max = dv.value[v.lid] > max ? dv.value[v.lid] : max;
-          return {x: dv.iter, y: dv.value[v.lid]};
-        });
-      });
-      // function calc(d, o) {
-      //   if (!d.nodes) {
-      //     let l = layers[d.name];
-      //     return {
-      //       iter: o.iter,
-      //       size: l.channels * l.kernelNum * l.kernelWidth * l.kernelHeight,
-      //       value: o.value[l.lid]
-      //     };
-      //   }
-      //   let size = 0, value = 0;
-      //   for (let node of d.nodes) {
-      //     let sub = calc(node, o);
-      //     size += sub.size;
-      //     value +=
-      //   }
-      //   return {
-      //     iter: o.iter,
-      //     size, value
-      //   };
-      // }
-      return [result, min, max];
+      let layers, dataTree, dataLayer, dataKernel;
+      switch (type) {
+        case 'kernel':
+          [layers, dataKernel] = [rest[0], rest[1]];
+          for (let d of dataKernel) {
+            result[d.name] = {};
+            let len = d.values[0].length;
+            let tmp = _.map(_.range(len), idx => {
+              return { iter: d.domain, value: [], index: idx };
+            });
+            for (let v of d.values) {
+              for (let i = 0; i < len; i += 1) {
+                tmp[i].value.push(v[i] > 0.05 ? 0 : 1);
+              }
+            }
+            result[d.name].pixelChart = tmp;
+          }
+          break;
+        case 'stat':
+          [layers, dataTree, dataLayer] = [rest[0], rest[1], rest[2]];
+          let [min, max] = [9999999, -9999999];
+          _.each(layers, (v) => {
+            result[v.name] = _.map(dataLayer, (dv: any) => {
+              min = dv.value[v.lid] < min ? dv.value[v.lid] : min;
+              max = dv.value[v.lid] > max ? dv.value[v.lid] : max;
+              return { x: dv.iter, y: dv.value[v.lid] };
+            });
+          });
+          break;
+        case 'seq':
+          break;
+        default:
+          break;
+      }
+      return result;
+      // return [result, min, max];
     }
 
     private _setOptions(type) {
@@ -186,12 +184,26 @@ namespace application {
             }
           };
           break;
+        case 'pixelChartWithLine':
+          options = {
+            width: 1200,
+            height: 70,
+            cellWidth: 1,
+            pixelChart: true,
+            lineChart: false,
+            margin: {
+              top: 10,
+              right: 0,
+              bottom: 10,
+              left: 0
+            }
+          };
+          break;
         default:
           alert('wrong chart type');
       }
       return options;
     }
-
   }
 
   angular

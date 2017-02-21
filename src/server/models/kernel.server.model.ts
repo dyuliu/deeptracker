@@ -1,14 +1,14 @@
 'use strict';
 
-import {Schema, Model, model, modelNames} from 'mongoose';
-import {Response} from 'express';
+import { Schema, Model, model, modelNames } from 'mongoose';
+import { Response } from 'express';
 import * as chalk from 'chalk';
 import * as _ from 'lodash';
 import * as utils from '../lib/utils.server';
-import {bson} from '../lib/bson.server';
+import { bson } from '../lib/bson.server';
 
 // begin of interface definition
-interface IOption extends application.IHTTPOptionConfig {};
+interface IOption extends application.IHTTPOptionConfig { };
 
 interface IModel extends Model<any> {
   respond?: (option: IOption, res: Response) => void;
@@ -17,22 +17,28 @@ interface IModel extends Model<any> {
 // end of interface definition
 
 let schema = new Schema({
-  iter: {type: Number, required: true},
-  lid: {type: Number, required: true},
-  name: {type: String, required: true},
-  value: {type: [Number], required: true}
+  iter: { type: Number, required: true },
+  lid: { type: Number, required: true },
+  name: { type: String, required: true },
+  value: { type: [Number], required: true }
 });
 
-export function respondStream (options: IOption, res: Response) {
+export function respondStream(options: IOption, res: Response) {
   // basic config
   let colName = options.db + '_' + utils.tables.kernel.get(options.type);
   let col = getModel(colName);
   console.log(chalk.green('stream fetching ' + colName));
   console.time('data get ready');
 
-  let cond: any = {$and: [{iter: { $gte: options.range.start }}, {iter: { $lte: options.range.end }}]};
-  if (!_.isEmpty(options.layer)) { cond.lid = {$in: options.layer}; }
-  let project: any = {_id: 0};
+  let cond = {};
+  if (options.range) {
+    cond['$and'] = [{ iter: { $gte: options.range.start } }, { iter: { $lte: options.range.end } }];
+  }
+  if (!_.isEmpty(options.layer)) {
+    cond['lid'] = {$in: options.layer};
+  }
+
+  let project: any = { _id: 0 };
 
   let cursor = col.find(cond, project)
     .lean()
@@ -44,7 +50,7 @@ export function respondStream (options: IOption, res: Response) {
     res.type('json');
     cursor
       .pipe(utils.KernelStreamTransformer(options))
-      .pipe(utils.ArrayStreamTransformer({batchSize: 1}))
+      .pipe(utils.ArrayStreamTransformer({ batchSize: 1 }))
       .pipe(res);
   } else if (options.parser === 'bson') {
     res.type('arraybuffer');
@@ -54,16 +60,22 @@ export function respondStream (options: IOption, res: Response) {
   }
 };
 
-export function respond (options: IOption, res: Response) {
+export function respond(options: IOption, res: Response) {
   // basic config
   let colName = options.db + '_' + utils.tables.kernel.get(options.type);
   let col = getModel(colName);
   console.log(chalk.green('normal fetching ' + colName));
   console.time('data get ready');
 
-  let cond: any = {$and: [{iter: { $gte: options.range.start }}, {iter: { $lte: options.range.end }}]};
-  if (!_.isEmpty(options.layer)) { cond.lid = {$in: options.layer}; }
-  let project: any = {_id: 0};
+  let cond = {};
+  if (options.range) {
+    cond['$and'] = [{ iter: { $gte: options.range.start } }, { iter: { $lte: options.range.end } }];
+  }
+  if (!_.isEmpty(options.layer)) {
+    cond['lid'] = {$in: options.layer};
+  }
+
+  let project: any = { _id: 0 };
   col.find(cond, project)
     .lean()
     .sort({ iter: 1 })
@@ -95,7 +107,7 @@ function postProcess(data: any[]): any[] {
       r[m.get(d.lid)].values.push(d.value);
       r[m.get(d.lid)].domain.push(d.iter);
     } else {
-      r.push({key: +d.lid, name: d.name, domain: [d.iter], values: [d.value]});
+      r.push({ key: +d.lid, name: d.name, domain: [d.iter], values: [d.value] });
       m.set(d.lid, r.length - 1);
     }
   });
@@ -105,7 +117,7 @@ function postProcess(data: any[]): any[] {
 
 function getModel(collectionName: string): IModel {
   if (modelNames().indexOf(collectionName) === -1) {
-      model(collectionName, schema, collectionName);
+    model(collectionName, schema, collectionName);
   }
   return model(collectionName);
 };

@@ -68,8 +68,6 @@ namespace application {
 
     private _paintHeatMap(data: IDTypeEle) {
       // to do
-      console.log(data);
-      console.log(data.length);
       let this_ = this;
       let ctx: CanvasRenderingContext2D = this_.canvas.node().getContext('2d');
       let size = data.length;
@@ -86,7 +84,6 @@ namespace application {
       }
     }
     private _paintLineChart(data: IDTypeEle, max: number) {
-      console.log(max, data);
       let this_ = this;
       let size = data.length;
       let y = d4.scaleLinear()
@@ -140,7 +137,7 @@ namespace application {
           let board = new Painter(element, scope.options);
           board.render(scope.data);
         };
-        scope.$watch('data', (n, o) => { console.log(n); if (n !== o && n) { start(); } }, false);
+        scope.$watch('data', (n, o) => { if (n !== o && n) { start(); } }, false);
 
       };
     }

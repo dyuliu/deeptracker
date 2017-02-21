@@ -28,7 +28,8 @@
             </div>
 
             <div ng-if="!opened[la.name] || !la.nodes" class="col-xs-10 col-sm-10">
-              <nvd3 options="options" data="data[la.name]"></nvd3>
+              <div pchartwithline options="options[la.name]" data="data[la.name]"></div>
+              <!--<nvd3 options="options[la.name]" data="data[la.name]"></nvd3>-->
             </div>
           </div>
 
@@ -41,7 +42,7 @@
                 </span>
               </div>
               <div ng-if="!opened[lan.name] || !lan.nodes" class="col-xs-10 col-sm-10 counter-level2">
-                <nvd3 options="options" data="data[lan.name]"></nvd3>
+                <!--<nvd3 options="options[lan.name]" data="data[lan.name]"></nvd3>-->
               </div>
             </div>
 
@@ -54,7 +55,8 @@
                   </span>
                 </div>
                 <div ng-if="!opened[lann.name] || !lann.nodes" class="col-xs-10 col-sm-10 counter-level3">
-                  <nvd3 options="options" data="data[lann.name]"></nvd3>
+                  <!--<nvd3 options="options" data="data[lann.name]"></nvd3>-->
+                  <div pchartwithline options="options[lann.name]" data="data[lann.name]"></div>
                 </div>
               </div>
             </div>

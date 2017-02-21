@@ -61,22 +61,21 @@ namespace application {
 
     public render(data) {
       let this_ = this;
-      this_._paintPixelChart(data.pixelChart);
-      this_._paintLineChart(data.lineChart, data.pixelChart.length);
+      if (this_.options.pixelChart) { this_._paintPixelChart(data.pixelChart); }
+      if (this_.options.lineChart) { this_._paintLineChart(data.lineChart, data.pixelChart.length); }
     }
 
     private _paintPixelChart(data) {
       let this_ = this;
       let ctx: CanvasRenderingContext2D = this_.canvas.node().getContext('2d');
-      console.log(data);
       // create Image
       let idx = 0;
-      for (let img of data) {
-        let size = img.iter.length;
+      for (let d of data) {
+        let size = d.iter.length;
         let image = ctx.createImageData(size, 1);
         for (let i = 0; i < size; i += 1) {
           let color;
-          if (img.value[i] === 1) {
+          if (d.value[i] === 1) {
             color = d4.color('#7fc97f').rgb();
           } else {
             color = d4.color('#fdc086').rgb();
@@ -86,7 +85,7 @@ namespace application {
           image.data[i * 4 + 2] = color.b;
           image.data[i * 4 + 3] = 255;
         }
-        ctx.putImageData(image, this_.offsetWidth, this_.offsetHeight + img.index);
+        ctx.putImageData(image, this_.offsetWidth, this_.offsetHeight + d.index);
         // ctx.putImageData(image, this_.offsetWidth, this_.offsetHeight + idx);
         idx += 1;
       }
@@ -98,7 +97,6 @@ namespace application {
       let y = d4.scaleLinear()
         .domain([0, 1])
         .rangeRound([maxHeight, 0]);
-      console.log(maxHeight, data);
       let lineData = _.map(data, (d, i) => [+i, y(1 - d.value)]);
       let line = d4.line()
         .x(function (d) { return d[0]; })

@@ -138,6 +138,8 @@ namespace application {
         width: 900,
         height: 70,
         cellWidth: 1,
+        pixelChart: true,
+        linechart: true,
         margin: {
           top: 10,
           right: 0,
