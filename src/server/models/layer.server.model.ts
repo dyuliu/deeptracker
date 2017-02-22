@@ -107,7 +107,7 @@ function postProcess(data: any[], options: IOption): any[] {
   let m = new Map();
   let r = [];
 
-  if (options.type === 's_cratio') {
+  if (options.type === 's_cratio' || 'hl_cratio') {
     _.each(data, d => {
       _.each(d.value, (v, lid) => {
         let fv = [];
@@ -116,7 +116,7 @@ function postProcess(data: any[], options: IOption): any[] {
           r[m.get(lid)].values.push(fv);
           r[m.get(lid)].domain.push(d.iter);
         } else {
-          r.push({key: +lid, domain: [d.iter], values: [fv]});
+          r.push({key: lid, domain: [d.iter], values: [fv]});
           m.set(lid, r.length - 1);
         }
       });

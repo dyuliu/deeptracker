@@ -7,8 +7,7 @@ namespace application {
     data: {};
     dataTree: any[];
     opened: {};
-    layers: {};
-    open: any;
+    open: any;    // func to open hl layer
   }
 
   class Controller {
@@ -23,34 +22,36 @@ namespace application {
       $q: ng.IQService,
       $http: ng.IHttpService
     ) {
+
       let this_ = this;
-      let selectedLayers = [];
+      let layers, hlLayers = [], selectedLayers;
+
       $q.all([
         DataManager.fetchInfo({ db: Global.getSelectedDB(), type: 'layer' }),
         $http.get('/json/tree.json')
       ]).then((data: any) => {
-        for (let o of data[0]) {
-          selectedLayers.push(o.lid);
-        }
-        $scope.layers = _.keyBy(data[0], (o: any) => o.name); // turn array to object with key layername
+        selectedLayers = _.map(data[0], (d: any) => d.lid);
+        layers = _.keyBy(data[0], (o: any) => o.name); // turn array to object with key layername
         data[1] = data[1].data;
         $scope.opened = {};
         $scope.options = {};
         for (let d of data[1]) {
           $scope.opened[d.name] = true;
-          $scope.options[d.name] = this_._setOptions('pixelChartWithLine');
+          $scope.options[d.name] = this_._setOptions('crChart');
           if (d.nodes) {
+            hlLayers.push(d.name);
             $scope.opened[d.name] = false;
             for (let dn of d.nodes) {
               dn.parent = d.name;
               $scope.opened[dn.name] = false;
-              $scope.options[dn.name] = this_._setOptions('sparklinePlus');
+              $scope.options[dn.name] = this_._setOptions('crChart');
               if (dn.nodes) {
+                hlLayers.push(dn.name);
                 for (let dnn of dn.nodes) {
                   dnn.parent = dn.name;
                   $scope.opened[dnn.name] = false;
-                  $scope.options[dnn.name] = this_._setOptions('pixelChartWithLine');
-                  $scope.options[dnn.name].height = $scope.layers[dnn.name].kernelNum + 20;
+                  $scope.options[dnn.name] = this_._setOptions('crChart');
+                  // $scope.options[dnn.name].height = layers[dnn.name].kernelNum + 20;
                 };
               }
             }
@@ -58,39 +59,76 @@ namespace application {
         }
         $scope.dataTree = data[1];
 
-        let opt: IHTTPOptionConfig = {
-          db: Global.getSelectedDB(),
-          type: 'w_norm1',
-          layer: selectedLayers.slice(0, 3),
-          parser: 'json'
-        };
-        DataManager
-          .fetchKernel(opt, true)
-          .then(dataKernel => {
-            $scope.data = this_._processData('kernel', $scope.layers, dataKernel);
-            console.log('$scope.data', $scope.data);
-          });
+        /*--- kernel detail data ---*/
+        // let opt: IHTTPOptionConfig = {
+        //   db: Global.getSelectedDB(),
+        //   type: 'w_norm1',
+        //   layer: selectedLayers.slice(0, 3),
+        //   parser: 'json'
+        // };
+        // DataManager
+        //   .fetchKernel(opt, true)
+        //   .then(dataKernel => {
+        //     $scope.data = this_._processData('kernel', layers, dataKernel);
+        //     console.log('$scope.data', $scope.data);
+        //   });
 
+        /*--- layer stat data ---*/
         // let opt: IHTTPOptionConfig = {
         //   db: Global.getSelectedDB(),
         //   type: 'g_norm1',
-        //   layer: selectedLayers,
+        //   // layer: selectedLayers,
         //   parser: 'json'
         // };
 
-        // $scope.options = this_._setOptions('sparklinePlus');
-        // DataManager.fetchLayer(opt, false)
-        //   .then((layerData: ILayerEle[]) => {
-        //     let tmpData = this_._processData(
-        //       'stat',
-        //       $scope.layers,
-        //       $scope.dataTree,
-        //       layerData
-        //     );
-        //     $scope.data = tmpData[0];
-        //   });
+        // let optHL: IHTTPOptionConfig = {
+        //   db: Global.getSelectedDB(),
+        //   type: 'hl_g_norm1',
+        //   // layer: selectedLayers,
+        //   parser: 'json'
+        // };
 
-        // $scope.data = volatileChart(25.0, 0.09, 30);
+        // $q.all([
+        //   DataManager.fetchLayer(opt, false),
+        //   DataManager.fetchLayer(optHL, false)
+        // ]).then(layerData => {
+        //   $scope.data = {};
+        //   _.merge(
+        //     $scope.data,
+        //     this_._processData('stat', layers, layerData[0])[0],
+        //     this_._processData('hl_stat', hlLayers, layerData[1])[0]
+        //   );
+        // });
+
+        /*--- layer stat data ---*/
+        let opt: IHTTPOptionConfig = {
+          db: Global.getSelectedDB(),
+          type: 's_cratio',
+          layer: selectedLayers,
+          seqidx: [10, 20, 30],
+          parser: 'json'
+        };
+
+        let optHL: IHTTPOptionConfig = {
+          db: Global.getSelectedDB(),
+          type: 'hl_s_cratio',
+          seqidx: [10, 20, 30],
+          parser: 'json'
+        };
+
+        $q.all([
+          DataManager.fetchLayer(opt, false),
+          DataManager.fetchLayer(optHL, false),
+        ]).then(layerData => {
+          $scope.data = {};
+          _.merge(
+            $scope.data,
+            this_._processData('seq', layers, layerData[0]),
+            this_._processData('hl_seq', hlLayers, layerData[1])
+          );
+          console.log($scope.data);
+        });
+
       });
 
       $('#widget-container-layerinfo')
@@ -105,12 +143,10 @@ namespace application {
         level = ' .level' + level;
         if (!$scope.opened[d.name]) {
           $('#' + d.name + level)
-            .show(200, 'swing');
-          // .removeClass('no-disp');
+            .show(200, 'linear');
         } else {
           $('#' + d.name + level)
-            .hide(200, 'swing');
-          // .addClass('no-disp');
+            .hide(200, 'linear');
         }
         $scope.opened[d.name] = !$scope.opened[d.name];
       };
@@ -120,11 +156,11 @@ namespace application {
     private _processData(type, ...rest: any[]) {
       let this_ = this;
       let result = {};
-      let layers, dataTree, dataLayer, dataKernel;
+      let [layers, data] = [rest[0], rest[1]],
+          [min, max] = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER];
       switch (type) {
         case 'kernel':
-          [layers, dataKernel] = [rest[0], rest[1]];
-          for (let d of dataKernel) {
+          for (let d of data) {
             result[d.name] = {};
             let len = d.values[0].length;
             let tmp = _.map(_.range(len), idx => {
@@ -137,25 +173,39 @@ namespace application {
             }
             result[d.name].pixelChart = tmp;
           }
-          break;
+          return result;
         case 'stat':
-          [layers, dataTree, dataLayer] = [rest[0], rest[1], rest[2]];
-          let [min, max] = [9999999, -9999999];
           _.each(layers, (v) => {
-            result[v.name] = _.map(dataLayer, (dv: any) => {
+            result[v.name] = _.map(data, (dv: any) => {
               min = dv.value[v.lid] < min ? dv.value[v.lid] : min;
               max = dv.value[v.lid] > max ? dv.value[v.lid] : max;
               return { x: dv.iter, y: dv.value[v.lid] };
             });
           });
-          break;
+          return [result, min, max];
+        case 'hl_stat':
+          _.each(layers, name => {
+            result[name] = _.map(data, (dv: any) => {
+              min = dv.value[name] < min ? dv.value[name] : min;
+              max = dv.value[name] > max ? dv.value[name] : max;
+              return { x: dv.iter, y: dv.value[name] };
+            });
+          });
+          return [result, min, max];
         case 'seq':
-          break;
+          _.each(data, d => {
+            let layer: any = _.find(layers, { lid: +d.key });
+            result[layer.name] = { iter: d.domain, value: d.values};
+          });
+          return result;
+        case 'hl_seq':
+          _.each(data, d => {
+            result[d.key] = { iter: d.domain, value: d.values};
+          });
+          return result;
         default:
           break;
       }
-      return result;
-      // return [result, min, max];
     }
 
     private _setOptions(type) {
@@ -165,13 +215,13 @@ namespace application {
           options = {
             chart: {
               type: 'sparklinePlus',
-              height: 70,
               width: 757,
+              height: 60,
               margin: {
                 left: 0,
                 right: 0,
-                top: 5,
-                bottom: 5
+                top: 2,
+                bottom: 2
               },
               color: function (d, i) { return '#4682b4'; },
               // yDomain: [0, 50],
@@ -186,17 +236,31 @@ namespace application {
           break;
         case 'pixelChartWithLine':
           options = {
-            width: 1200,
-            height: 70,
+            width: 757,
+            height: 60,
             cellWidth: 1,
             pixelChart: true,
             lineChart: false,
             margin: {
-              top: 10,
+              top: 2,
               right: 0,
-              bottom: 10,
+              bottom: 2,
               left: 0
             }
+          };
+          break;
+        case 'crChart':
+          options = {
+            width: 757,
+            height: 60,
+            cellWidth: 1,
+            margin: {
+              top: 2,
+              right: 0,
+              bottom: 2,
+              left: 0
+            },
+            ratio: null
           };
           break;
         default:

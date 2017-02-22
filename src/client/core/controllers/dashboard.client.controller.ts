@@ -11,18 +11,23 @@ namespace application {
     timeSlider: any;
     levelChange: any;
     reset: any;
+    click: any; // emit event
   }
 
   class Controller {
-    public static $inject: string[] = ['$scope', 'DataManager', 'Global'];
+    public static $inject: string[] = ['$scope', 'DataManager', 'Global', 'Pip'];
 
     constructor(
       public $scope: IScope,
       DataManager: IDataManagerService,
-      Global: IGlobalService
+      Global: IGlobalService,
+      Pip: IPipService
     ) {
       let this_ = this;
 
+      $scope.click = function(eType) {
+        if (eType === 'vlDiv') { Pip.emitVlDiv(null); }
+      };
       // to activate sidebar
       setTimeout(() => {
         $('#sidebar-collapse').trigger('click');

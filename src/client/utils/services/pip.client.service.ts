@@ -5,9 +5,11 @@ namespace application {
     emitHeatmapDataLoaded(msg: any): void;
     emitUrlChanged(msg: any): void;
     emitRender(msg: any): void;
+    emitVlDiv(msg: any): void;
     onHeatmapDataLoaded(scope: ng.IScope, cb: (msg: any) => void): void;
     onUrlChanged(scope: ng.IScope, cb: (msg: any) => void): void;
     onRender(scope: ng.IScope, cb: (msg: any) => void): void;
+    onVlDiv(scope: ng.IScope, cb: (msg: any) => void): void;
   }
 
   export class Pip {
@@ -50,6 +52,7 @@ namespace application {
       this.addEvent('heatmapDataLoaded');
       this.addEvent('urlChanged');
       this.addEvent('render');
+      this.addEvent('vlDiv');
     }
   }
 

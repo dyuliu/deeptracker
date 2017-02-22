@@ -22,14 +22,15 @@
           <div class="row">
             <div class="col-xs-2 col-sm-2">
               <span class="tree-branch-name" ng-click="open(la, 2)">
-              <i class="icon-folder ace-icon" ng-class="{'tree-minus': opened[la.name], 'tree-plus': !opened[la.name]}"></i>
+              <i class="icon-folder ace-icon" ng-class="{'invisible': !la.nodes, 'tree-minus': opened[la.name], 'tree-plus': !opened[la.name]}"></i>
               <span class="tree-label">{{la.name}}</span>
               </span>
             </div>
 
             <div ng-if="!opened[la.name] || !la.nodes" class="col-xs-10 col-sm-10">
-              <div pchartwithline options="options[la.name]" data="data[la.name]"></div>
               <!--<nvd3 options="options[la.name]" data="data[la.name]"></nvd3>-->
+              <!--<div pchartwithline options="options[la.name]" data="data[la.name]"></div>-->
+              <div crchart options="options[la.name]" data="data[la.name]"></div>
             </div>
           </div>
 
@@ -43,20 +44,23 @@
               </div>
               <div ng-if="!opened[lan.name] || !lan.nodes" class="col-xs-10 col-sm-10 counter-level2">
                 <!--<nvd3 options="options[lan.name]" data="data[lan.name]"></nvd3>-->
+                <!--<div pchartwithline options="options[lan.name]" data="data[lan.name]"></div>-->
+                <div crchart options="options[lan.name]" data="data[lan.name]"></div>
               </div>
             </div>
 
             <div ng-repeat-start="lann in lan.nodes" id="{{lann.name}}" class="level3 layerbox no-padding" style="display: none" ng-repeat-end>
               <div class="row">
                 <div class="col-xs-2 col-sm-2">
-                  <span class="tree-branch-name" ng-click="open(lan, 3)">
-                    <i class="icon-folder ace-icon" ng-class="{'invisible': !lan.nodes, 'tree-minus': opened[lan.name], 'tree-plus': !opened[lan.name]}"></i>
+                  <span class="tree-branch-name" ng-click="open(lann, 3)">
+                    <i class="icon-folder ace-icon" ng-class="{'invisible': !lann.nodes, 'tree-minus': opened[lann.name], 'tree-plus': !opened[lann.name]}"></i>
                     <span class="tree-label">{{lann.name}}</span>
                   </span>
                 </div>
                 <div ng-if="!opened[lann.name] || !lann.nodes" class="col-xs-10 col-sm-10 counter-level3">
                   <!--<nvd3 options="options" data="data[lann.name]"></nvd3>-->
-                  <div pchartwithline options="options[lann.name]" data="data[lann.name]"></div>
+                  <!--<div pchartwithline options="options[lann.name]" data="data[lann.name]"></div>-->
+                  <div crchart options="options[lann.name]" data="data[lann.name]"></div>
                 </div>
               </div>
             </div>

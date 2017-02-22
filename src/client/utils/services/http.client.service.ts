@@ -80,7 +80,7 @@ namespace application {
     }
 
     private _jsonParser(data) {
-      console.log('json parser');
+      // console.log('json parser');
       let strData = typeof data === 'string' ? data : abtostr(data);
       let result;
       let pos = strData.indexOf('\n');
@@ -123,7 +123,7 @@ namespace application {
     }
 
     private _bsonParser(data) {
-      console.log('bson parser');
+      // console.log('bson parser');
       if (!(data instanceof ArrayBuffer)) {
         console.error('bsonParser: not arraybuffer');
         return data;

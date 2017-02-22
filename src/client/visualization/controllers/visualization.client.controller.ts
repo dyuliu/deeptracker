@@ -3,19 +3,23 @@
 namespace application {
 
   interface IScope extends ng.IScope {
-    dbList: IInfoDBDataType;
+    vlDiv: boolean;
   }
 
   class Controller {
-    public static $inject: string[] = ['$scope', 'DataManager', 'Global'];
+    public static $inject: string[] = ['$scope', 'DataManager', 'Global', 'Pip'];
 
     constructor(
       public $scope: IScope,
       DataManager: IDataManagerService,
-      Global: IGlobalService
+      Global: IGlobalService,
+      Pip: IPipService
     ) {
 
       /* tslint:disable */
+      $scope.vlDiv = false;
+      Pip.onVlDiv( $scope, e => { $scope.vlDiv = !$scope.vlDiv; });
+
       $('#simple-colorpicker-1').ace_colorpicker({ pull_right: true }).on('change', function () {
         let color_class = $(this).find('option:selected').data('class');
         let new_class = 'widget-box';
@@ -177,6 +181,10 @@ namespace application {
           $('#widget-container-labelinfo-detail .widget-header').addClass('invisible');
         });
       /* tslint:enable */
+      $('#main-widget-container').mousemove( function (e) {
+        let parentOffset = $(this).parent().offset();
+        $('.vl-div').css('left', e.pageX - parentOffset.left);
+      });
     }
     // end of constructor
 

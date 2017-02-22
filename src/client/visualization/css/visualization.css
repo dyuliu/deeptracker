@@ -15,7 +15,9 @@
 .vl-div {
   height: 100%;
   position: absolute;
-  border-left: 2px dashed red;
+  left: 0px;
+  border-left: 1px dashed rgba(0, 0, 255, 0.6);
+  z-index: 100;
 }
 .timebox {
   width: 757px;
