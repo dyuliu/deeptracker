@@ -10,8 +10,10 @@
 .info-table a:hover {
   cursor: pointer;
 }
-.verticalLine {
-  height: 100%;
-  position: absolute;
-  border-left: 2px dashed red;
+.hr-div {
+  position: relative;
+  margin: 6px 0 6px 0;
+  width: 100%;
+  border-top: 1px solid rgba(105, 105, 105, 0.45);
+  z-index: 100;
 }

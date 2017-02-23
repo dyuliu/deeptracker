@@ -148,6 +148,7 @@ namespace application {
           let board = new Painter(element, scope.options);
           board.render(scope.data);
         };
+        if (!_.isUndefined(scope.data)) { start(); };
         scope.$watch('data', (n, o) => { if (n !== o && n) { start(); } }, false);
 
       };

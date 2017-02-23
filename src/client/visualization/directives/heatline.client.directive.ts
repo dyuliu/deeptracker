@@ -3,8 +3,8 @@ namespace application {
 
   interface IDTypeEle extends Array<{ iter: number, value: number }> {};
   export interface IDTypeHeatline {
-    testError: IDTypeEle;
-    abnormal: IDTypeEle;
+    heatmapData: IDTypeEle;
+    linechartData: IDTypeEle;
     max: number;
   }
 
@@ -62,8 +62,8 @@ namespace application {
 
     public render(data: IDTypeHeatline) {
       let this_ = this;
-      this_._paintHeatMap(data.testError);
-      this_._paintLineChart(data.abnormal, data.max);
+      this_._paintHeatMap(data.heatmapData);
+      this_._paintLineChart(data.linechartData, data.max);
     }
 
     private _paintHeatMap(data: IDTypeEle) {
@@ -87,9 +87,10 @@ namespace application {
       let this_ = this;
       let size = data.length;
       let y = d4.scaleLinear()
-        // .domain([0, d4.max(data, d => d.value)])
-        .domain([0, max])
+        .domain([0, d4.max(data, d => d.value)])
+        // .domain([0, max])
         .rangeRound([this_.height, 0]);
+        // .rangeRound([996, 0]);
       let lineData = _.map(data, (d, i) => [+i, y(d.value)]);
       let line = d4.line()
         .x(function (d) { return d[0]; })
@@ -98,7 +99,8 @@ namespace application {
       chart.append('path')
         .datum(lineData)
         .attr('fill', 'none')
-        .attr('stroke', 'steelblue')
+        // .attr('stroke', 'steelblue')
+        .attr('stroke', 'rgba(100%, 0%, 0%, 0.84)')
         .attr('stroke-opacity', 1)
         .attr('stroke-linejoin', 'round')
         .attr('stroke-linecap', 'round')
@@ -134,9 +136,11 @@ namespace application {
       ) {
 
         let start = () => {
+          element.empty();
           let board = new Painter(element, scope.options);
           board.render(scope.data);
         };
+        if (!_.isUndefined(scope.data)) { start(); };
         scope.$watch('data', (n, o) => { if (n !== o && n) { start(); } }, false);
 
       };

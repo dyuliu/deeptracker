@@ -21,8 +21,10 @@
               <div class="col-xs-2 col-sm-2">Label Info</div>
               <div class="col-xs-10 col-sm-10">
                 <div heatline data="dataModel" options="optionsHeatLine"></div>
-                <div heatline data="dataCls" options="optionsHeatLine"></div>
-                <div pchartwithline data="dataDetail" options="optionsDetail"></div>
+
+                <div ng-repeat-start="cls in selectedCls"
+                  heatline data="dataCls[cls.name]" options="optionsCls[cls.name]" ng-repeat-end></div>
+                <!--<div pchartwithline data="dataDetail" options="optionsDetail"></div>-->
                 <!--<div id="widget-container-labelinfo-model" class="col-xs-12 col-sm-12 widget-container-col no-padding">
                   <div class="widget-box transparent">
                     <div class="widget-header widget-header-small invisible">
