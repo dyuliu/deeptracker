@@ -1,51 +1,49 @@
 'use strict';
 
 namespace application {
-  export class HomeController {
-    public static $inject: string[] = ['$scope', '$location', 'Pip'];
 
-    constructor($scope, $location, Pip: IPipService) {
+  export class HomeController {
+    public static $inject: string[] = ['$scope', '$location'];
+
+    constructor($scope, $location) {
       $scope.actives = {
-        overview: true,
-        records: false,
-        layers: {
-          lineWithFocusChart: false,
-          boxPlotChart: false
-        },
-        timepath: false,
-        filtermatrix: false,
-        speed: false,
-        seq: false,
-        imginfo: false,
-        kernel: false
+        info: false,
+        gallery: false,
+        visualization: false
       };
 
+      let this_ = this;
+      $scope.subPageTitle = this_._getSubPageTitle($scope.actives);
 
       $scope.$watch(function () {
         return $location.url();
       }, function (url: string, oldUrl) {
-        // if (url === oldUrl) { return; }
-        $scope.actives.overview = _.endsWith(url, 'overview');
-        $scope.actives.records = _.endsWith(url, 'records');
-        $scope.actives.timepath = _.endsWith(url, 'timepath');
-        $scope.actives.filtermatrix = _.endsWith(url, 'filtermatrix');
-        $scope.actives.speed = _.endsWith(url, 'speed');
-        $scope.actives.seq = _.endsWith(url, 'seq');
-        $scope.actives.img = _.endsWith(url, 'img');
-        $scope.actives.kernel = _.endsWith(url, 'kernel');
-        if (url.includes('layers')) {
-          for (let key of _.keys($scope.actives.layers)) {
-            $scope.actives.layers[key] = _.endsWith(url, key);
-          }
-        } else {
-          for (let key of _.keys($scope.actives.layers)) {
-            $scope.actives.layers[key] = false;
-          }
-        }
-        Pip.emitUrlChanged($location.search().chartType);
-      }, true);
+        $scope.actives.info = _.endsWith(url, 'info');
+        $scope.actives.gallery = _.endsWith(url, 'gallery');
+        $scope.actives.visualization = _.endsWith(url, 'visualization');
+        $scope.subPageTitle = this_._getSubPageTitle($scope.actives);
+      });
+
+      $scope.showScroll = false;
+      $(window).on('scroll', function(e) {
+        $('.my-btn-scroll-up').removeClass('invisible');
+      });
+
+      $scope.click = function() {
+        $('html,body').animate({ scrollTop: 0 }, 500, function() {
+          $('.my-btn-scroll-up').addClass('invisible');
+        });
+      };
+
     }
 
+    private _getSubPageTitle(actives) {
+      let title = '';
+      _.each(actives, (d, k) => {
+        if (d) { title = k; }
+      });
+      return _.capitalize(title);
+    }
   }
 
   angular

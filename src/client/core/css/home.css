@@ -14,3 +14,10 @@
 .timerange {
   margin-top: 10px;
 }
+.my-btn-scroll-up {
+  border-width: 0;
+  position: fixed;
+  right: 20px;
+  z-index: 99;
+  bottom: 2px;
+}

@@ -31,19 +31,17 @@ namespace application {
               controller: 'HomeController',
             },
             'header@home': {
-              templateUrl: 'src/client/core/views/sub-views/header.client.view.html'
-              // controller: 'HeaderController'
+              templateUrl: 'src/client/core/views/header.client.view.html'
             },
             'dashboard@home': {
-              templateUrl: 'src/client/core/views/sub-views/dashboard.client.view.html',
+              templateUrl: 'src/client/core/views/dashboard.client.view.html',
               controller: 'DashboardController'
             },
             'content@home': {
-              templateUrl: 'src/client/core/views/sub-views/content.client.view.html'
-              // controller: 'ContentController'
+              templateUrl: 'src/client/core/views/content.client.view.html'
             },
             'footer@home': {
-              templateUrl: 'src/client/core/views/sub-views/footer.client.view.html'
+              templateUrl: 'src/client/core/views/footer.client.view.html'
             }
           }
         });

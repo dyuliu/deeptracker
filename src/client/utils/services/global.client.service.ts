@@ -63,6 +63,8 @@ namespace application {
     getModels(): any;
     setSelectedDB(d: string): void;
     getSelectedDB(): string;
+    setInfo(type: string, d: string): void;
+    getInfo(type: string): any;
   }
 
   export class Global implements IGlobalService {
@@ -79,6 +81,8 @@ namespace application {
     public getModels: () => any;
     public setSelectedDB: (d: string) => void;
     public getSelectedDB: () => string;
+    public setInfo: (t: string, d: any) => void;
+    public getInfo: (t: string) => any;
 
     public static factory() {
       let service = () => {
@@ -162,21 +166,38 @@ namespace application {
         ]
       };
 
-      let imgDataset = [
-        'imagenet',
-        'cifar'
-      ];
+      // global static var
+      let imgDataset = ['imagenet', 'cifar'];
 
       let models = {
         'imagenet': [
+          {label: 'resnet50-sgd-1P4G-1x', value: 'imagenet-1x-1'},
           {label: 'resnet50-sgd-1P4G-1x-lr0.5', value: 'imagenet-1x-lr0.5'},
           {label: 'resnet50-sgd-1P4G-1x-lr2', value: 'imagenet-1x-lr2'},
+          {label: 'resnet50-sgd-1P4G-1x-m0', value: 'imagenet-1x-m0'},
+          {label: 'resnet50-sgd-1P4G-2x', value: 'imagenet-2x-1'},
           {label: 'resnet50-sgd-1P4G-2x-lr2', value: 'imagenet-2x-lr2'},
-          {label: 'resnet50-sgd-1P4G-8x-1', value: 'imagenet-8x-1'}
+          {label: 'resnet50-sgd-1P4G-8x', value: 'imagenet-8x-1'}
         ],
         'cifar': [
-          {label: 'resnet164-sgd-1P4G-1x', value: 'cifar-1x-1'},
+          {label: 'resnet164-sgd-1P4G-1x-1', value: 'cifar-1x-1'},
+          {label: 'resnet164-sgd-1P4G-1x-2', value: 'cifar-1x-2'},
+          {label: 'resnet164-sgd-1P4G-1x-lr0.5', value: 'cifar-1x-lr0.5'},
+          {label: 'resnet164-sgd-1P4G-1x-lr2', value: 'cifar-1x-lr2'},
+          {label: 'resnet164-sgd-1P4G-1x-m0', value: 'cifar-1x-m0'},
+          {label: 'resnet164-sgd-1P4G-2x-1', value: 'cifar-2x-1'},
+          {label: 'resnet164-sgd-1P4G-2x-lr0.5', value: 'cifar-2x-lr0.5'},
+          {label: 'resnet164-sgd-1P4G-2x-lr2', value: 'cifar-2x-lr2'},
+          {label: 'resnet164-sgd-1P4G-4x', value: 'cifar-4x-1'},
+          {label: 'resnet164-sgd-1P4G-8x', value: 'cifar-8x-1'}
         ]
+      };
+
+      // global dynamic var
+      let info = {
+        db: null,
+        layer: null,
+        cls: null
       };
 
       let selectedDB = null;
@@ -195,6 +216,9 @@ namespace application {
 
       this.setSelectedDB = (d) => { selectedDB = d; };
       this.getSelectedDB = () => selectedDB;
+
+      this.setInfo = (t, d) => { info[t] = d; };
+      this.getInfo = (t) => info[t];
     }
   }
 

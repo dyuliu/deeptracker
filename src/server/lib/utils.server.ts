@@ -234,7 +234,8 @@ interface ITables {
 export let tables: ITables = {
   info: new Map<string, string>([
     ['layer', 'LayerInfo'],
-    ['db', 'DBInfo']
+    ['db', 'DBInfo'],
+    ['cls', 'ClsInfo']
   ]),
   img: new Map<string, string>([
     ['testinfo', 'ImgTestInfo'],

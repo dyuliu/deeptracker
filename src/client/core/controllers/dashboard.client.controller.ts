@@ -10,51 +10,75 @@ namespace application {
     config: any;
     timeSlider: any;
     levelChange: any;
-    reset: any;
     click: any; // emit event
   }
 
   class Controller {
-    public static $inject: string[] = ['$scope', 'DataManager', 'Global', 'Pip'];
+    public static $inject: string[] = [
+      '$scope', 'DataManager', '$q', 'Global', 'Pip'
+    ];
 
     constructor(
       public $scope: IScope,
       DataManager: IDataManagerService,
+      $q: ng.IQService,
       Global: IGlobalService,
       Pip: IPipService
     ) {
       let this_ = this;
 
-      $scope.click = function(eType) {
-        if (eType === 'vlDiv') { Pip.emitVlDiv(null); }
+      $scope.imgDataset = Global.getImgDataset();
+      $scope.models = [];
+      $scope.selected = {
+        imgDataset: 'imagenet',  // default val
+        model: 'imagenet-8x-1'   // default val
       };
-      // to activate sidebar
+
+      $scope.$watch('selected.imgDataset', (n: any, o) => {
+        if (n === null) { return; }
+        $scope.models = Global.getModels()[n];
+      });
+
+      $scope.$watch('selected.model', (n: any, o) => {
+        Global.setSelectedDB(n);
+        // fetch model related info
+        $q.all([
+          DataManager.fetchInfo({ db: Global.getSelectedDB(), type: 'layer' }),
+          DataManager.fetchInfo({ db: Global.getSelectedDB(), type: 'cls' })
+        ]).then( (data: any[]) => {
+          Global.setInfo('layer', data[0]);
+          Global.setInfo('cls', data[1]);
+        });
+      });
+
+      // four buttons click event handler
+      $scope.click = function (eType) {
+        switch (eType) {
+          case 'vlDiv':
+            Pip.emitVlDiv(null);
+            break;
+          case 'reset':
+            ace.data.remove('demo', 'widget-state');
+            ace.data.remove('demo', 'widget-order');
+            document.location.reload();
+            break;
+          case 'upload':
+            console.log('upload your db file');
+            break;
+          case 'save':
+            console.log('save your db file');
+            break;
+          default:
+            break;
+        };
+      };
+      // bug: to activate sidebar
       setTimeout(() => {
         $('#sidebar-collapse').trigger('click');
         if ($('#sidebar').hasClass('menu-min')) {
           $('#sidebar-collapse').trigger('click');
         };
       }, 100);
-
-      $scope.imgDataset = Global.getImgDataset();
-      $scope.models = [];
-      $scope.selected = {
-        imgDataset: null,
-        model: null
-      };
-
-      $scope.selected.imgDataset = 'imagenet';
-
-      $scope.$watch('selected.imgDataset', function (n: any, o) {
-        if (n === null) { return; }
-        console.log(n);
-        $scope.models = Global.getModels()[n];
-        $scope.selected.model = $scope.models[3].value;
-      }, false);
-      $scope.$watch('selected.model', function (n: any, o) {
-        console.log(n);
-        Global.setSelectedDB(n);
-      });
 
       $scope.config = {
         record: {
@@ -120,17 +144,12 @@ namespace application {
         });
 
       // spinner
-      $scope.levelChange = function(step) {
+      $scope.levelChange = function (step) {
         let val = $scope.config.layerInfo.level + step;
         if (val < 0 || val > 3) { return; }
         $scope.config.layerInfo.level = val;
       };
 
-      $scope.reset = function() {
-        ace.data.remove('demo', 'widget-state');
-        ace.data.remove('demo', 'widget-order');
-        document.location.reload();
-      };
     }
   }
 
