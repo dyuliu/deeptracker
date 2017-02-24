@@ -58,7 +58,7 @@ export function respond(options: IOption, res: Response) {
   let colName = options.db + '_' + utils.tables.img.get(options.type);
   let col = getModel(colName);
   console.log(chalk.green('normal fetching ' + colName));
-
+  console.time(colName);
   let [cond, project, sort] = getConfig(options);
 
   col.find(cond, project)
@@ -67,6 +67,7 @@ export function respond(options: IOption, res: Response) {
     .exec((err, data: any[]) => {
       if (err) { return console.log(chalk.bgRed(err)); }
       data = postProcess(data, options);
+      console.timeEnd(colName);
       if (options.parser === 'json') {
         res.json(data);
       } else if (options.parser === 'bson') {
@@ -114,10 +115,26 @@ function postProcess(data: any[], options: IOption): any[] {
     case 'detail':
       return data;
     case 'model_stat':
-      _.each(data, (d: any) => { d.abLeft = d.abLeft[options.seqidx[0]]; });
+      // let first = true;
+      // let kconst = 0;
+      data = _.map(data, (d: any) => {
+        // let tmp = d.iter - kconst;
+        // if (tmp > 0 && first && tmp % 1600 !== 0) { console.log(tmp + kconst); first = false; }
+        return {
+          iter: d.iter,
+          value: d.abLeft = d.abLeft[options.seqidx[0]]
+        };
+      });
       return data;
     case 'cls_stat':
-      _.each(data, (d: any) => { d.abLeft = d.abLeft[options.seqidx[0]]; });
+      data = _.map(data, (d: any) => {
+        return {
+          cls: d.cls,
+          iter: d.iter,
+          testError: d.testError,
+          value: d.abLeft[options.seqidx[0]]
+        };
+      });
       return data;
     case 'testinfo':
       let m = new Map();

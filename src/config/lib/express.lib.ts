@@ -16,7 +16,7 @@ import path = require('path');
 import bodyParser = require('body-parser');
 import express = require('express');
 import config = require('../config');
-import logger = require('./logger.lib');
+// import logger = require('./logger.lib');
 
 
 /**
@@ -64,14 +64,16 @@ function initMiddleware (app) {
   app.use(favicon(config.favicon));
 
   // Environment dependent middleware
-  if (process.env.NODE_ENV === 'development') {
-    // Enable logger (morgan)
-    app.use(morgan(logger.getLogFormat(), logger.getMorganOptions()));
-    // Disable views cache
-    app.set('view cache', false);
-  } else if (process.env.NODE_ENV === 'production') {
-    app.locals.cache = 'memory';
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   // Enable logger (morgan)
+  //   app.use(morgan(logger.getLogFormat(), logger.getMorganOptions()));
+  //   // Disable views cache
+  //   app.set('view cache', false);
+  // } else if (process.env.NODE_ENV === 'production') {
+  //   app.locals.cache = 'memory';
+  // }
+
+  app.locals.cache = 'memory';
 
   // Request body parsing middleware should be above methodOverride
   app.use(bodyParser.urlencoded({

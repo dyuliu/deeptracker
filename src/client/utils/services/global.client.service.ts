@@ -63,8 +63,8 @@ namespace application {
     getModels(): any;
     setSelectedDB(d: string): void;
     getSelectedDB(): string;
-    setInfo(type: string, d: string): void;
-    getInfo(type: string): any;
+    setData(type: string, d: any): void;
+    getData(type?: string): any;
   }
 
   export class Global implements IGlobalService {
@@ -81,8 +81,8 @@ namespace application {
     public getModels: () => any;
     public setSelectedDB: (d: string) => void;
     public getSelectedDB: () => string;
-    public setInfo: (t: string, d: any) => void;
-    public getInfo: (t: string) => any;
+    public setData: (t: string, d: any) => void;
+    public getData: (t?: string) => any;
 
     public static factory() {
       let service = () => {
@@ -194,13 +194,28 @@ namespace application {
       };
 
       // global dynamic var
-      let info = {
-        db: null,
-        layer: null,
-        cls: null
-      };
-
       let selectedDB = null;
+
+      let data = {
+        iterNum: 0,
+        iterSet: null,
+        info: {
+          db: null,
+          layer: null,
+          cls: null
+        },
+        record: {
+          lr: null,
+          testError: null,
+          trainError: null,
+          testLoss: null,
+          trainLoss: null
+        },
+        label: {
+          modelStat: null,
+          clsStat: null
+        }
+      };
 
       this.setRecordTypeList = (d) => { record = d; };
       this.getRecordTypeList = () => record;
@@ -214,11 +229,14 @@ namespace application {
       this.getImgDataset = () => imgDataset;
       this.getModels = () => models;
 
+      // api for global dynamic var
       this.setSelectedDB = (d) => { selectedDB = d; };
       this.getSelectedDB = () => selectedDB;
-
-      this.setInfo = (t, d) => { info[t] = d; };
-      this.getInfo = (t) => info[t];
+      this.setData = (t, d) => { data[t] = d; };
+      this.getData = (t?) => {
+        if (!t) { return data; }
+          else { return data[t]; }
+      };
     }
   }
 

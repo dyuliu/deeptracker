@@ -11,22 +11,13 @@ namespace application {
 
     constructor(
       public $scope: IScope,
-      DataManager: IDataManagerService,
-      Global: IGlobalService,
-      Pip: IPipService
+      public DataManager: IDataManagerService,
+      public Global: IGlobalService,
+      public Pip: IPipService
     ) {
 
-      /* tslint:disable */
       $scope.vlDiv = false;
       Pip.onVlDiv( $scope, e => { $scope.vlDiv = !$scope.vlDiv; });
-
-      $('#simple-colorpicker-1').ace_colorpicker({ pull_right: true }).on('change', function () {
-        let color_class = $(this).find('option:selected').data('class');
-        let new_class = 'widget-box';
-        if (color_class !== 'default') { new_class += ' widget-color-' + color_class; }
-        $(this).closest('.widget-box').attr('class', new_class);
-      });
-
 
       // scrollables
       $('.scrollable').each(function () {
@@ -180,7 +171,6 @@ namespace application {
         .mouseleave(function() {
           $('#widget-container-labelinfo-detail .widget-header').addClass('invisible');
         });
-      /* tslint:enable */
       $('#main-widget-container').mousemove( function (e) {
         let parentOffset = $(this).parent().offset();
         $('.vl-div').css('left', e.pageX - parentOffset.left);

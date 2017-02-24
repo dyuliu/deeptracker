@@ -2,5 +2,6 @@
 {
     "editor.rulers": [80],
     // "editor.wrappingColumn": 80,
-    "typescript.tsdk": "node_modules/typescript/lib"
-}
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "vsicons.presets.angular": false
+  }

@@ -13,36 +13,30 @@ namespace application {
   }
 
   class Controller {
-    public static $inject: string[] = ['$scope', 'DataManager', 'Global', '$q'];
+    public static $inject: string[] = [
+      '$scope', 'DataManager', 'Global', '$q', 'Pip'
+    ];
 
     constructor(
       public $scope: IScope,
-      DataManager: IDataManagerService,
-      Global: IGlobalService,
-      public $q: ng.IQService
+      public DataManager: IDataManagerService,
+      public Global: IGlobalService,
+      public $q: ng.IQService,
+      public Pip: IPipService
     ) {
       let this_ = this;
 
-      $scope.$watch(function () {
-        return Global.getInfo('cls');
-      }, (n, o) => {
-        if (!n) { return; }
-        // $scope.selectedCls = _.sampleSize(n, 1000);
-        // $scope.selectedCls = n;
+      Pip.onModelChanged($scope, (msg) => {
+        console.log('act label fetch cls_stat');
+        act();
+      });
+
+      function act() {
         $scope.optionsHeatLine = this_._setOptions('heatline');
         $scope.optionsDetail = this_._setOptions('pixelChartWithLine');
 
-        let optTestError: IHTTPOptionConfig = {
-          db: Global.getSelectedDB(),
-          type: 'test_error',
-          parser: 'json'
-        };
-        let optStat: IHTTPOptionConfig = {
-          db: Global.getSelectedDB(),
-          type: 'model_stat',
-          seqidx: [49],
-          parser: 'json'
-        };
+        let bd = Global.getData();
+
         let optClsStat: IHTTPOptionConfig = {
           db: Global.getSelectedDB(),
           type: 'cls_stat',
@@ -51,21 +45,14 @@ namespace application {
           parser: 'json'
         };
 
-        $q.all([
-          DataManager.fetchRecord(optTestError),
-          DataManager.fetchImg(optStat, false),
-          DataManager.fetchImg(optClsStat, false)
-        ]).then(data => {
-          $scope.dataModel = {
-            heatmapData: data[0],
-            linechartData: _.map(data[1], (d: any) => {
-              return { iter: d.iter, value: d.abLeft };
-            }),
-            max: d4.max(data[1], (d: any) => d.abLeft)
-          };
-
+        $scope.dataModel = {
+          heatmapData: bd.record.testError,
+          linechartData: bd.label.modelStat,
+          max: d4.max(bd.label.modelStat, (d: any) => d.value)
+        };
+        DataManager.fetchImg(optClsStat, false).then(data => {
           $scope.optionsCls = {};
-          $scope.dataCls = this_._processData('cls_heatline', data[2], $scope.dataModel.max);
+          $scope.dataCls = this_._processData('cls_heatline', data, $scope.dataModel.max);
           let kk = [];
           _.each($scope.dataCls, (d: any, k) => {
             $scope.optionsCls[k] = this_._setOptions('heatline');
@@ -77,8 +64,6 @@ namespace application {
           kk = _.map(kk, d => { return { name: d.key }; });
           kk = _.reverse(kk);
           $scope.selectedCls = kk;
-          console.log($scope.dataCls);
-          // valid
 
           // $scope.dataClsDetail = this_._processData('cls_pchartwithline');
           // $scope.dataCls = {
@@ -86,7 +71,7 @@ namespace application {
           //     return {iter: d.iter, value: d.testError};
           //   }),
           //   abnormal: _.map(data[2], (d: any) => {
-          //     return {iter: d.iter, value: d.abLeft};
+          //     return {iter: d.iter, value: d.value};
           //   }),
           //   max: $scope.dataModel.max
           // };
@@ -123,7 +108,8 @@ namespace application {
           //   lineChart: $scope.dataCls.testError
           // };
         });
-      });
+      }
+
 
 
       // function computeDist(veca, vecb) {
@@ -164,8 +150,8 @@ namespace application {
               result[d.cls] = { heatmapData: [], linechartData: [], max, pmax: -1 };
             }
             result[d.cls].heatmapData.push({ iter: d.iter, value: d.testError });
-            result[d.cls].linechartData.push({ iter: d.iter, value: d.abLeft });
-            result[d.cls].pmax = result[d.cls].pmax < d.abLeft ? d.abLeft : result[d.cls].pmax;
+            result[d.cls].linechartData.push({ iter: d.iter, value: d.value });
+            result[d.cls].pmax = result[d.cls].pmax < d.value ? d.value : result[d.cls].pmax;
           }
           _.each(result, (d: any) => {
             d.heatmapData = _.sortBy(d.heatmapData, ['iter']);
