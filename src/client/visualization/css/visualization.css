@@ -20,7 +20,12 @@
   z-index: 100;
 }
 .timebox {
+  margin-top: 10px;
   width: 757px;
+}
+.time-input {
+  width: 95% !important;
+  margin: auto;
 }
 .layerbox {
   margin-top: -1px;

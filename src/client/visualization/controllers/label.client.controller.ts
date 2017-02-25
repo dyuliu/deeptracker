@@ -26,6 +26,9 @@ namespace application {
     ) {
       let this_ = this;
 
+      Pip.onTimeChanged($scope, (iter) => {
+        console.log('select iter: ', iter);
+      });
       Pip.onModelChanged($scope, (msg) => {
         console.log('act label fetch cls_stat');
         act();

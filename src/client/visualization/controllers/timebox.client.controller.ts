@@ -3,18 +3,34 @@
 namespace application {
 
   interface IScope extends ng.IScope {
-    test: any;
+    iter: any;
   }
 
   class Controller {
-    public static $inject: string[] = ['$scope', 'DataManager', 'Global', '$q'];
+    public static $inject: string[] = ['$scope', 'Pip', 'Global', '$q'];
 
     constructor(
       public $scope: IScope,
-      DataManager: IDataManagerService,
+      public Pip: IPipService,
       public Global: IGlobalService,
       $q: ng.IQService
     ) {
+      let this_ = this;
+
+      this_._init();
+      $scope.iter = 0;
+      Pip.onModelChanged($scope, (msg) => {
+        $('#timebox').slider({max: Global.getData('iterNum') - 1});
+      });
+
+      $scope.$watch('iter', (n: any, o) => {
+        $('#timebox').slider({value: n});
+        Pip.emitTimeChanged(n);
+      });
+
+    }
+
+    private _init() {
       let this_ = this;
       $('#widget-container-timebox')
         .mouseenter(function () {
@@ -23,11 +39,12 @@ namespace application {
         .mouseleave(function () {
           $('#widget-container-timebox .widget-header').addClass('invisible');
         });
+
       $('#timebox')
         .slider({
           orientation: 'horizontal',
           min: 0,
-          max: 756,
+          max: 1,
           value: 0,
           slide: function (event, ui: any) {
             let val = ui.value;
@@ -36,6 +53,9 @@ namespace application {
                 .prependTo(ui.handle);
             }
             $(ui.handle.firstChild).show().children().eq(1).text(val);
+            this_.$scope.$apply(function(){
+              this_.$scope.iter = val;
+            });
           }
         })
         .find('span.ui-slider-handle').on('blur', function () {
