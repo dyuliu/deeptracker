@@ -75,3 +75,7 @@
   -webkit-transition-timing-function: ease;
           transition-timing-function: ease;
 }
+.overlay {
+  fill: none;
+  pointer-events: all;
+}

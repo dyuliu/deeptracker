@@ -1,7 +1,7 @@
 namespace application {
   'use strict';
 
-  interface IDTypeEle extends Array<{ iter: number, value: number }> {};
+  interface IDTypeEle extends Array<{ iter: number, value: number }> { };
 
   export interface IImgDataEle {
     key: string;  // img file name
@@ -14,6 +14,7 @@ namespace application {
 
   class Painter {
     private svg: d4.Selection<any, any, any, any>;
+    private rect: d4.Selection<any, any, any, any>;
     private canvas: d4.Selection<any, any, any, any>;
     private width: number;
     private height: number;
@@ -45,8 +46,14 @@ namespace application {
         .style('left', 0)
         .style('top', 0)
         .style('width', options.width ? options.width + 'px' : '100%')
-        .style('height', options.height ? options.height + 'px' : '80px')
-        .append('g')
+        .style('height', options.height ? options.height + 'px' : '80px');
+
+      this.rect = this.svg
+        .attr('class', 'overlay')
+        .attr('width', ele.width() - options.margin.left - options.margin.right)
+        .attr('height', ele.height() - options.margin.top - options.margin.bottom);
+
+      this.svg = this.svg.append('g')
         .attr('transform', 'translate(' +
         options.margin.left + ',' +
         options.margin.top + ')'
@@ -111,6 +118,25 @@ namespace application {
         .attr('stroke-linecap', 'round')
         .attr('stroke-width', 1)
         .attr('d', line);
+
+      // add hover line
+      // let focus = this_.svg.append('g')
+      //   .attr('class', 'focus')
+      //   .style('display', 'none');
+      // focus.append('circle')
+      //   .attr('r', 2)
+      //   .attr('fill', 'steelblue');
+      // focus.append('text')
+      //   .attr('x', 9)
+      //   .attr('dy', '.35em');
+
+      // this_.rect
+      //   .on('mouseover', function () { focus.style('display', null); })
+      //   .on('mouseout', function () { focus.style('display', 'none'); })
+      //   .on('mousemove', mousemove);
+      // function mousemove() {
+      //   console.log(d3.mouse(this));
+      // }
     }
   }
 

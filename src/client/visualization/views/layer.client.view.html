@@ -13,7 +13,18 @@
 
     <div class="row">
       <div class="col-xs-1 col-sm-1">
-        node graph
+        <div ng-repeat-start="(key, value) in kData" ng-repeat-end>
+          <h4> {{key}} </h4>
+          <p ng-repeat-start="v in value" style="margin-left: 10px" ng-repeat-end>
+            {{v[0] + ':' + v[1] + ' , '}}
+            {{v[2]/v[1] | number : 5}}
+          </p>
+        </div>
+        <!--<div ng-repeat-start="(key, value) in kData" ng-repeat-end>
+          <p>{{key}}</p>
+          <p ng-repeat-start="v in value">{{v[0] + ' : ' + v[1]}}</p>
+        </div>-->
+
       </div>
 
       <div class="col-xs-11 col-sm-11">
@@ -28,9 +39,9 @@
             </div>
 
             <div ng-if="!opened[la.name] || !la.nodes" class="col-xs-10 col-sm-10">
-              <!--<nvd3 options="options[la.name]" data="data[la.name]"></nvd3>-->
+              <nvd3 options="options[la.name]" data="data[la.name]"></nvd3>
               <!--<div pchartwithline options="options[la.name]" data="data[la.name]"></div>-->
-              <div crchart options="options[la.name]" data="data[la.name]"></div>
+              <!--<div crchart options="options[la.name]" data="data[la.name]"></div>-->
             </div>
           </div>
 
@@ -43,9 +54,9 @@
                 </span>
               </div>
               <div ng-if="!opened[lan.name] || !lan.nodes" class="col-xs-10 col-sm-10 counter-level2">
-                <!--<nvd3 options="options[lan.name]" data="data[lan.name]"></nvd3>-->
+                <nvd3 options="options[lan.name]" data="data[lan.name]"></nvd3>
                 <!--<div pchartwithline options="options[lan.name]" data="data[lan.name]"></div>-->
-                <div crchart options="options[lan.name]" data="data[lan.name]"></div>
+                <!--<div crchart options="options[lan.name]" data="data[lan.name]"></div>-->
               </div>
             </div>
 
@@ -58,9 +69,9 @@
                   </span>
                 </div>
                 <div ng-if="!opened[lann.name] || !lann.nodes" class="col-xs-10 col-sm-10 counter-level3">
-                  <!--<nvd3 options="options" data="data[lann.name]"></nvd3>-->
+                  <nvd3 options="options[lann.name]" data="data[lann.name]"></nvd3>
                   <!--<div pchartwithline options="options[lann.name]" data="data[lann.name]"></div>-->
-                  <div crchart options="options[lann.name]" data="data[lann.name]"></div>
+                  <!--<div crchart options="options[lann.name]" data="data[lann.name]"></div>-->
                 </div>
               </div>
             </div>

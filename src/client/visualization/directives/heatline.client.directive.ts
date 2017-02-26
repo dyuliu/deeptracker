@@ -1,7 +1,7 @@
 namespace application {
   'use strict';
 
-  interface IDTypeEle extends Array<{ iter: number, value: number }> {};
+  interface IDTypeEle extends Array<{ iter: number, value: number }> { };
   export interface IDTypeHeatline {
     heatmapData: IDTypeEle;
     linechartData: IDTypeEle;
@@ -16,6 +16,7 @@ namespace application {
   class Painter {
     private svg: d4.Selection<any, any, any, any>;
     private canvas: d4.Selection<any, any, any, any>;
+    private rect: d4.Selection<any, any, any, any>;
     private width: number;
     private height: number;
     private offsetWidth: number;
@@ -40,17 +41,23 @@ namespace application {
         .attr('height', options.height ? options.height + 'px' : '80px');
 
       // initialize svg configuration
-      this.svg = container
+      this.svg = d4.select(ele[0])
         .append('svg')
         .style('position', 'absolute')
         .style('left', 0)
         .style('top', 0)
         .style('width', options.width ? options.width + 'px' : '100%')
-        .style('height', options.height ? options.height + 'px' : '80px')
-        .append('g')
+        .style('height', options.height ? options.height + 'px' : '80px');
+
+      this.rect = this.svg
+        .attr('class', 'overlay')
+        .attr('width', ele.width() - options.margin.left - options.margin.right)
+        .attr('height', ele.height() - options.margin.top - options.margin.bottom);
+
+      this.svg = this.svg.append('g')
         .attr('transform', 'translate(' +
-          options.margin.left + ',' +
-          options.margin.top + ')'
+        options.margin.left + ',' +
+        options.margin.top + ')'
         );
 
       // init env variables
@@ -90,7 +97,7 @@ namespace application {
         .domain([0, d4.max(data, d => d.value)])
         // .domain([0, max])
         .rangeRound([this_.height, 0]);
-        // .rangeRound([996, 0]);
+      // .rangeRound([996, 0]);
       let lineData = _.map(data, (d, i) => [+i, y(d.value)]);
       let line = d4.line()
         .x(function (d) { return d[0]; })
@@ -106,6 +113,27 @@ namespace application {
         .attr('stroke-linecap', 'round')
         .attr('stroke-width', 1)
         .attr('d', line);
+
+      let focus = this_.svg.append('g')
+        .attr('class', 'focus')
+        .style('display', 'none');
+      focus.append('circle')
+        .attr('r', 2)
+        .attr('fill', 'steelblue');
+      focus.append('text')
+        .attr('x', 9)
+        .attr('dy', '.35em');
+
+      this_.rect
+        .on('mouseover', function () { focus.style('display', null); })
+        .on('mouseout', function () { focus.style('display', 'none'); })
+        .on('mousemove', mousemove);
+      function mousemove() {
+        let iter = Math.trunc(d4.mouse(this)[0]);
+        focus.attr('transform', 'translate(' + iter + ',' + lineData[iter][1] + ')');
+        focus.select('text').text('iter.toString()');
+        console.log(iter);
+      }
     }
 
   }

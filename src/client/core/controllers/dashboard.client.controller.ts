@@ -77,6 +77,17 @@ namespace application {
       this_.$scope.$watch('selected.imgDataset', (n: any, o) => {
         if (!n) { return; }
         this_.$scope.models = this_.Global.getModels()[n];
+        if (n === 'imagenet') {
+          this_.DataManager.loadJson('/json/imagenet-tree.json').then(data => {
+            data = data.data;
+            this_.Global.setData('tree', data);
+          });
+        } else if (n === 'cifar') {
+          this_.DataManager.loadJson('/json/cifar-tree.json').then(data => {
+            data = data.data;
+            this_.Global.setData('tree', data);
+          });
+        }
       });
 
       this_.$scope.$watch('selected.model', (n: any, o) => {
@@ -94,10 +105,12 @@ namespace application {
           trainLoss: this_.DataManager.fetchRecord({ db, type: 'train_loss', parser }),
           labelStat: this_.DataManager.fetchImg({ db, type: 'model_stat', seqidx: [49], parser }, false)
         }).then((data: any) => {
-          let iterSet = new Set();
-          for (let i = 0; i < data.labelStat.length; i += 1) { iterSet.add(data.labelStat[i].iter); }
-          this_.Global.setData('iterSet', iterSet);
-          this_.Global.setData('iterNum', iterSet.size);
+          let iterSet = new Set(), iterArray = [];
+          for (let i = 0; i < data.labelStat.length; i += 1) {
+            iterSet.add(data.labelStat[i].iter);
+            iterArray.push(data.labelStat[i].iter);
+          }
+          this_.Global.setData('iter', {num: iterSet.size, set: iterSet, array: iterArray});
           this_.Global.setData('record', {
             lr: myFilter(data.lr, iterSet),
             testError: _.filter(data.testError, (d: any) => iterSet.has(d.iter)),
@@ -114,7 +127,6 @@ namespace application {
             clsStat: null
           });
           this_.Pip.emitModelChanged(null);
-          console.log(this_.Global.getData());
         }).catch(reason => {
           console.log(reason);
         });

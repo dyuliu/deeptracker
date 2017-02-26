@@ -5,6 +5,7 @@ namespace application {
   interface IScope extends ng.IScope {
     options: {};
     data: {};
+    kData: {};
     dataTree: any[];
     opened: {};
     open: any;    // func to open hl layer
@@ -12,7 +13,7 @@ namespace application {
 
   class Controller {
     public static $inject: string[] = [
-      '$scope', 'DataManager', 'Global', '$q', '$http'
+      '$scope', 'DataManager', 'Global', '$q', '$http', 'Pip'
     ];
 
     constructor(
@@ -20,50 +21,74 @@ namespace application {
       DataManager: IDataManagerService,
       public Global: IGlobalService,
       $q: ng.IQService,
-      $http: ng.IHttpService
+      $http: ng.IHttpService,
+      Pip: IPipService
     ) {
 
       let this_ = this;
-      let layers, hlLayers = [], selectedLayers;
+      let layers, hlLayers = [], allLayers;
 
-      $q.all([
-        DataManager.fetchInfo({ db: Global.getSelectedDB(), type: 'layer' }),
-        $http.get('/json/tree.json')
-      ]).then((data: any) => {
-        selectedLayers = _.map(data[0], (d: any) => d.lid);
-        layers = _.keyBy(data[0], (o: any) => o.name); // turn array to object with key layername
-        data[1] = data[1].data;
+      // $scope.kData = [1, 2, 3, 4, 5];
+      $scope.kData = { 'a': 1, 'b': 2, 'c': 3 };
+
+      Pip.onTimeChanged($scope, (iter) => {
+        console.log('select iter: ', iter);
+        // print kernel with maximum change
+        // let typeArray = ['euclidean', 'manhattan', 'cosine', 'norm1', 'nomr2'];
+        let typeArray = ['cosine', 'norm1', 'nomr2'];
+        let allQuery = {}, parser = 'json';
+        for (let type of typeArray) {
+          allQuery[type] = DataManager.fetchKernel({
+            db: Global.getSelectedDB(), type: 'i_' + type, iter, parser
+          }, false);
+        }
+        $q.all(allQuery).then(data => {
+          console.log('kernel data', data);
+          $scope.kData = data;
+        });
+      });
+      Pip.onModelChanged($scope, (msg) => {
+        let globalData = Global.getData();
+        let layerArray = globalData.info.layer,
+          tree = globalData.tree,
+          iterSet = globalData.iter.set;
+        allLayers = _.map(layerArray, (d: any) => d.lid);
+        layers = _.keyBy(layerArray, (o: any) => o.name); // turn array to object with key layername
         $scope.opened = {};
         $scope.options = {};
-        for (let d of data[1]) {
+
+        // init tree
+        for (let d of tree) {
           $scope.opened[d.name] = true;
-          $scope.options[d.name] = this_._setOptions('crChart');
+          $scope.options[d.name] = this_._setOptions('sparklinePlus');
           if (d.nodes) {
             hlLayers.push(d.name);
             $scope.opened[d.name] = false;
             for (let dn of d.nodes) {
               dn.parent = d.name;
               $scope.opened[dn.name] = false;
-              $scope.options[dn.name] = this_._setOptions('crChart');
+              $scope.options[dn.name] = this_._setOptions('sparklinePlus');
               if (dn.nodes) {
                 hlLayers.push(dn.name);
                 for (let dnn of dn.nodes) {
                   dnn.parent = dn.name;
                   $scope.opened[dnn.name] = false;
-                  $scope.options[dnn.name] = this_._setOptions('crChart');
+                  $scope.options[dnn.name] = this_._setOptions('sparklinePlus');
                   // $scope.options[dnn.name].height = layers[dnn.name].kernelNum + 20;
                 };
               }
             }
           }
+
+
         }
-        $scope.dataTree = data[1];
+        $scope.dataTree = tree;
 
         /*--- kernel detail data ---*/
         // let opt: IHTTPOptionConfig = {
         //   db: Global.getSelectedDB(),
         //   type: 'w_norm1',
-        //   layer: selectedLayers.slice(0, 3),
+        //   layer: allLayers.slice(0, 3),
         //   parser: 'json'
         // };
         // DataManager
@@ -74,60 +99,63 @@ namespace application {
         //   });
 
         /*--- layer stat data ---*/
-        // let opt: IHTTPOptionConfig = {
-        //   db: Global.getSelectedDB(),
-        //   type: 'g_norm1',
-        //   // layer: selectedLayers,
-        //   parser: 'json'
-        // };
-
-        // let optHL: IHTTPOptionConfig = {
-        //   db: Global.getSelectedDB(),
-        //   type: 'hl_g_norm1',
-        //   // layer: selectedLayers,
-        //   parser: 'json'
-        // };
-
-        // $q.all([
-        //   DataManager.fetchLayer(opt, false),
-        //   DataManager.fetchLayer(optHL, false)
-        // ]).then(layerData => {
-        //   $scope.data = {};
-        //   _.merge(
-        //     $scope.data,
-        //     this_._processData('stat', layers, layerData[0])[0],
-        //     this_._processData('hl_stat', hlLayers, layerData[1])[0]
-        //   );
-        // });
-
-        /*--- layer stat data ---*/
         let opt: IHTTPOptionConfig = {
           db: Global.getSelectedDB(),
-          type: 's_cratio',
-          layer: selectedLayers,
-          seqidx: [10, 20, 30],
+          type: 'g_norm1',
+          // layer: allLayers,
           parser: 'json'
         };
 
         let optHL: IHTTPOptionConfig = {
           db: Global.getSelectedDB(),
-          type: 'hl_s_cratio',
-          seqidx: [10, 20, 30],
+          type: 'hl_g_norm1',
+          // layer: allLayers,
           parser: 'json'
         };
 
         $q.all([
           DataManager.fetchLayer(opt, false),
-          DataManager.fetchLayer(optHL, false),
+          DataManager.fetchLayer(optHL, false)
         ]).then(layerData => {
           $scope.data = {};
+          layerData[0] = _.filter(layerData[0], (d: any) => iterSet.has(d.iter));
+          layerData[1] = _.filter(layerData[1], (d: any) => iterSet.has(d.iter));
           _.merge(
             $scope.data,
-            this_._processData('seq', layers, layerData[0]),
-            this_._processData('hl_seq', hlLayers, layerData[1])
+            this_._processData('stat', layers, layerData[0])[0],
+            this_._processData('hl_stat', hlLayers, layerData[1])[0]
           );
           console.log($scope.data);
         });
+
+        /*--- layer stat data ---*/
+        // let opt: IHTTPOptionConfig = {
+        //   db: Global.getSelectedDB(),
+        //   type: 's_cratio',
+        //   layer: allLayers,
+        //   seqidx: [10, 20, 30],
+        //   parser: 'json'
+        // };
+
+        // let optHL: IHTTPOptionConfig = {
+        //   db: Global.getSelectedDB(),
+        //   type: 'hl_s_cratio',
+        //   seqidx: [10, 20, 30],
+        //   parser: 'json'
+        // };
+
+        // $q.all([
+        //   DataManager.fetchLayer(opt, false),
+        //   DataManager.fetchLayer(optHL, false),
+        // ]).then(layerData => {
+        //   $scope.data = {};
+        //   _.merge(
+        //     $scope.data,
+        //     this_._processData('seq', layers, layerData[0]),
+        //     this_._processData('hl_seq', hlLayers, layerData[1])
+        //   );
+        //   console.log($scope.data);
+        // });
 
       });
 
@@ -157,7 +185,7 @@ namespace application {
       let this_ = this;
       let result = {};
       let [layers, data] = [rest[0], rest[1]],
-          [min, max] = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER];
+        [min, max] = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER];
       switch (type) {
         case 'kernel':
           for (let d of data) {
@@ -195,12 +223,12 @@ namespace application {
         case 'seq':
           _.each(data, d => {
             let layer: any = _.find(layers, { lid: +d.key });
-            result[layer.name] = { iter: d.domain, value: d.values};
+            result[layer.name] = { iter: d.domain, value: d.values };
           });
           return result;
         case 'hl_seq':
           _.each(data, d => {
-            result[d.key] = { iter: d.domain, value: d.values};
+            result[d.key] = { iter: d.domain, value: d.values };
           });
           return result;
         default:

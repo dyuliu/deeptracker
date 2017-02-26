@@ -4,6 +4,7 @@ namespace application {
     db?: string;
     type?: string;
     range?: {start: number, end: number};
+    iter?: number;
     layer?: number[];
     seqidx?: number[];
     parser?: string;
@@ -11,8 +12,8 @@ namespace application {
   }
 
   export interface IHTTPOption {
-    api: string;
-    config: IHTTPOptionConfig;
+    api?: string;
+    config?: IHTTPOptionConfig;
     // responseType?: string;    // text, json, arraybuffer
     url?: string;
     method?: string;

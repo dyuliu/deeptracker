@@ -251,7 +251,12 @@ export let tables: ITables = {
     ['w_norm2', 'KernelCRNorm2'],
     ['w_std', 'KernelWeightStd'],
     ['g_norm1', 'KernelGradNorm1'],
-    ['g_norm2', 'KernelGradNorm2']
+    ['g_norm2', 'KernelGradNorm2'],
+    ['i_euclidean', 'KernelIvEuclidean'],
+    ['i_manhattan', 'KernelIvManhattan'],
+    ['i_cosine', 'KernelIvCosine'],
+    ['i_norm1', 'KernelIvCRNorm1'],
+    ['i_nomr2', 'KernelIvCRNorm2']
   ]),
   layer: new Map<string, string>([
     ['w_max', 'WeightStatMax'],

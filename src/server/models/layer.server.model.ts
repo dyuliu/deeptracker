@@ -107,7 +107,7 @@ function postProcess(data: any[], options: IOption): any[] {
   let m = new Map();
   let r = [];
 
-  if (options.type === 's_cratio' || 'hl_cratio') {
+  if (options.type === 's_cratio' || options.type === 'hl_cratio') {
     _.each(data, d => {
       _.each(d.value, (v, lid) => {
         let fv = [];

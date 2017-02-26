@@ -18,14 +18,15 @@ namespace application {
       let this_ = this;
 
       this_._init();
-      $scope.iter = 0;
+      $scope.iter = null;
       Pip.onModelChanged($scope, (msg) => {
-        $('#timebox').slider({max: Global.getData('iterNum') - 1});
+        $('#timebox').slider({max: Global.getData('iter').num - 1});
       });
 
       $scope.$watch('iter', (n: any, o) => {
+        if (!n) { return; }
         $('#timebox').slider({value: n});
-        Pip.emitTimeChanged(n);
+        Pip.emitTimeChanged(Global.getData('iter').array[n]);
       });
 
     }

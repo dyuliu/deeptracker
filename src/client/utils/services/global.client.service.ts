@@ -197,8 +197,12 @@ namespace application {
       let selectedDB = null;
 
       let data = {
-        iterNum: 0,
-        iterSet: null,
+        iter: {
+          num: 0,
+          set: null,
+          array: null
+        },
+        tree: null,
         info: {
           db: null,
           layer: null,
