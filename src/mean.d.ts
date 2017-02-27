@@ -2,7 +2,19 @@
 
 declare var d3: any;
 
+declare var ace: any;
+
 declare var BSON: any;
+
+declare var numeric: any;
+declare var LG: any;
+
+// extend jquery
+interface JQuery {
+    ace_scroll: any;
+    widget_box: any;
+}
+
 // Please define your own interface below for config
 declare namespace mean {
     interface IAssets {

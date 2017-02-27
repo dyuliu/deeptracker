@@ -28,13 +28,13 @@ namespace application {
     kernelHeight: number;
   }
 
-  export interface ILayerDataType extends Array<ILayerEle> {};
-  export interface IRecordDataType extends Array<IRecordEle> {}
-  export interface IInfoDBDataType extends Array<IInfoDBEle> {};
-  export interface IInfoLayerDataType extends Array<IInfoLayerEle> {};
+  export interface ILayerDataType extends Array<ILayerEle> { };
+  export interface IRecordDataType extends Array<IRecordEle> { }
+  export interface IInfoDBDataType extends Array<IInfoDBEle> { };
+  export interface IInfoLayerDataType extends Array<IInfoLayerEle> { };
 
 
-  interface IRecordTypeList extends Array<string> {}
+  interface IRecordTypeList extends Array<string> { }
   interface ILayerTypeList {
     weight: string[];
     gradient: string[];
@@ -51,57 +51,83 @@ namespace application {
   }
 
   export interface IGlobalService {
-    setRecordTypeList(d: IRecordTypeList): void;
-    getRecordTypeList(): IRecordTypeList;
-    setLayerTypeList(d: ILayerTypeList): void;
-    getLayerTypeList(): ILayerTypeList;
-    setKernelTypeList(d: IKernelTypeList): void;
-    getKernelTypeList(): IKernelTypeList;
-    setImgTypeList(d: IImgTypeList): void;
-    getImgTypeList(): IImgTypeList;
-    getImgDataset(): string[];
-    getModels(): any;
-    setSelectedDB(d: string): void;
-    getSelectedDB(): string;
-    setData(type: string, d: any): void;
+    setRecordTypeList(d: IRecordTypeList, type?: string): void;
+    setLayerTypeList(d: ILayerTypeList, type?: string): void;
+    setKernelTypeList(d: IKernelTypeList, type?: string): void;
+    setImgTypeList(d: IImgTypeList, type?: string): void;
+    setSelectedDB(d: string, type?: string): void;
+    setData(d: any, type?: string): void;
+    setConfig(d: any, type?: string): void;
+    getRecordTypeList(type?: string): IRecordTypeList;
+    getLayerTypeList(type?: string): ILayerTypeList;
+    getKernelTypeList(type?: string): IKernelTypeList;
+    getImgTypeList(type?: string): IImgTypeList;
+    getImgDBList(type?: string): string[];
+    getModelList(type?: string): any;
+    getSelectedDB(type?: string): string;
     getData(type?: string): any;
+    getConfig(type?: string): any;
   }
 
-  export class Global implements IGlobalService {
+  export class Global {
 
-    public setRecordTypeList: (d: IRecordTypeList) => void;
-    public getRecordTypeList: () => IRecordTypeList;
-    public setLayerTypeList: (d: ILayerTypeList) => void;
-    public getLayerTypeList: () => ILayerTypeList;
-    public setKernelTypeList: (d: IKernelTypeList) => void;
-    public getKernelTypeList: () => IKernelTypeList;
-    public setImgTypeList: (d: IImgTypeList) => void;
-    public getImgTypeList: () => IImgTypeList;
-    public getImgDataset: () => string[];
-    public getModels: () => any;
-    public setSelectedDB: (d: string) => void;
-    public getSelectedDB: () => string;
-    public setData: (t: string, d: any) => void;
-    public getData: (t?: string) => any;
+    public exports: any;
+    public all: any;
 
     public static factory() {
       let service = () => {
-        return new Global();
+        let tmp = new Global().exports;
+        return tmp;
       };
       service.$inject = [];
       return service;
     }
 
     constructor() {
-      let record = [
-        'lr',
-        'test_error',
-        'test_loss',
-        'train_error',
-        'train_loss'
+      // init variables
+      this._init();
+
+      // add public API
+      this._addAPI('recordTypeList');
+      this._addAPI('layerTypeList');
+      this._addAPI('kernelTypeList');
+      this._addAPI('imgTypeList');
+      this._addAPI('imgDBList');
+      this._addAPI('modelList');
+      this._addAPI('selectedDB');
+      this._addAPI('data');
+      this._addAPI('config');
+    }
+
+    private _addAPI(name: string) {
+      let this_ = this;
+      let setName = 'set' + name[0].toUpperCase() + name.slice(1);
+      let getName = 'get' + name[0].toUpperCase() + name.slice(1);
+      this_.exports[setName] = (d, t?) => {
+        if (!t) {
+          this_.all[name] = d;
+        } else {
+          this_.all[name][t] = d;
+        }
+      };
+      this_.exports[getName] = (t?) => {
+        return !t ? this_.all[name] : this_.all[name][t];
+      };
+    }
+
+    private _init() {
+      // initialize
+      this.exports = {};
+      this.all = {};
+      this.all.recordTypeList = [
+        {label: 'learning rate', value: 'lr'},
+        {label: 'validation error', value: 'testError'},
+        {label: 'validation loss', value: 'testLoss'},
+        {label: 'train error', value: 'trainError'},
+        {label: 'train loss', value: 'trainLoss'}
       ];
 
-      let layer = {
+      this.all.layerTypeList = {
         weight: [
           'w_max',
           'w_mean',
@@ -137,7 +163,7 @@ namespace application {
         ],
       };
 
-      let kernel = {
+      this.all.kernelTypeList = {
         weight: [],
         gradient: [],
         seq: [
@@ -146,8 +172,7 @@ namespace application {
         ]
       };
 
-      // to improve, it should be fetched from backend
-      let img = {
+      this.all.imgTypeList = {
         type: [
           'test',
           'train'
@@ -167,36 +192,36 @@ namespace application {
       };
 
       // global static var
-      let imgDataset = ['imagenet', 'cifar'];
+      this.all.imgDBList = ['imagenet', 'cifar'];
 
-      let models = {
+      this.all.modelList = {
         'imagenet': [
-          {label: 'resnet50-sgd-1P4G-1x', value: 'imagenet-1x-1'},
-          {label: 'resnet50-sgd-1P4G-1x-lr0.5', value: 'imagenet-1x-lr0.5'},
-          {label: 'resnet50-sgd-1P4G-1x-lr2', value: 'imagenet-1x-lr2'},
-          {label: 'resnet50-sgd-1P4G-1x-m0', value: 'imagenet-1x-m0'},
-          {label: 'resnet50-sgd-1P4G-2x', value: 'imagenet-2x-1'},
-          {label: 'resnet50-sgd-1P4G-2x-lr2', value: 'imagenet-2x-lr2'},
-          {label: 'resnet50-sgd-1P4G-8x', value: 'imagenet-8x-1'}
+          { label: 'resnet50-sgd-1P4G-1x', value: 'imagenet-1x-1' },
+          { label: 'resnet50-sgd-1P4G-1x-lr0.5', value: 'imagenet-1x-lr0.5' },
+          { label: 'resnet50-sgd-1P4G-1x-lr2', value: 'imagenet-1x-lr2' },
+          { label: 'resnet50-sgd-1P4G-1x-m0', value: 'imagenet-1x-m0' },
+          { label: 'resnet50-sgd-1P4G-2x', value: 'imagenet-2x-1' },
+          { label: 'resnet50-sgd-1P4G-2x-lr2', value: 'imagenet-2x-lr2' },
+          { label: 'resnet50-sgd-1P4G-8x', value: 'imagenet-8x-1' }
         ],
         'cifar': [
-          {label: 'resnet164-sgd-1P4G-1x-1', value: 'cifar-1x-1'},
-          {label: 'resnet164-sgd-1P4G-1x-2', value: 'cifar-1x-2'},
-          {label: 'resnet164-sgd-1P4G-1x-lr0.5', value: 'cifar-1x-lr0.5'},
-          {label: 'resnet164-sgd-1P4G-1x-lr2', value: 'cifar-1x-lr2'},
-          {label: 'resnet164-sgd-1P4G-1x-m0', value: 'cifar-1x-m0'},
-          {label: 'resnet164-sgd-1P4G-2x-1', value: 'cifar-2x-1'},
-          {label: 'resnet164-sgd-1P4G-2x-lr0.5', value: 'cifar-2x-lr0.5'},
-          {label: 'resnet164-sgd-1P4G-2x-lr2', value: 'cifar-2x-lr2'},
-          {label: 'resnet164-sgd-1P4G-4x', value: 'cifar-4x-1'},
-          {label: 'resnet164-sgd-1P4G-8x', value: 'cifar-8x-1'}
+          { label: 'resnet164-sgd-1P4G-1x-1', value: 'cifar-1x-1' },
+          { label: 'resnet164-sgd-1P4G-1x-2', value: 'cifar-1x-2' },
+          { label: 'resnet164-sgd-1P4G-1x-lr0.5', value: 'cifar-1x-lr0.5' },
+          { label: 'resnet164-sgd-1P4G-1x-lr2', value: 'cifar-1x-lr2' },
+          { label: 'resnet164-sgd-1P4G-1x-m0', value: 'cifar-1x-m0' },
+          { label: 'resnet164-sgd-1P4G-2x-1', value: 'cifar-2x-1' },
+          { label: 'resnet164-sgd-1P4G-2x-lr0.5', value: 'cifar-2x-lr0.5' },
+          { label: 'resnet164-sgd-1P4G-2x-lr2', value: 'cifar-2x-lr2' },
+          { label: 'resnet164-sgd-1P4G-4x', value: 'cifar-4x-1' },
+          { label: 'resnet164-sgd-1P4G-8x', value: 'cifar-8x-1' }
         ]
       };
 
       // global dynamic var
-      let selectedDB = null;
+      this.all.selectedDB = null;
 
-      let data = {
+      this.all.data = {
         iter: {
           num: 0,
           set: null,
@@ -221,27 +246,30 @@ namespace application {
         }
       };
 
-      this.setRecordTypeList = (d) => { record = d; };
-      this.getRecordTypeList = () => record;
-      this.setLayerTypeList = (d) => { layer = d; };
-      this.getLayerTypeList = () => layer;
-      this.setKernelTypeList = (d) => { kernel = d; };
-      this.getKernelTypeList = () => kernel;
-      this.setImgTypeList = (d) => { img = d; };
-      this.getImgTypeList = () => img;
-
-      this.getImgDataset = () => imgDataset;
-      this.getModels = () => models;
-
-      // api for global dynamic var
-      this.setSelectedDB = (d) => { selectedDB = d; };
-      this.getSelectedDB = () => selectedDB;
-      this.setData = (t, d) => { data[t] = d; };
-      this.getData = (t?) => {
-        if (!t) { return data; }
-          else { return data[t]; }
+      this.all.config = {
+        record: {
+          lr: false,
+          testError: true,
+          testLoss: false,
+          trainError: true,
+          trainLoss: false,
+          show: false
+        },
+        label: {
+          mds: false,
+          show: false,
+          threshold: 0,
+          abnormal: 50
+        },
+        layer: {
+          type: null,
+          show: false,
+          sameScale: true,
+          level: 0
+        }
       };
     }
+
   }
 
   angular

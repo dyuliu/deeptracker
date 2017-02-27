@@ -2,18 +2,18 @@ namespace application {
   'use strict';
 
   export interface IPipService {
-    emitHeatmapDataLoaded(msg: any): void;
     emitUrlChanged(msg: any): void;
-    emitRender(msg: any): void;
     emitVlDiv(msg: any): void;
     emitModelChanged(msg: any): void;
     emitTimeChanged(msg: any): void;
-    onHeatmapDataLoaded(scope: ng.IScope, cb: (msg: any) => void): void;
+    emitRecordConfigChanged(msg: any): void;
+    emitLabelConfigChanged(msg: any): void;
     onUrlChanged(scope: ng.IScope, cb: (msg: any) => void): void;
-    onRender(scope: ng.IScope, cb: (msg: any) => void): void;
     onVlDiv(scope: ng.IScope, cb: (msg: any) => void): void;
     onModelChanged(scope: ng.IScope, cb: (msg: any) => void): void;
     onTimeChanged(scope: ng.IScope, cb: (msg: any) => void): void;
+    onRecordConfigChanged(scope: ng.IScope, cb: (msg: any) => void): void;
+    onLabelConfigChanged(scope: ng.IScope, cb: (msg: any) => void): void;
   }
 
   export class Pip {
@@ -53,12 +53,12 @@ namespace application {
       };
 
       // adding events one by one
-      this.addEvent('heatmapDataLoaded');
       this.addEvent('urlChanged');
-      this.addEvent('render');
       this.addEvent('vlDiv');
       this.addEvent('modelChanged');
       this.addEvent('timeChanged');
+      this.addEvent('recordConfigChanged');
+      this.addEvent('labelConfigChanged');
     }
   }
 

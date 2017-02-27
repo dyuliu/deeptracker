@@ -4,6 +4,7 @@ namespace application {
 
   interface IScope extends ng.IScope {
     vlDiv: boolean;
+    config: any;
   }
 
   class Controller {
@@ -19,72 +20,14 @@ namespace application {
       $scope.vlDiv = false;
       Pip.onVlDiv( $scope, e => { $scope.vlDiv = !$scope.vlDiv; });
 
-      // scrollables
-      $('.scrollable').each(function () {
-        let $this = $(this);
-        $(this).ace_scroll({
-          size: $this.attr('data-size') || 100,
-        });
-      });
-      $('.scrollable-horizontal').each(function () {
-        let $this = $(this);
-        $(this).ace_scroll(
-          {
-            horizontal: true,
-            styleClass: 'scroll-top',
-            size: $this.attr('data-size') || 500,
-            mouseWheelLock: true
-          }
-        ).css({ 'padding-top': 12 });
+      $scope.config = Global.getConfig();
+      Pip.onRecordConfigChanged($scope, (conf: any) => {
+        $scope.config.record = conf;
       });
 
-      $(window).on('resize.scroll_reset', function () {
-        $('.scrollable-horizontal').ace_scroll('reset');
+      Pip.onLabelConfigChanged($scope, (conf: any) => {
+        $scope.config.label = conf;
       });
-
-
-      $('#id-checkbox-vertical').prop('checked', false).on('click', function () {
-        $('#widget-toolbox-1').toggleClass('toolbox-vertical')
-          .find('.btn-group').toggleClass('btn-group-vertical')
-          .filter(':first').toggleClass('hidden')
-          .parent().toggleClass('btn-toolbar');
-      });
-
-
-      // widget boxes
-      // widget box drag & drop example
-      // $('.widget-container-col').sortable({
-      //   connectWith: '.widget-container-col',
-      //   items: '> .widget-box',
-      //   handle: ace.vars.touch ? '.widget-title' : false,
-      //   cancel: '.fullscreen',
-      //   opacity: 0.8,
-      //   revert: true,
-      //   forceHelperSize: true,
-      //   placeholder: 'widget-placeholder',
-      //   forcePlaceholderSize: true,
-      //   tolerance: 'pointer',
-      //   start: function (event, ui) {
-      //     ui.item.parent().css({ 'min-height': ui.item.height() });
-      //   },
-      //   update: function (event, ui) {
-      //     ui.item.parent({ 'min-height': '' });
-      //     let widget_order = {};
-      //     $('.widget-container-col').each(function () {
-      //       let container_id = $(this).attr('id');
-      //       widget_order[container_id] = [];
-
-
-      //       $(this).find('> .widget-box').each(function () {
-      //         let widget_id = $(this).attr('id');
-      //         widget_order[container_id].push(widget_id);
-      //       });
-      //     });
-
-      //     ace.data.set('demo', 'widget-order', widget_order, null, true);
-      //   }
-      // });
-
 
       $(document).on('shown.ace.widget hidden.ace.widget closed.ace.widget', '.widget-box', function (event) {
         let widgets = ace.data.get('demo', 'widget-state', true);

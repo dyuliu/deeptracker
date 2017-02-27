@@ -72,12 +72,10 @@
 
       <div class="space-6"></div>
 
-      <div style="margin-left: 5px">
+      <!--<div style="margin-left: 5px">
         <label class="control-label bolder blue">Time Slider</label> (epoch)
         <div id="timerange" class="timerange"></div>
-      </div>
-
-      <hr/>
+      </div>-->
 
       <div style="margin-left: 5px">
         <div class="row">
@@ -91,76 +89,84 @@
             </label>
           </div>
         </div>
-
-        <div class="checkbox">
+        <div ng-repeat-start="type in recordTypeList" class="checkbox" ng-repeat-end="">
           <label>
-            <input ng-model="config.record.lr" name="form-field-checkbox" type="checkbox" class="ace" />
-            <span class="lbl"> global lr</span>
-            </label>
-        </div>
-
-        <div class="checkbox">
-          <label>
-            <input ng-model="config.record.testError" name="form-field-checkbox" type="checkbox" class="ace" />
-            <span class="lbl"> test error</span>
+            <input ng-model="config.record[type.value]" name="form-field-checkbox" type="checkbox" class="ace" />
+            <span class="lbl"> {{type.label}}</span>
           </label>
         </div>
-
-        <div class="checkbox">
-          <label>
-            <input ng-model="config.record.trainError" name="form-field-checkbox" type="checkbox" class="ace" />
-            <span class="lbl"> train error</span>
-          </label>
-        </div>
-
-        <div class="checkbox">
-          <label>
-            <input ng-model="config.record.testLoss" name="form-field-checkbox" class="ace ace-checkbox-2" type="checkbox" />
-            <span class="lbl"> test loss</span>
-          </label>
-        </div>
-
-        <div class="checkbox">
-          <label>
-            <input ng-model="config.record.trainLoss" name="form-field-checkbox" class="ace ace-checkbox-2" type="checkbox" />
-            <span class="lbl"> train loss</span>
-          </label>
-        </div>
-
-        <label>
-          <input ng-model="config.record.merge" name="switch-field-1" class="ace ace-switch ace-switch-2" type="checkbox" />
-          <span class="lbl">merge?</span>
-        </label>
-
-        <label>
-          <input ng-model="config.record.lrMark" name="switch-field-1" class="ace ace-switch ace-switch-2" type="checkbox" />
-          <span class="lbl">lr marks?</span>
-        </label>
       </div>
-
+      <!-- end of record panel -->
       <hr/>
 
       <div style="margin-left: 5px">
         <div class="row">
           <div class="col-xs-6">
-            <label class="control-label bolder blue">Labal Info</label>
+            <label class="control-label bolder blue">Label Info</label>
           </div>
           <div class="col-xs-6">
             <label>
-              <input ng-model="config.labelInfo.show" name="switch-field-1" class="ace ace-switch" type="checkbox" />
+              <input ng-model="config.label.show" name="switch-field-1" class="ace ace-switch" type="checkbox" />
               <span class="lbl">&nbsp;</span>
             </label>
           </div>
         </div>
+        <div class="space-4"></div>
+        <div class="ace-spinner middle" style="width: 100%">
+          <div class="col-xs-4">
+            <label style="margin-top: 10px">abnormal:</label>
+          </div>
+          <div class="col-xs-8">
+            <div class="input-group">
+              <input ng-model="config.label.abnormal" type="text" class="spinbox-input form-control text-center">
+              <div class="spinbox-buttons input-group-btn btn-group-vertical">
+                <button ng-click="spinnerChange(1, 'abnormal')" type="button" class="btn spinbox-up btn-sm btn-info">
+                <i class="ace-icon fa fa-chevron-up"></i>
+              </button>
+                <button ng-click="spinnerChange(-1, 'abnormal')" type="button" class="btn spinbox-down btn-sm btn-info">
+                <i class="ace-icon fa fa-chevron-down"></i>
+              </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <div class="space-4"></div>
+
+        <div class="ace-spinner middle" style="width: 100%">
+        <div class="col-xs-4">
+            <label style="margin-top: 10px">threshold:</label>
+          </div>
+          <div class="col-xs-8">
+            <div class="input-group">
+              <input ng-model="config.label.threshold" type="text" class="spinbox-input form-control text-center">
+              <div class="spinbox-buttons input-group-btn btn-group-vertical">
+                <button ng-click="spinnerChange(1, 'threshold')" type="button" class="btn spinbox-up btn-sm btn-info">
+                <i class="ace-icon fa fa-chevron-up"></i>
+              </button>
+                <button ng-click="spinnerChange(-1, 'threshold')" type="button" class="btn spinbox-down btn-sm btn-info">
+                <i class="ace-icon fa fa-chevron-down"></i>
+              </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="space-4"></div>
         <div class="checkbox">
           <label>
-            <input name="form-field-checkbox" type="checkbox" class="ace" />
-            <span class="lbl"> choice</span>
+            <input ng-model="config.label.mds" name="form-field-checkbox" type="checkbox" class="ace" />
+            <span class="lbl"> mds layout </span>
           </label>
         </div>
-      </div>
+        <div class="space-4"></div>
 
+        <div>
+          <button class="btn btn-success" style="margin-left: 10px" ng-click="labelRender()">Go</button>
+          <i id="label-data-loading" class="ace-icon fa fa-spinner fa-spin orange bigger-125 invisible"></i>
+        </div>
+
+      </div>
+      <!-- end of label panel -->
       <hr/>
 
       <div style="margin-left: 5px">
@@ -243,29 +249,6 @@
         </label>
 
         <div class="space-6"></div>
-
-        <div>
-          <h5>Search:</h5><input type="search" class="input-sm" placeholder="interstellar2a_branch1">
-        </div>
-
-        <div class="ace-spinner middle" style="width: 90%">
-          <div class="col-xs-3">
-            <h5>Level:</h5>
-          </div>
-          <div class="col-xs-9">
-            <div class="input-group">
-              <input ng-model="config.layerInfo.level" type="text" id="levelSpin" class="spinbox-input form-control text-center">
-              <div class="spinbox-buttons input-group-btn btn-group-vertical">
-                <button ng-click="levelChange(1)" type="button" class="btn spinbox-up btn-sm btn-info">
-                <i class="ace-icon fa fa-chevron-up"></i>
-              </button>
-                <button ng-click="levelChange(-1)" type="button" class="btn spinbox-down btn-sm btn-info">
-                <i class="ace-icon fa fa-chevron-down"></i>
-              </button>
-              </div>
-            </div>
-          </div>
-        </div>
 
       </div>
 

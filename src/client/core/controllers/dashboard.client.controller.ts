@@ -8,7 +8,9 @@ namespace application {
     checkbox: any;
     config: any;
     timeSlider: any;
-    levelChange: any;
+    spinnerChange: any;
+    labelRender: any;
+    recordTypeList: any;
     click: any; // emit event
   }
 
@@ -37,6 +39,13 @@ namespace application {
       this._setDBPanel();
       this._setVisPanel();
 
+      $scope.$watch('config.record', (n: any, o) => {
+        Pip.emitRecordConfigChanged(n);
+      }, true);
+
+      // $scope.$watch('config.label', (n: any, o) => {
+      //   Pip.emitLabelConfigChanged(n);
+      // }, true);
     }
 
     private _setBtnEvent() {
@@ -65,7 +74,7 @@ namespace application {
 
     private _setDBPanel() {
       let this_ = this;
-      this_.$scope.imgDataset = this_.Global.getImgDataset();
+      this_.$scope.imgDataset = this_.Global.getImgDBList();
       this_.$scope.models = [];
       this_.$scope.selected = {
         imgDataset: 'imagenet',
@@ -76,16 +85,16 @@ namespace application {
 
       this_.$scope.$watch('selected.imgDataset', (n: any, o) => {
         if (!n) { return; }
-        this_.$scope.models = this_.Global.getModels()[n];
+        this_.$scope.models = this_.Global.getModelList()[n];
         if (n === 'imagenet') {
           this_.DataManager.loadJson('/json/imagenet-tree.json').then(data => {
             data = data.data;
-            this_.Global.setData('tree', data);
+            this_.Global.setData(data, 'tree');
           });
         } else if (n === 'cifar') {
           this_.DataManager.loadJson('/json/cifar-tree.json').then(data => {
             data = data.data;
-            this_.Global.setData('tree', data);
+            this_.Global.setData(data, 'tree');
           });
         }
       });
@@ -103,29 +112,25 @@ namespace application {
           trainError: this_.DataManager.fetchRecord({ db, type: 'train_error', parser }),
           testLoss: this_.DataManager.fetchRecord({ db, type: 'test_loss', parser }),
           trainLoss: this_.DataManager.fetchRecord({ db, type: 'train_loss', parser }),
-          labelStat: this_.DataManager.fetchImg({ db, type: 'model_stat', seqidx: [49], parser }, false)
+          labelStat: this_.DataManager.fetchImg({ db, type: 'model_stat', parser }, false)
         }).then((data: any) => {
           let iterSet = new Set(), iterArray = [];
           for (let i = 0; i < data.labelStat.length; i += 1) {
             iterSet.add(data.labelStat[i].iter);
             iterArray.push(data.labelStat[i].iter);
           }
-          this_.Global.setData('iter', {num: iterSet.size, set: iterSet, array: iterArray});
-          this_.Global.setData('record', {
+          this_.Global.setData({ num: iterSet.size, set: iterSet, array: iterArray }, 'iter');
+          this_.Global.setData({
             lr: myFilter(data.lr, iterSet),
             testError: _.filter(data.testError, (d: any) => iterSet.has(d.iter)),
             testLoss: _.filter(data.testLoss, (d: any) => iterSet.has(d.iter)),
             trainError: myFilter(data.trainError, iterSet),
             trainLoss: myFilter(data.trainLoss, iterSet)
-          });
-          this_.Global.setData('info', {
+          }, 'record');
+          this_.Global.setData({
             layer: data.infoLayer,
             cls: data.infoCls
-          });
-          this_.Global.setData('label', {
-            modelStat: data.labelStat,
-            clsStat: null
-          });
+          }, 'info');
           this_.Pip.emitModelChanged(null);
         }).catch(reason => {
           console.log(reason);
@@ -146,37 +151,10 @@ namespace application {
 
     private _setVisPanel() {
       let this_ = this;
-      this_.$scope.config = {
-        record: {
-          lr: false,
-          testError: true,
-          testLoss: false,
-          trainError: true,
-          trainLoss: false,
-          merge: false,
-          show: false,
-          lrMark: false
-        },
-        labelInfo: {
-          show: false
-        },
-        layerInfo: {
-          type: null,
-          show: false,
-          sameScale: true,
-          level: 0
-        }
-      };
 
-      this_.$scope.checkbox = {
-        record: [
-          { label: 'global lr', model: 'lr' },
-          { label: 'test error', model: 'testError' },
-          { label: 'train error', model: 'trainError' },
-          { label: 'test loss', model: 'testLoss' },
-          { label: 'train loss', model: 'trainLoss' }
-        ]
-      };
+      this_.$scope.config = this_.Global.getConfig();
+
+      this_.$scope.recordTypeList = this_.Global.getRecordTypeList();
 
       this_.$scope.timeSlider = {
         min: 10,
@@ -209,12 +187,19 @@ namespace application {
           $(this.firstChild).hide();
         });
 
-      // spinner
-      this_.$scope.levelChange = function (step) {
-        let val = this_.$scope.config.layerInfo.level + step;
-        if (val < 0 || val > 3) { return; }
-        this_.$scope.config.layerInfo.level = val;
+
+      // label info
+      this_.$scope.spinnerChange = function (step, key) {
+        let val = this_.$scope.config.label[key] + step;
+        if (val < 0) { return; }
+        if (key === 'abnormal' && val > 100) { return; }
+        this_.$scope.config.label[key] = val;
       };
+
+      this_.$scope.labelRender = function (step, key) {
+          this_.Pip.emitLabelConfigChanged(this_.$scope.config.label);
+      };
+
     }
 
   }

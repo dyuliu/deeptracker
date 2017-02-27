@@ -10,11 +10,15 @@ namespace application {
     dataCls: any;
     dataDetail: any;
     selectedCls: any[];
+    open: any;
+    flip: any;
+    click: any;
+    showModal: any;
   }
 
   class Controller {
     public static $inject: string[] = [
-      '$scope', 'DataManager', 'Global', '$q', 'Pip'
+      '$scope', 'DataManager', 'Global', '$q', 'Pip', '$timeout', '$modal',
     ];
 
     constructor(
@@ -22,114 +26,197 @@ namespace application {
       public DataManager: IDataManagerService,
       public Global: IGlobalService,
       public $q: ng.IQService,
-      public Pip: IPipService
+      public Pip: IPipService,
+      public $timeout: ng.ITimeoutService,
+      public $modal
     ) {
       let this_ = this;
+
+      this_._init();
+
+      let modal = $modal({
+        scope: $scope,
+        templateUrl: 'src/client/visualization/views/tpls/modal.client.tpls.html',
+        show: false
+      });
+
+      $scope.showModal = function () {
+        modal.$promise.then(modal.show);
+      };
+
+      $scope.click = function (type: string, clsName?: string) {
+        if (type === 'open') {
+          $scope.open = !$scope.open;
+          if ($scope.open) {
+            // $scope.selectedCls = Global.getData('info').cls;
+            // fetch dataCls
+          }
+        } else if (type === 'flip') {
+          $scope.flip[clsName] = !$scope.flip[clsName];
+          if ($scope.flip[clsName]) {
+            showDetail(clsName);
+          }
+        }
+      };
 
       Pip.onTimeChanged($scope, (iter) => {
         console.log('select iter: ', iter);
       });
       Pip.onModelChanged($scope, (msg) => {
-        console.log('act label fetch cls_stat');
+        // act();
+      });
+      Pip.onLabelConfigChanged($scope, (conf: any) => {
         act();
       });
+
+      function showDetail(clsName: string) {
+        DataManager.fetchImg({
+          db: Global.getSelectedDB(),
+          type: 'detail',
+          cls: [clsName],
+          parser: 'json'
+        }, false).then((data: any) => {
+          console.log(data);
+
+          let pixelChart: any = _.map(data, (d: any) => {
+            let correct = _.map(d.answer, o => o === d.label ? 1 : 0);
+            return { iter: d.iter, value: correct, file: d.file };
+          });
+
+          for (let i = 0; i < pixelChart.length; i += 1) { pixelChart[i].index = i; }
+          $scope.optionsDetail[clsName] = this_._setOptions('pixelChartWithLine', pixelChart.length);
+          $scope.dataDetail[clsName] = {
+            pixelChart: pixelChart,
+            lineChart: $scope.dataCls[clsName].heatmapData
+          };
+        });
+      }
 
       function act() {
         $scope.optionsHeatLine = this_._setOptions('heatline');
         $scope.optionsDetail = this_._setOptions('pixelChartWithLine');
-
-        let bd = Global.getData();
-
-        let optClsStat: IHTTPOptionConfig = {
+        $('#label-data-loading').removeClass('invisible');
+        let conf = Global.getConfig('label');
+        console.log('conf', conf);
+        DataManager.fetchImg({
+          db: Global.getSelectedDB(),
+          type: 'model_stat',
+          seqidx: [conf.abnormal - 1],
+          parser: 'json'
+        }, false).then(data => {
+          $scope.dataModel = {
+            heatmapData: Global.getData('record').testError,
+            linechartData: data,
+            max: d4.max(data, (d: any) => d.value)
+          };
+        });
+        DataManager.fetchImg({
           db: Global.getSelectedDB(),
           type: 'cls_stat',
-          seqidx: [49],
+          seqidx: [conf.abnormal - 1],
           cls: [],
           parser: 'json'
-        };
-
-        $scope.dataModel = {
-          heatmapData: bd.record.testError,
-          linechartData: bd.label.modelStat,
-          max: d4.max(bd.label.modelStat, (d: any) => d.value)
-        };
-        DataManager.fetchImg(optClsStat, false).then(data => {
+        }, false).then((data: any) => {
+          $('#label-data-loading').addClass('invisible');
           $scope.optionsCls = {};
           $scope.dataCls = this_._processData('cls_heatline', data, $scope.dataModel.max);
+          $scope.selectedCls = [];
           let kk = [];
           _.each($scope.dataCls, (d: any, k) => {
-            $scope.optionsCls[k] = this_._setOptions('heatline');
-            $scope.optionsCls[k].height = d.pmax / d.max * 1000;
-            kk.push({ key: k, value: d.pmax / d.max });
+            if (d.pmax >= conf.threshold) {
+              $scope.optionsCls[k] = this_._setOptions('heatline');
+              $scope.selectedCls.push({ name: k, pmax: d.pmax });
+            }
           });
-          kk = _.sortBy(kk, ['value']);
-          kk = _.slice(kk, kk.length - 100, kk.length);
-          kk = _.map(kk, d => { return { name: d.key }; });
-          kk = _.reverse(kk);
-          $scope.selectedCls = kk;
-
-          // $scope.dataClsDetail = this_._processData('cls_pchartwithline');
-          // $scope.dataCls = {
-          //   testError: _.map(data[2], (d: any) => {
-          //     return {iter: d.iter, value: d.testError};
-          //   }),
-          //   abnormal: _.map(data[2], (d: any) => {
-          //     return {iter: d.iter, value: d.value};
-          //   }),
-          //   max: $scope.dataModel.max
-          // };
-
-          // let pixelChart: any = _.map(data[3], (d: any) => {
-          //   let correct = _.map(d.answer, o => o === d.label ? 1 : 0);
-          //   return {iter: d.iter, value: correct, file: d.file};
-          // });
-          // let distMatrix = [];
-          // let pLength = pixelChart.length;
-          // let max = -1;
-          // for (let i = 0; i < pLength; i += 1) {
-          //   distMatrix.push(Array(pLength).fill(0));
-          //   distMatrix[i][i] = 0;
-          //   for (let j = i - 1; j >= 0; j -= 1) { distMatrix[i][j] = distMatrix[j][i]; }
-          //   for (let j = i + 1; j < pLength; j += 1) {
-          //     distMatrix[i][j] = computeDist(pixelChart[i].value, pixelChart[j].value);
-          //     if (distMatrix[i][j] > max) { max = distMatrix[i][j]; }
-          //   }
-          // }
-          // let fs = d4.scaleLinear().range([0, 1]).domain([0, max]).clamp(true);
-          // for (let i = 0; i < pLength; i += 1) {
-          //   for (let j = 0; j < pLength; j += 1) {
-          //     distMatrix[i][j] = fs(distMatrix[i][j]);
-          //   }
-          // }
-          // let coordinate = _.map(LG.utils.Mds.mds(distMatrix, 1), (d, i) => {
-          //   return [i, d[0]];
-          // });
-          // coordinate = _.sortBy(coordinate, d => d[1]);
-          // for (let i = 0; i < pixelChart.length; i += 1) { pixelChart[i].index = coordinate[i][0]; }
-          // $scope.dataDetail = {
-          //   pixelChart: pixelChart,
-          //   lineChart: $scope.dataCls.testError
-          // };
+          if (conf.mds) {
+            let tmp = [];
+            _.each($scope.selectedCls, d => {
+              let v = _.map($scope.dataCls[d.name].heatmapData, (o: any) => o.value);
+              tmp.push({ name: d.name, value: v });
+            });
+            $scope.selectedCls = mdsLayout(tmp);
+          } else {
+            $scope.selectedCls = _.reverse(_.sortBy($scope.selectedCls, ['pmax']));
+          }
         });
+
       }
 
+      function mdsLayout(data) {
+        let result = [];
+        let distMatrix = [];
+        let length = data.length;
+        let max = -1;
+        for (let i = 0; i < length; i += 1) {
+          distMatrix.push(Array(length).fill(0));
+          distMatrix[i][i] = 0;
+          for (let j = i - 1; j >= 0; j -= 1) { distMatrix[i][j] = distMatrix[j][i]; }
+          for (let j = i + 1; j < length; j += 1) {
+            distMatrix[i][j] = computeDist2(data[i].value, data[j].value);
+            if (distMatrix[i][j] > max) { max = distMatrix[i][j]; }
+          }
+        }
 
+        let fs = d4.scaleLinear().range([0, 1]).domain([0, max]).clamp(true);
+        for (let i = 0; i < length; i += 1) {
+          for (let j = 0; j < length; j += 1) {
+            distMatrix[i][j] = fs(distMatrix[i][j]);
+          }
+        }
+        let coordinate = _.map(LG.utils.Mds.mds(distMatrix, 1), (d, i) => {
+          return [i, d[0]];
+        });
+        coordinate = _.sortBy(coordinate, d => d[1]);
+        for (let i = 0; i < data.length; i += 1) {
+          let idx = coordinate[i][0];
+          result.push({ name: data[idx].name, pmax: data[idx.pmax] });
+        }
+        return result;
 
-      // function computeDist(veca, vecb) {
-      //   let size = veca.length;
-      //   let dist = 0;
-      //   for (let i = 0; i < size; i += 1) {
-      //     dist += veca[i] !== vecb[i] ? 1 : 0;
-      //   }
-      //   return dist;
-      // }
+      }
 
-      // function computeDist2(veca, vecb) {
-      //   let da = numeric.norm2(veca);
-      //   let db = numeric.norm2(vecb);
-      //   if (da !== 0 && db !== 0) { return 1 - numeric.dot(veca, vecb) / (norm2(veca) * norm2(vecb)); }
-      //   return 1;
-      // }
+      function computeDist(va, vb) {
+        let size = va.length;
+        let dist = 0;
+        for (let i = 0; i < size; i += 1) {
+          dist += va[i] !== vb[i] ? 1 : 0;
+        }
+        return dist;
+      }
+
+      // cos
+      function computeDist2(va, vb) {
+        let nva = numeric.norm2(va);
+        let nvb = numeric.norm2(vb);
+        if (nva !== 0 && nvb !== 0) {
+          return 1 - numeric.dot(va, vb) / (numeric.norm2(va) * numeric.norm2(vb));
+        }
+        return 1;
+      }
+
+    }
+    // end of constructor
+
+    private _init() {
+
+      let this_ = this;
+      let cls = this_.Global.getData('info').cls;
+      this_.$scope.open = false;
+      this_.$scope.flip = {};
+      _.each(cls, c => {
+        this_.$scope.flip[c.name] = false;
+      });
+      this_.$scope.dataDetail = {};
+
+      this_.$timeout(function () {
+        $('#widget-container-labelinfo .scrollable').each(function () {
+          let $this = $(this);
+          console.log($this);
+          $(this).ace_scroll({
+            size: $this.attr('data-size') || 100,
+          });
+        });
+      }, 100);
 
       $('#widget-container-labelinfo')
         .mouseenter(function () {
@@ -139,8 +226,6 @@ namespace application {
           $('#widget-container-labelinfo .widget-header:first-child').addClass('invisible');
         });
     }
-    // end of constructor
-
     private _processData(type, ...rest: any[]) {
       let this_ = this;
       let result = {};
@@ -161,36 +246,39 @@ namespace application {
             d.linechartData = _.sortBy(d.linechartData, ['iter']);
           });
           return result;
+        case 'cls_pixelchart':
+          break;
         default:
           break;
       }
     }
 
-    private _setOptions(type) {
+    private _setOptions(type, height?) {
       let options;
       switch (type) {
         case 'heatline':
           options = {
-            width: 2800,
-            height: 1000,
+            width: 2000,
+            height: height ? height : 18,
             cellWidth: 1,
             margin: {
-              top: 2,
+              top: 0,
               right: 0,
               bottom: 2,
               left: 0
-            }
+            },
+            lineChart: false
           };
           break;
         case 'pixelChartWithLine':
           options = {
-            width: 900,
-            height: 1000,
+            width: 2000,
+            height: height ? height : 18,
             cellWidth: 1,
             pixelChart: true,
-            linechart: true,
+            lineChart: true,
             margin: {
-              top: 2,
+              top: 0,
               right: 0,
               bottom: 2,
               left: 0

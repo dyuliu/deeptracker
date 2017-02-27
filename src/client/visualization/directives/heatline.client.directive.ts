@@ -70,7 +70,7 @@ namespace application {
     public render(data: IDTypeHeatline) {
       let this_ = this;
       this_._paintHeatMap(data.heatmapData);
-      this_._paintLineChart(data.linechartData, data.max);
+      if (this_.options.lineChart) { this_._paintLineChart(data.linechartData, data.max); }
     }
 
     private _paintHeatMap(data: IDTypeEle) {
@@ -132,7 +132,7 @@ namespace application {
         let iter = Math.trunc(d4.mouse(this)[0]);
         focus.attr('transform', 'translate(' + iter + ',' + lineData[iter][1] + ')');
         focus.select('text').text('iter.toString()');
-        console.log(iter);
+        // console.log(iter);
       }
     }
 

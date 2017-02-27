@@ -14,7 +14,7 @@ namespace application {
 
       $scope.imgDatabase = 'imagenet';
       $scope.$watch(function() {
-        return Global.getInfo('cls');
+        return Global.getData('info').cls;
       }, (n, o) => {
         if (!n) { return; }
         $scope.images = _.map(n, (d: any) => {
