@@ -11,6 +11,7 @@ namespace application {
     spinnerChange: any;
     labelRender: any;
     recordTypeList: any;
+    layerTypeList: any;
     click: any; // emit event
   }
 
@@ -27,6 +28,7 @@ namespace application {
       public Pip: IPipService
     ) {
 
+      let this_ = this;
       // bug: to activate sidebar
       setTimeout(() => {
         $('#sidebar-collapse').trigger('click');
@@ -43,9 +45,22 @@ namespace application {
         Pip.emitRecordConfigChanged(n);
       }, true);
 
-      // $scope.$watch('config.label', (n: any, o) => {
-      //   Pip.emitLabelConfigChanged(n);
-      // }, true);
+      $scope.$watch('config.label', (n: any, o) => {
+        let clsStat = this_.Global.getData('label').clsStat;
+        if (n.show && !o.show && !clsStat) {
+          $scope.config.label.show = false;
+          return;
+        }
+        if (n.show) { Pip.emitLabelConfigChanged(n); }
+      }, true);
+
+      $scope.$watch('config.layer', (n: any, o) => {
+        Pip.emitLayerConfigChanged(n);
+      }, true);
+
+      $scope.$watch('config.timebox', (n: any, o) => {
+        Pip.emitTimeboxConfigChanged(n);
+      }, true);
     }
 
     private _setBtnEvent() {
@@ -103,6 +118,14 @@ namespace application {
         if (!n) { return; }
         this_.Global.setSelectedDB(n);
         let [db, parser] = [n, 'json'];
+        $('#label-data-loading').removeClass('invisible');
+        // cached seq
+        this_.DataManager.fetchImg({ db, type: 'cls_stat', seqidx: [49], cls: [], parser }, false)
+          .then(data => {
+            $('#label-data-loading').addClass('invisible');
+            let labelData = this_.Global.getData('label');
+            labelData.clsStat = data;
+          });
         // prefetch data
         this_.$q.all({
           infoLayer: this_.DataManager.fetchInfo({ db, type: 'layer' }),
@@ -114,6 +137,7 @@ namespace application {
           trainLoss: this_.DataManager.fetchRecord({ db, type: 'train_loss', parser }),
           labelStat: this_.DataManager.fetchImg({ db, type: 'model_stat', parser }, false)
         }).then((data: any) => {
+
           let iterSet = new Set(), iterArray = [];
           for (let i = 0; i < data.labelStat.length; i += 1) {
             iterSet.add(data.labelStat[i].iter);
@@ -129,8 +153,12 @@ namespace application {
           }, 'record');
           this_.Global.setData({
             layer: data.infoLayer,
-            cls: data.infoCls
+            cls: data.infoCls,
           }, 'info');
+          this_.Global.setData({
+            modelStat: data.labelStat,
+            clsStat: null
+          }, 'label');
           this_.Pip.emitModelChanged(null);
         }).catch(reason => {
           console.log(reason);
@@ -155,6 +183,7 @@ namespace application {
       this_.$scope.config = this_.Global.getConfig();
 
       this_.$scope.recordTypeList = this_.Global.getRecordTypeList();
+      this_.$scope.layerTypeList = this_.Global.getLayerTypeList();
 
       this_.$scope.timeSlider = {
         min: 10,
@@ -190,14 +219,14 @@ namespace application {
 
       // label info
       this_.$scope.spinnerChange = function (step, key) {
-        let val = this_.$scope.config.label[key] + step;
+        let val = +this_.$scope.config.label[key] + step;
         if (val < 0) { return; }
         if (key === 'abnormal' && val > 100) { return; }
         this_.$scope.config.label[key] = val;
       };
 
       this_.$scope.labelRender = function (step, key) {
-          this_.Pip.emitLabelConfigChanged(this_.$scope.config.label);
+        this_.Pip.emitLabelConfigChanged(this_.$scope.config.label);
       };
 
     }

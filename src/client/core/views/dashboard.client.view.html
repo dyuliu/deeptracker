@@ -72,10 +72,19 @@
 
       <div class="space-6"></div>
 
-      <!--<div style="margin-left: 5px">
-        <label class="control-label bolder blue">Time Slider</label> (epoch)
-        <div id="timerange" class="timerange"></div>
-      </div>-->
+      <div style="margin-left: 5px">
+        <div class="row">
+          <div class="col-xs-6">
+            <label class="control-label bolder blue">Time Slider</label>
+          </div>
+          <div class="col-xs-6">
+            <label>
+              <input ng-model="config.timebox.show" name="switch-field-1" class="ace ace-switch" type="checkbox" />
+              <span class="lbl">&nbsp;</span>
+            </label>
+          </div>
+        </div>
+      </div>
 
       <div style="margin-left: 5px">
         <div class="row">
@@ -102,7 +111,9 @@
       <div style="margin-left: 5px">
         <div class="row">
           <div class="col-xs-6">
-            <label class="control-label bolder blue">Label Info</label>
+            <label class="control-label bolder blue">Label Info
+              <i id="label-data-loading" class="ace-icon fa fa-spinner fa-spin orange bigger-125 invisible"></i>
+            </label>
           </div>
           <div class="col-xs-6">
             <label>
@@ -112,7 +123,7 @@
           </div>
         </div>
         <div class="space-4"></div>
-        <div class="ace-spinner middle" style="width: 100%">
+        <!--<div class="ace-spinner middle" style="width: 100%">
           <div class="col-xs-4">
             <label style="margin-top: 10px">abnormal:</label>
           </div>
@@ -129,12 +140,12 @@
               </div>
             </div>
           </div>
-        </div>
+        </div>-->
 
         <div class="space-4"></div>
 
         <div class="ace-spinner middle" style="width: 100%">
-        <div class="col-xs-4">
+          <div class="col-xs-4">
             <label style="margin-top: 10px">threshold:</label>
           </div>
           <div class="col-xs-8">
@@ -152,18 +163,18 @@
           </div>
         </div>
         <div class="space-4"></div>
-        <div class="checkbox">
+        <!--<div class="checkbox">
           <label>
             <input ng-model="config.label.mds" name="form-field-checkbox" type="checkbox" class="ace" />
             <span class="lbl"> mds layout </span>
           </label>
-        </div>
-        <div class="space-4"></div>
+        </div>-->
+        <!--<div class="space-4"></div>
 
         <div>
           <button class="btn btn-success" style="margin-left: 10px" ng-click="labelRender()">Go</button>
           <i id="label-data-loading" class="ace-icon fa fa-spinner fa-spin orange bigger-125 invisible"></i>
-        </div>
+        </div>-->
 
       </div>
       <!-- end of label panel -->
@@ -176,187 +187,85 @@
           </div>
           <div class="col-xs-6">
             <label>
-              <input ng-model="config.layerInfo.show" name="switch-field-1" class="ace ace-switch" type="checkbox" />
+              <input ng-model="config.layer.show" name="switch-field-1" class="ace ace-switch" type="checkbox" />
               <span class="lbl">&nbsp;</span>
             </label>
           </div>
         </div>
 
-        <!--<div class="checkbox">
-          <label>
-            <input name="form-field-checkbox" type="checkbox" class="ace" />
-            <span class="lbl"> choice</span>
-          </label>
-        </div>-->
+        <div class="space-4"></div>
 
+        <div class="row control-group">
+          <div class="col-xs-6">
+            <div>
+              <label>
+                <input ng-model="config.layer.gw" name="form-field-radio1" type="radio" class="ace" value="w"/>
+                <span class="lbl"> weight </span>
+              </label>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div>
+              <label>
+                <input ng-model="config.layer.gw" name="form-field-radio1" type="radio" class="ace" value="g"/>
+                <span class="lbl"> gradient </span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-4"></div>
 
         <div class="control-group">
-          Types:
-          <div class="radio">
+          Single Attr:
+          <div ng-repeat-start="type in layerTypeList" class="radio" ng-repeat-end="">
             <label>
-              <input ng-model="config.layerInfo.type" name="form-field-radio" type="radio" value="norm1" class="ace" />
-              <span class="lbl"> norm1 </span>
+              <input ng-model="config.layer.type" name="form-field-radio2" type="radio" class="ace" value="{{type.value}}"/>
+              <span class="lbl"> {{type.label}}</span>
             </label>
           </div>
-
-          <div class="radio">
-            <label>
-              <input ng-model="config.layerInfo.type" name="form-field-radio" type="radio" value="norm2" class="ace" />
-              <span class="lbl"> norm2 </span>
-            </label>
-          </div>
-
-          <div class="radio">
-            <label>
-              <input ng-model="config.layerInfo.type" name="form-field-radio" type="radio" value="mean" class="ace" />
-              <span class="lbl"> mean </span>
-            </label>
-          </div>
-
-          <div class="radio">
-            <label>
-              <input ng-model="config.layerInfo.type" name="form-field-radio" type="radio" value="min" class="ace" />
-              <span class="lbl"> min </span>
-            </label>
-          </div>
-
-          <div class="radio">
-            <label>
-              <input ng-model="config.layerInfo.type" name="form-field-radio" type="radio" value="max" class="ace" />
-              <span class="lbl"> max </span>
-            </label>
-          </div>
-
-          <div class="radio">
-            <label>
-              <input ng-model="config.layerInfo.type" name="form-field-radio" type="radio" value="cr" class="ace" />
-              <span class="lbl"> cr </span>
-            </label>
-          </div>
-
-          <div class="radio">
-            <label>
-              <input ng-model="config.layerInfo.type" name="form-field-radio" type="radio" value="kernel" class="ace" />
-              <span class="lbl"> kernel </span>
-            </label>
-          </div>
-
         </div>
-        <label>
-          Same Scale:
-          <input ng-model="config.layerInfo.sameScale" name="switch-field-1" class="ace ace-switch ace-switch-2" type="checkbox" />
-          <span class="lbl">&nbsp;</span>
-        </label>
 
-        <div class="space-6"></div>
-
+        <div class="control-group">
+          Other Types:
+          <div class="radio">
+            <label>
+                <input ng-model="config.layer.type" name="form-field-radio2" type="radio" class="ace" value="s_cratio"/>
+                <span class="lbl"> change ratio </span>
+              </label>
+          </div>
+          <div class="radio">
+            <label>
+                <input ng-model="config.layer.type" name="form-field-radio2" type="radio" class="ace" value="box"/>
+                <span class="lbl"> boxplot </span>
+              </label>
+          </div>
+        </div>
       </div>
 
+      <!--<div class="row">
+        <div class="col-xs-12">
+          <label>Ratios:&nbsp;</label>
+          <button type="button" class="btn btn-default" ng-model="selectedRatio" data-html="1" data-multiple="1"
+            bs-options="ratio as ratio.label for ratio in ratioList" bs-select>
+            Action <span class="caret"></span>
+          </button>
+        </div>
+      </div>-->
+
+      <label>
+        Same Scale:
+        <input ng-model="config.layerInfo.sameScale" name="switch-field-1" class="ace ace-switch ace-switch-2" type="checkbox" />
+        <span class="lbl">&nbsp;</span>
+      </label>
+
+      <div class="space-8"></div>
+
     </div>
-    <!--<ul class="submenu">
 
-      <li>
-        as
-      </li>
-
-      <li>
-        as
-      </li>
-
-      <li>
-        as
-      </li>
-      <li>
-        <a>
-          <span>Label:</span>
-        </a>
-      </li>
-
-      <li>
-        <a>
-          <span>Layer:</span>
-        </a>
-      </li>
-
-    </ul>-->
   </li>
-
 </ul>
 
 <div class="sidebar-toggle sidebar-collapse" hidden="True" id="sidebar-collapse">
   <i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
 </div>
-
-<!--<ul class="nav nav-list">
-
-  <li ng-class="{'active': actives.overview}">
-    <a ui-sref="home.overview">
-      <i class="menu-icon fa fa-table"></i>
-      <span class="menu-text"> Overview </span>
-    </a>
-    <b class="arrow"></b>
-  </li>
-
-  <li ng-class="{'active': actives.records}">
-    <a ui-sref="home.record">
-      <i class="menu-icon fa fa-list-alt"></i>
-      <span class="menu-text"> Record </span>
-    </a>
-    <b class="arrow"></b>
-  </li>
-
-  <li class="">
-    <a ui-sref="home.layer.stat" class="dropdown-toggle">
-      <i class="menu-icon fa fa-align-justify"></i>
-      <span class="menu-text"> Layer </span>
-      <b class="arrow fa fa-angle-down"></b>
-    </a>
-
-    <b class="arrow"></b>
-
-    <ul class="submenu">
-
-      <li ng-class="{'active': actives.layers.lineWithFocusChart}">
-        <a ui-sref="home.layer.stat">
-          <i class="menu-icon fa fa-caret-right"></i> Stat
-        </a>
-        <b class="arrow"></b>
-      </li>
-
-      <li ng-class="{'active': actives.speed}">
-        <a ui-sref="home.layer.speed">
-          <i class="menu-icon fa fa-tachometer"></i>
-          <span class="menu-text"> SpeedFlow </span>
-        </a>
-        <b class="arrow"></b>
-      </li>
-
-      <li ng-class="{'active': actives.seq}">
-        <a ui-sref="home.layer.seq">
-          <i class="menu-icon fa fa-tachometer"></i>
-          <span class="menu-text"> ChangeRatio </span>
-        </a>
-        <b class="arrow"></b>
-      </li>
-
-    </ul>
-  </li>
-
-  <li ng-class="{'active': actives.img}">
-    <a ui-sref="home.img">
-      <i class="menu-icon fa fa-file-image-o"></i>
-      <span class="menu-text"> Img </span>
-    </a>
-
-    <b class="arrow"></b>
-  </li>
-
-  <li ng-class="{'active': actives.kernel}">
-    <a ui-sref="home.kernel">
-      <i class="menu-icon fa fa-cube"></i>
-      <span class="menu-text"> Kernel </span>
-    </a>
-
-    <b class="arrow"></b>
-  </li>
-</ul>-->

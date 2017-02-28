@@ -61,11 +61,12 @@ export function respond(options: IOption, res: Response) {
   console.time(colName);
   let [cond, project, sort] = getConfig(options);
 
-  col.find(cond, project)
-    .lean()
-    .sort(sort)
-    .exec((err, data: any[]) => {
-      if (err) { return console.log(chalk.bgRed(err)); }
+
+  let cached = false;
+  if (options.type === 'cls_stat') {
+    if (!_.isUndefined(utils.cacheData[options.db])) {
+      cached = true;
+      let data = utils.cacheData[options.db];
       data = postProcess(data, options);
       console.timeEnd(colName);
       if (options.parser === 'json') {
@@ -81,7 +82,34 @@ export function respond(options: IOption, res: Response) {
         }
         res.end(null);
       }
-    });
+    }
+  }
+  if (!cached) {
+    col.find(cond, project)
+      .lean()
+      .sort(sort)
+      .exec((err, data: any[]) => {
+        if (err) { return console.log(chalk.bgRed(err)); }
+        if (options.type === 'cls_stat') {
+          utils.cacheData[options.db] = data;
+        }
+        data = postProcess(data, options);
+        console.timeEnd(colName);
+        if (options.parser === 'json') {
+          res.json(data);
+        } else if (options.parser === 'bson') {
+          res.type('arraybuffer');
+          for (let d of data) {
+            let b = bson.serialize(d);
+            let buf = Buffer.alloc(4);
+            buf.writeInt32LE(b.byteLength, 0);
+            res.write(buf);
+            res.write(b);
+          }
+          res.end(null);
+        }
+      });
+  }
 }
 
 function getConfig(options: IOption) {

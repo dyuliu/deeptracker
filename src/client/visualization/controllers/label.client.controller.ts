@@ -18,7 +18,8 @@ namespace application {
 
   class Controller {
     public static $inject: string[] = [
-      '$scope', 'DataManager', 'Global', '$q', 'Pip', '$timeout', '$modal',
+      '$scope', 'DataManager', 'Global', '$q',
+      'Pip', '$timeout', '$modal', '$rootScope'
     ];
 
     constructor(
@@ -28,19 +29,23 @@ namespace application {
       public $q: ng.IQService,
       public Pip: IPipService,
       public $timeout: ng.ITimeoutService,
-      public $modal
+      public $modal,
+      public $rootScope
     ) {
       let this_ = this;
+      let first;
 
+      let previous_conf = null;
       this_._init();
-
       let modal = $modal({
         scope: $scope,
-        templateUrl: 'src/client/visualization/views/tpls/modal.client.tpls.html',
-        show: false
+        templateUrl: 'src/client/visualization/views/tpls/img-modal.client.tpls.html',
+        show: false,
+        controller: 'ImgModalController'
       });
 
-      $scope.showModal = function () {
+      $scope.showModal = function (name) {
+        modal.$scope.clsName = name;
         modal.$promise.then(modal.show);
       };
 
@@ -63,10 +68,11 @@ namespace application {
         console.log('select iter: ', iter);
       });
       Pip.onModelChanged($scope, (msg) => {
+        first = true;
         // act();
       });
       Pip.onLabelConfigChanged($scope, (conf: any) => {
-        act();
+        if (conf.show === true) { act(conf); }
       });
 
       function showDetail(clsName: string) {
@@ -84,7 +90,7 @@ namespace application {
           });
 
           for (let i = 0; i < pixelChart.length; i += 1) { pixelChart[i].index = i; }
-          $scope.optionsDetail[clsName] = this_._setOptions('pixelChartWithLine', pixelChart.length);
+          $scope.optionsDetail[clsName] = this_._setOptions('pixelChartWithLine', pixelChart.length + 5);
           $scope.dataDetail[clsName] = {
             pixelChart: pixelChart,
             lineChart: $scope.dataCls[clsName].heatmapData
@@ -92,53 +98,43 @@ namespace application {
         });
       }
 
-      function act() {
-        $scope.optionsHeatLine = this_._setOptions('heatline');
-        $scope.optionsDetail = this_._setOptions('pixelChartWithLine');
-        $('#label-data-loading').removeClass('invisible');
-        let conf = Global.getConfig('label');
-        console.log('conf', conf);
-        DataManager.fetchImg({
-          db: Global.getSelectedDB(),
-          type: 'model_stat',
-          seqidx: [conf.abnormal - 1],
-          parser: 'json'
-        }, false).then(data => {
+      function act(conf) {
+        if (first) {
+          console.log('first processing data');
+          $scope.optionsHeatLine = this_._setOptions('heatline');
+          let gd = Global.getData();
+
           $scope.dataModel = {
             heatmapData: Global.getData('record').testError,
-            linechartData: data,
-            max: d4.max(data, (d: any) => d.value)
+            linechartData: gd.label.modelStat,
+            max: d4.max(gd.label.modelStat, (d: any) => d.value)
           };
-        });
-        DataManager.fetchImg({
-          db: Global.getSelectedDB(),
-          type: 'cls_stat',
-          seqidx: [conf.abnormal - 1],
-          cls: [],
-          parser: 'json'
-        }, false).then((data: any) => {
-          $('#label-data-loading').addClass('invisible');
+
           $scope.optionsCls = {};
-          $scope.dataCls = this_._processData('cls_heatline', data, $scope.dataModel.max);
-          $scope.selectedCls = [];
-          let kk = [];
-          _.each($scope.dataCls, (d: any, k) => {
-            if (d.pmax >= conf.threshold) {
-              $scope.optionsCls[k] = this_._setOptions('heatline');
-              $scope.selectedCls.push({ name: k, pmax: d.pmax });
-            }
-          });
-          if (conf.mds) {
-            let tmp = [];
-            _.each($scope.selectedCls, d => {
-              let v = _.map($scope.dataCls[d.name].heatmapData, (o: any) => o.value);
-              tmp.push({ name: d.name, value: v });
-            });
-            $scope.selectedCls = mdsLayout(tmp);
-          } else {
-            $scope.selectedCls = _.reverse(_.sortBy($scope.selectedCls, ['pmax']));
+          $scope.dataCls = this_._processData('cls_heatline', gd.label.clsStat, $scope.dataModel.max);
+          gd.label.clsStat = null;
+
+          first = false;
+        }
+
+        console.log('mds calc');
+        let selectedCls = [];
+        _.each($scope.dataCls, (d: any, k) => {
+          if (d.pmax >= conf.threshold) {
+            $scope.optionsCls[k] = this_._setOptions('heatline');
+            selectedCls.push({ name: k, pmax: d.pmax });
           }
         });
+        if (conf.mds) {
+          let tmp = [];
+          _.each(selectedCls, d => {
+            let v = _.map($scope.dataCls[d.name].heatmapData, (o: any) => o.value);
+            tmp.push({ name: d.name, value: v });
+          });
+          $scope.selectedCls = mdsLayout(tmp);
+        } else {
+          $scope.selectedCls = _.reverse(_.sortBy(selectedCls, ['pmax']));
+        }
 
       }
 
@@ -203,6 +199,7 @@ namespace application {
       let cls = this_.Global.getData('info').cls;
       this_.$scope.open = false;
       this_.$scope.flip = {};
+      this_.$scope.optionsDetail = {};
       _.each(cls, c => {
         this_.$scope.flip[c.name] = false;
       });
@@ -211,7 +208,6 @@ namespace application {
       this_.$timeout(function () {
         $('#widget-container-labelinfo .scrollable').each(function () {
           let $this = $(this);
-          console.log($this);
           $(this).ace_scroll({
             size: $this.attr('data-size') || 100,
           });
@@ -280,7 +276,7 @@ namespace application {
             margin: {
               top: 0,
               right: 0,
-              bottom: 2,
+              bottom: 5,
               left: 0
             }
           };

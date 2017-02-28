@@ -120,48 +120,63 @@ namespace application {
       this.exports = {};
       this.all = {};
       this.all.recordTypeList = [
-        {label: 'learning rate', value: 'lr'},
-        {label: 'validation error', value: 'testError'},
-        {label: 'validation loss', value: 'testLoss'},
-        {label: 'train error', value: 'trainError'},
-        {label: 'train loss', value: 'trainLoss'}
+        { label: 'learning rate', value: 'lr' },
+        { label: 'validation error', value: 'testError' },
+        { label: 'validation loss', value: 'testLoss' },
+        { label: 'train error', value: 'trainError' },
+        { label: 'train loss', value: 'trainLoss' }
       ];
 
-      this.all.layerTypeList = {
-        weight: [
-          'w_max',
-          'w_mean',
-          'w_mid',
-          'w_min',
-          'w_norm0',
-          'w_norm1',
-          'w_norm2',
-          'w_quarter1',
-          'w_quarter3',
-          'w_std',
-          'w_sum',
-          'w_var'
-        ],
-        gradient: [
-          'g_max',
-          'g_mean',
-          'g_mid',
-          'g_min',
-          'g_norm0',
-          'g_norm1',
-          'g_norm2',
-          'g_quarter1',
-          'g_quarter3',
-          'g_std',
-          'g_sum',
-          'g_var'
-        ],
-        seq: [
-          's_cratio',
-          's_histogram',
-          's_histogram'
-        ],
-      };
+
+      this.all.layerTypeList = [
+        { label: 'max', value: 'max' },
+        { label: 'mean', value: 'mean' },
+        { label: 'mid', value: 'mid' },
+        { label: 'min', value: 'min' },
+        { label: 'norm1', value: 'norm1' },
+        { label: 'norm2', value: 'norm2' },
+        { label: 'quarter1', value: 'quarter1' },
+        { label: 'quarter3', value: 'quarter3' },
+        { label: 'std', value: 'std' },
+        { label: 'sum', value: 'sum' },
+        { label: 'var', value: 'var' }
+        // { label: 'change ratio', value: 's_cratio' }
+      ];
+      // this.all.layerTypeList = {
+      //   weight: [
+      //     'w_max',
+      //     'w_mean',
+      //     'w_mid',
+      //     'w_min',
+      //     'w_norm0',
+      //     'w_norm1',
+      //     'w_norm2',
+      //     'w_quarter1',
+      //     'w_quarter3',
+      //     'w_std',
+      //     'w_sum',
+      //     'w_var'
+      //   ],
+      //   gradient: [
+      //     'g_max',
+      //     'g_mean',
+      //     'g_mid',
+      //     'g_min',
+      //     'g_norm0',
+      //     'g_norm1',
+      //     'g_norm2',
+      //     'g_quarter1',
+      //     'g_quarter3',
+      //     'g_std',
+      //     'g_sum',
+      //     'g_var'
+      //   ],
+      //   seq: [
+      //     's_cratio',
+      //     's_histogram',
+      //     's_histogram'
+      //   ],
+      // };
 
       this.all.kernelTypeList = {
         weight: [],
@@ -247,6 +262,9 @@ namespace application {
       };
 
       this.all.config = {
+        timebox: {
+          show: false
+        },
         record: {
           lr: false,
           testError: true,
@@ -258,11 +276,12 @@ namespace application {
         label: {
           mds: false,
           show: false,
-          threshold: 0,
-          abnormal: 50
+          threshold: 5,
+          abnormal: 30
         },
         layer: {
-          type: null,
+          gw: 'g',
+          type: 'norm1',
           show: false,
           sameScale: true,
           level: 0

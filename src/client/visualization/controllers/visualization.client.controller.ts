@@ -29,6 +29,14 @@ namespace application {
         $scope.config.label = conf;
       });
 
+      Pip.onLayerConfigChanged($scope, (conf: any) => {
+        $scope.config.layer = conf;
+      });
+
+      Pip.onTimeboxConfigChanged($scope, (conf: any) => {
+        $scope.config.timebox = conf;
+      });
+
       $(document).on('shown.ace.widget hidden.ace.widget closed.ace.widget', '.widget-box', function (event) {
         let widgets = ace.data.get('demo', 'widget-state', true);
         if (widgets == null) { widgets = {}; };

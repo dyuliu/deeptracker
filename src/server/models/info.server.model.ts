@@ -58,7 +58,6 @@ function getClsInfo(options: IOption, res: Response) {
   let proj: any = { _id: 0 };
   col.find(cond, proj)
     .lean()
-    .sort({ lid: 1 })
     .exec((err, data) => {
       if (err) { return console.log(chalk.bgRed(err)); }
       res.json(data);

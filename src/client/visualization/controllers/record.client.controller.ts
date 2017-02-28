@@ -29,12 +29,13 @@ namespace application {
       });
 
       Pip.onRecordConfigChanged($scope, (conf: any) => {
-        let data = Global.getData('record');
-        act(data, conf);
+        if (conf.show === true) {
+          let data = Global.getData('record');
+          act(data, conf);
+        }
       });
 
       function act(data, conf) {
-        console.log(conf);
         $scope.show = {
           lr: conf.lr,
           error: conf.testError || conf.trainError,

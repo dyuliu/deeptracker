@@ -8,12 +8,16 @@ namespace application {
     emitTimeChanged(msg: any): void;
     emitRecordConfigChanged(msg: any): void;
     emitLabelConfigChanged(msg: any): void;
+    emitLayerConfigChanged(msg: any): void;
+    emitTimeboxConfigChanged(msg: any): void;
     onUrlChanged(scope: ng.IScope, cb: (msg: any) => void): void;
     onVlDiv(scope: ng.IScope, cb: (msg: any) => void): void;
     onModelChanged(scope: ng.IScope, cb: (msg: any) => void): void;
     onTimeChanged(scope: ng.IScope, cb: (msg: any) => void): void;
     onRecordConfigChanged(scope: ng.IScope, cb: (msg: any) => void): void;
     onLabelConfigChanged(scope: ng.IScope, cb: (msg: any) => void): void;
+    onLayerConfigChanged(scope: ng.IScope, cb: (msg: any) => void): void;
+    onTimeboxConfigChanged(scope: ng.IScope, cb: (msg: any) => void): void;
   }
 
   export class Pip {
@@ -59,6 +63,8 @@ namespace application {
       this.addEvent('timeChanged');
       this.addEvent('recordConfigChanged');
       this.addEvent('labelConfigChanged');
+      this.addEvent('layerConfigChanged');
+      this.addEvent('timeboxConfigChanged');
     }
   }
 

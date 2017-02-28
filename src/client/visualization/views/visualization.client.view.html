@@ -3,7 +3,7 @@
 
     <div ng-show="vlDiv" class="vl-div"></div>
 
-    <div class="row">
+    <div ng-show="config.timebox.show" class="row">
       <div id="widget-container-timebox" class="col-xs-12 col-sm-12 widget-container-col"
         ng-include="'src/client/visualization/views/timebox.client.view.html'">
       </div>
@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div ng-if="config.layer.show" ng-show="config.layer.show" ng-class="row">
+    <div ng-show="config.layer.show" ng-class="row">
       <div id="widget-container-layerinfo" class="col-xs-12 col-sm-12 widget-container-col"
         ng-include="'src/client/visualization/views/layer.client.view.html'">
       </div>

@@ -13,23 +13,23 @@ namespace application {
 
   class Controller {
     public static $inject: string[] = [
-      '$scope', 'DataManager', 'Global', '$q', '$http', 'Pip'
+      '$scope', 'DataManager', 'Global', '$q', 'Pip', '$timeout'
     ];
 
     constructor(
       public $scope: IScope,
-      DataManager: IDataManagerService,
+      public DataManager: IDataManagerService,
       public Global: IGlobalService,
-      $q: ng.IQService,
-      $http: ng.IHttpService,
-      Pip: IPipService
+      public $q: ng.IQService,
+      public Pip: IPipService,
+      public $timeout: ng.ITimeoutService
     ) {
 
       let this_ = this;
       let layers, hlLayers = [], allLayers;
 
+      this_._init();
       // $scope.kData = [1, 2, 3, 4, 5];
-      $scope.kData = { 'a': 1, 'b': 2, 'c': 3 };
 
       Pip.onTimeChanged($scope, (iter) => {
         console.log('select iter: ', iter);
@@ -47,7 +47,15 @@ namespace application {
           $scope.kData = data;
         });
       });
+      Pip.onLayerConfigChanged($scope, (conf: any) => {
+        if (conf.show === true) { act(conf); }
+      });
       Pip.onModelChanged($scope, (msg) => {
+        let conf = Global.getConfig('layer');
+        if (conf.show === true) { act(conf); }
+      });
+
+      function act(conf) {
         let globalData = Global.getData();
         let layerArray = globalData.info.layer,
           tree = globalData.tree,
@@ -98,17 +106,18 @@ namespace application {
         //     console.log('$scope.data', $scope.data);
         //   });
 
+        let type = conf.gw + '_' + conf.type;
         /*--- layer stat data ---*/
         let opt: IHTTPOptionConfig = {
           db: Global.getSelectedDB(),
-          type: 'g_norm1',
+          type: conf.gw + '_' + conf.type,
           // layer: allLayers,
           parser: 'json'
         };
 
         let optHL: IHTTPOptionConfig = {
           db: Global.getSelectedDB(),
-          type: 'hl_g_norm1',
+          type: 'hl_' + conf.gw + '_' + conf.type,
           // layer: allLayers,
           parser: 'json'
         };
@@ -156,16 +165,7 @@ namespace application {
         //   );
         //   console.log($scope.data);
         // });
-
-      });
-
-      $('#widget-container-layerinfo')
-        .mouseenter(function () {
-          $('#widget-container-layerinfo .widget-header').removeClass('invisible');
-        })
-        .mouseleave(function () {
-          $('#widget-container-layerinfo .widget-header').addClass('invisible');
-        });
+      }
 
       $scope.open = function (d, level) {
         level = ' .level' + level;
@@ -179,6 +179,28 @@ namespace application {
         $scope.opened[d.name] = !$scope.opened[d.name];
       };
 
+    }
+
+    private _init() {
+      let this_ = this;
+      this_.$scope.kData = { 'a': 1, 'b': 2, 'c': 3 };
+
+      this_.$timeout(function () {
+        $('#widget-container-layerinfo .scrollable').each(function () {
+          let $this = $(this);
+          $(this).ace_scroll({
+            size: $this.attr('data-size') || 100,
+          });
+        });
+      }, 100);
+
+      $('#widget-container-layerinfo')
+        .mouseenter(function () {
+          $('#widget-container-layerinfo .widget-header').removeClass('invisible');
+        })
+        .mouseleave(function () {
+          $('#widget-container-layerinfo .widget-header').addClass('invisible');
+        });
     }
 
     private _processData(type, ...rest: any[]) {
@@ -257,6 +279,9 @@ namespace application {
               y: function (d, i) { return d.y; },
               xTickFormat: function (d) {
                 return d;
+              },
+              yTickFormat: function (d) {
+                return d4.format('.3s')(d);
               },
               duration: 250
             }

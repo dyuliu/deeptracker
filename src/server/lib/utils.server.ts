@@ -323,5 +323,7 @@ export let tables: ITables = {
   ])
 };
 
+export let cacheData = {
+};
 
 
