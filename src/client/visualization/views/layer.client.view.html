@@ -37,10 +37,10 @@
               </span>
             </div>
 
-            <div ng-if="!opened[la.name]" class="col-xs-10 col-sm-10">
+            <div ng-if="!opened[la.name] || !la.nodes" class="col-xs-10 col-sm-10">
               <nvd3 ng-if="showTypes[la.name] === 'nvd3' " options="options[la.name]" data="data[la.name]"></nvd3>
               <div ng-if="showTypes[la.name] === 'cr' " crchart options="options[la.name]" data="data[la.name]"></div>
-              <div ng-if="showTypes[la.name] === 'pchart' " pchartwithline options="options[la.name]" data="data[la.name]"></div>
+              <div ng-if="showTypes[la.name] === 'pchart' " pchartwithline options="optionsDetail[la.name]" data="dataDetail[la.name]"></div>
             </div>
           </div>
 
@@ -55,7 +55,7 @@
               <div ng-if="opened[la.name] && !opened[lan.name]" class="col-xs-10 col-sm-10">
                 <nvd3 ng-if="showTypes[lan.name] === 'nvd3' " options="options[lan.name]" data="data[lan.name]"></nvd3>
                 <div ng-if="showTypes[lan.name] === 'cr' " crchart options="options[lan.name]" data="data[lan.name]"></div>
-                <div ng-if="showTypes[lan.name] === 'pchart' " pchartwithline options="options[lan.name]" data="data[lan.name]"></div>
+                <div ng-if="showTypes[lan.name] === 'pchart' " pchartwithline options="optionsDetail[lan.name]" data="dataDetail[lan.name]"></div>
               </div>
             </div>
 
@@ -69,7 +69,7 @@
                 <div ng-if="opened[lan.name]" class="col-xs-10 col-sm-10">
                   <nvd3 ng-if="showTypes[lann.name] === 'nvd3' " options="options[lann.name]" data="data[lann.name]"></nvd3>
                   <div ng-if="showTypes[lann.name] === 'cr' " crchart options="options[lann.name]" data="data[lann.name]"></div>
-                  <div ng-if="showTypes[lann.name] === 'pchart' " pchartwithline options="options[lann.name]" data="data[lann.name]"></div>
+                  <div ng-if="showTypes[lann.name] === 'pchart' " pchartwithline options="optionsDetail[lann.name]" data="dataDetail[lann.name]"></div>
                 </div>
               </div>
             </div>

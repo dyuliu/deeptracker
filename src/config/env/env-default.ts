@@ -87,7 +87,14 @@ export let env: mean.IEnv = {
     // uri: 'mongodb://localhost:27017/final',
     options: {
       user: '',
-      pass: ''
+      pass: '',
+      server: {
+        socketOptions: {
+          socketTimeoutMS: 30000,
+          connectionTimeoutMS: 30000,
+          connectionTimeout: 30000,
+        }
+      }
     },
     debug: process.env.MONGODB_DEBUG || false
   },

@@ -3,9 +3,11 @@
 namespace application {
 
   interface IScope extends ng.IScope {
-    options: {};
-    showTypes: {};
     data: {};
+    dataDetail: {};
+    options: {};
+    optionsDetail: {};
+    showTypes: {};
     kData: {};
     dataTree: any[];
     opened: {};
@@ -58,6 +60,67 @@ namespace application {
 
       function openPixelChart(d) {
         // open it
+        let layerArray = Global.getData('info').layer;
+        let lid = _.find(layerArray, (o: any) => o.name === d.name).lid;
+        let [db, parser] = [Global.getSelectedDB(), 'json'];
+        let type = 'i_cosine';
+        DataManager.fetchKernel({ db, type, layer: [lid], parser }, false)
+          // DataManager.fetchKernel({ db, type: 'i_norm1', layer: [lid], parser }, false)
+          .then(data => {
+            $scope.optionsDetail[d.name] = this_._setOptions('pixelChartWithLine');
+            $scope.optionsDetail[d.name].height = data.length + 4;
+
+            // global scale
+            // let f = d4.scaleLinear();
+            // if (type === 'i_cosine') { f.range([1, 0]); }
+            //   else { f.range([0, 1]); }
+            // let [min, max] = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER];
+
+            // _.each(data, (dd, i) => {
+            //   let [mmin, mmax] = d4.extent(dd.value);
+            //   if (min > mmin) { min = mmin; }
+            //   if (max < mmax) { max = mmax; }
+            // });
+            // f.domain([min, max]);
+            // _.each(data, (dd, i) => {
+            //   dd.value = _.map(dd.value, (o: any) => {
+            //     let t = f(o);
+            //     return t;
+            //   });
+            //   dd.index = +i;
+            // });
+
+            // horizon scale
+            // _.each(data, (dd, i) => {
+            //   let [mmin, mmax] = d4.extent(dd.value);
+            //   let nf = d4.scaleLinear().domain([mmin, mmax]).range([1, 0]).clamp(true);
+            //   console.log(mmin, mmax, nf(1));
+            //   dd.value = _.map(dd.value, (o: any) => {
+            //     let t = nf(o);
+            //     return 0;
+            //   });
+            //   dd.index = +i;
+            // });
+
+            // vertical scale
+            for (let i = 0; i < data[0].iter.length; i += 1) {
+              let [min, max] = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER];
+              _.each(data, (dd, j) => {
+                if (min > dd.value[i]) { min = dd.value[i]; }
+                if (max < dd.value[i]) { max = dd.value[i]; }
+                dd.index = +j;
+              });
+              let nf = d4.scaleLinear().domain([min, max]).range([1, 0.02]).clamp(true);
+              _.each(data, dd => {
+                dd.value[i] = nf(dd.value[i]);
+              });
+            }
+            console.log(data);
+            $scope.dataDetail[d.name] = {
+              pixelChart: data,
+              lineChart: null
+            };
+          });
       }
 
       function act(conf) {
@@ -70,6 +133,8 @@ namespace application {
         layers = _.keyBy(layerArray, (o: any) => o.name); // turn array to object with key layername
         $scope.opened = {};
         $scope.options = {};
+        $scope.optionsDetail = {};
+        $scope.dataDetail = {};
         $scope.showTypes = {};
         $scope.conf = conf;
         $scope.dataTree = tree;
@@ -231,19 +296,6 @@ namespace application {
 
         }
 
-        /*--- kernel detail data ---*/
-        // let opt: IHTTPOptionConfig = {
-        //   db: Global.getSelectedDB(),
-        //   type: 'w_norm1',
-        //   layer: allLayers.slice(0, 3),
-        //   parser: 'json'
-        // };
-        // DataManager
-        //   .fetchKernel(opt, true)
-        //   .then(dataKernel => {
-        //     $scope.data = this_._processData('kernel', layers, dataKernel);
-        //     console.log('$scope.data', $scope.data);
-        //   });
       }
 
       $scope.open = function (d, level) {
@@ -263,10 +315,10 @@ namespace application {
             $scope.showTypes[d.name] = 'pchart';
             openPixelChart(d);
           } else {
-            if ($scope.conf.showType === 'sparklinePlus' || $scope.conf.showType === 'boxPlotChart') {
-              $scope.showTypes[d.name] = 'nvd3';
-            } else if ($scope.conf.showType === 'crChart') {
+            if ($scope.conf.type === 's_cratio') {
               $scope.showTypes[d.name] = 'cr';
+            } else {
+              $scope.showTypes[d.name] = 'nvd3';
             }
           }
         }
@@ -473,6 +525,7 @@ namespace application {
             cellWidth: 1,
             pixelChart: true,
             lineChart: false,
+            color: d4.scaleSequential(d4.interpolateBlues),
             margin: {
               top: 2,
               right: 0,

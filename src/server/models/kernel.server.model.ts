@@ -6,6 +6,11 @@ import * as chalk from 'chalk';
 import * as _ from 'lodash';
 import * as utils from '../lib/utils.server';
 import { bson } from '../lib/bson.server';
+import * as numeric from 'numeric';
+import * as d3 from 'd3';
+import { LG } from '../lib/mds.server';
+
+
 
 // begin of interface definition
 interface IOption extends application.IHTTPOptionConfig { };
@@ -68,6 +73,7 @@ export function respond(options: IOption, res: Response) {
   console.time(colName);
 
   let [cond, project, sort] = getConfig(options);
+  console.log(cond, project, sort);
 
   col.find(cond, project)
     .lean()
@@ -96,10 +102,11 @@ function getConfig(options: IOption) {
   let cond, project, sort;
 
   if (_.startsWith(options.type, 'i_')) {
-    cond = { iter: options.iter };
-    // if (_.startsWith(options.db, 'imagenet')) { cond = { lid: { $nin: [1, 267] } }; }
+    cond = {};
+    sort = { iter: 1 };
+    if (options.iter) { cond.iter = options.iter; sort = { lid: 1 }; }
+    if (!_.isEmpty(options.layer)) { cond.lid = options.layer[0]; }
     project = { _id: 0 };
-    sort = { lid: 1 };
   } else {
     // default
     cond = {};
@@ -118,7 +125,7 @@ function getConfig(options: IOption) {
 }
 
 function postProcess(data: any[], options: IOption): any[] {
-  if (_.startsWith(options.type, 'i_')) {
+  if (_.startsWith(options.type, 'i_') && options.iter) {
     let tmp = [];
     for (let layer of data) {
       _.each(layer.value, (v, k) => {
@@ -141,6 +148,20 @@ function postProcess(data: any[], options: IOption): any[] {
     }
     tmp = _.sortBy(r, d => d[1]);
     return _.reverse(tmp);
+  } else if (_.startsWith(options.type, 'i_') && options.layer) {  // one layer
+    let r = [];
+    let size = data[0].value.length;
+    for (let i = 0; i < size; i += 1) {
+      let tmp = { key: i, iter: [], value: [] };
+      for (let d of data) {
+        tmp.iter.push(d.iter);
+        tmp.value.push(d.value[i]);
+      }
+      r.push(tmp);
+    }
+    // mdsLayout(r);
+    // console.log('mds calc done!!!!');
+    return r;
   } else {
     let m = new Map();
     let r = [];
@@ -156,12 +177,6 @@ function postProcess(data: any[], options: IOption): any[] {
     r = _.sortBy(r, ['key']);
     return r;
   }
-  // switch (options.type) {
-  //   case 'xx':
-  //     return;
-  //   default:
-  //     break;
-  // }
 };
 
 function getModel(collectionName: string): IModel {
@@ -170,3 +185,53 @@ function getModel(collectionName: string): IModel {
   }
   return model(collectionName);
 };
+
+function mdsLayout(data) {
+  let distMatrix = [];
+  let length = data.length;
+  let max = -1;
+  for (let i = 0; i < length; i += 1) {
+    distMatrix.push(Array(length).fill(0));
+    distMatrix[i][i] = 0;
+    for (let j = i - 1; j >= 0; j -= 1) { distMatrix[i][j] = distMatrix[j][i]; }
+    for (let j = i + 1; j < length; j += 1) {
+      distMatrix[i][j] = computeDist2(data[i].value, data[j].value);
+      if (distMatrix[i][j] > max) { max = distMatrix[i][j]; }
+    }
+  }
+
+  let fs = d3.scaleLinear().range([0, 1]).domain([0, max]).clamp(true);
+  for (let i = 0; i < length; i += 1) {
+    for (let j = 0; j < length; j += 1) {
+      distMatrix[i][j] = fs(distMatrix[i][j]);
+    }
+  }
+  console.log('mds calc ing ~~~~');
+  let coordinate = _.map(LG.utils.Mds.mds(distMatrix, 1), (d, i) => {
+    return [i, d[0]];
+  });
+  coordinate = _.sortBy(coordinate, d => d[1]);
+  for (let i = 0; i < data.length; i += 1) {
+    let idx = coordinate[i][0];
+    data[idx].index = i;
+  }
+}
+
+function computeDist(va, vb) {
+  let size = va.length;
+  let dist = 0;
+  for (let i = 0; i < size; i += 1) {
+    dist += va[i] !== vb[i] ? 1 : 0;
+  }
+  return dist;
+}
+
+// cos
+function computeDist2(va, vb) {
+  let nva = numeric.norm2(va);
+  let nvb = numeric.norm2(vb);
+  if (nva !== 0 && nvb !== 0) {
+    return 1 - numeric.dot(va, vb) / (numeric.norm2(va) * numeric.norm2(vb));
+  }
+  return 1;
+}

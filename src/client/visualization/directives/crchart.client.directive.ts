@@ -136,6 +136,7 @@ namespace application {
       ) {
 
         let start = () => {
+          element.empty();
           let board = new Painter(element, scope.options);
           board.render(scope.data);
         };

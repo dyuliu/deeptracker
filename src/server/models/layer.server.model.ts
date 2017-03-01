@@ -162,3 +162,4 @@ function getModel(collectionName: string): IModel {
   }
   return model(collectionName);
 };
+

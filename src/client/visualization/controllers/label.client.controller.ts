@@ -86,7 +86,7 @@ namespace application {
 
           let pixelChart: any = _.map(data, (d: any) => {
             let correct = _.map(d.answer, o => o === d.label ? 1 : 0);
-            return { iter: d.iter, value: correct, file: d.file };
+            return { iter: d.iter, value: correct, key: d.file };
           });
 
           for (let i = 0; i < pixelChart.length; i += 1) { pixelChart[i].index = i; }
@@ -273,6 +273,9 @@ namespace application {
             cellWidth: 1,
             pixelChart: true,
             lineChart: true,
+            color: function (d) {
+              if (d === 0) { return '#7fc97f'; } else { return '#fdc086'; };
+            },
             margin: {
               top: 0,
               right: 0,

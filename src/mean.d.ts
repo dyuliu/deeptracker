@@ -52,7 +52,8 @@ declare namespace mean {
             uri: string,
             options: {
                 user: string,
-                pass: string
+                pass: string,
+                server?: any
             },
             debug: boolean
         };

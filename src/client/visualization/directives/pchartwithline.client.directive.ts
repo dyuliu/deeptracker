@@ -4,10 +4,10 @@ namespace application {
   interface IDTypeEle extends Array<{ iter: number, value: number }> { };
 
   export interface IImgDataEle {
-    key: string;  // img file name
+    key: string;  // img file name or kernel
     cls: string;  // img class
     domain?: Array<number>;  // iter
-    values: Array<number>; // correctness for all imgs in one iter
+    value: Array<number>; // correctness for all imgs in one iter
   }
 
   export interface IImgDataType extends Array<IImgDataEle> { };
@@ -77,15 +77,18 @@ namespace application {
       let ctx: CanvasRenderingContext2D = this_.canvas.node().getContext('2d');
       // create Image
       let idx = 0;
+      let colorFunc = this_.options.color;
       for (let d of data) {
         let size = d.iter.length;
         let image = ctx.createImageData(size, 1);
         for (let i = 0; i < size; i += 1) {
           let color;
           if (d.value[i] === 1) {
-            color = d4.color('#7fc97f').rgb();
+            // color = d4.color('#7fc97f').rgb();
+            color = d4.color(colorFunc(d.value[i])).rgb();
           } else {
-            color = d4.color('#fdc086').rgb();
+            // color = d4.color('#fdc086').rgb();
+            color = d4.color(colorFunc(d.value[i])).rgb();
           }
           image.data[i * 4 + 0] = color.r;
           image.data[i * 4 + 1] = color.g;
@@ -171,6 +174,7 @@ namespace application {
       ) {
 
         let start = () => {
+          element.empty();
           let board = new Painter(element, scope.options);
           board.render(scope.data);
         };
