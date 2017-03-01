@@ -268,9 +268,9 @@ namespace application {
         record: {
           lr: false,
           testError: true,
-          testLoss: false,
+          testLoss: true,
           trainError: true,
-          trainLoss: false,
+          trainLoss: true,
           show: false
         },
         label: {
@@ -283,7 +283,7 @@ namespace application {
           gw: 'g',
           type: 'norm1',
           show: false,
-          sameScale: true,
+          sameScale: false,
           level: 0
         }
       };

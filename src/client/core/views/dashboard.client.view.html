@@ -183,7 +183,9 @@
       <div style="margin-left: 5px">
         <div class="row">
           <div class="col-xs-6">
-            <label class="control-label bolder blue">Layer Info</label>
+            <label class="control-label bolder blue">Layer Info
+              <i id="layer-data-loading" class="ace-icon fa fa-spinner fa-spin orange bigger-125 invisible"></i>
+            </label>
           </div>
           <div class="col-xs-6">
             <label>
@@ -227,7 +229,7 @@
         </div>
 
         <div class="control-group">
-          Other Types:
+          Special:
           <div class="radio">
             <label>
                 <input ng-model="config.layer.type" name="form-field-radio2" type="radio" class="ace" value="s_cratio"/>
@@ -255,7 +257,7 @@
 
       <label>
         Same Scale:
-        <input ng-model="config.layerInfo.sameScale" name="switch-field-1" class="ace ace-switch ace-switch-2" type="checkbox" />
+        <input ng-model="config.layer.sameScale" name="switch-field-1" class="ace ace-switch ace-switch-2" type="checkbox" />
         <span class="lbl">&nbsp;</span>
       </label>
 

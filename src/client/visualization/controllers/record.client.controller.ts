@@ -55,10 +55,11 @@ namespace application {
             $scope.data.error = this_._process('lineChart', data.testError, data.trainError);
             $scope.options.error = this_._setOption('lineChart', data.testError.length, color);
           } else {
-            if (conf.trainError) { color = color.slice(1); }
+            let myColor = color;
+            if (conf.trainError) { myColor = color.slice(1); }
             let d = conf.testError ? data.testError : data.trainError;
             $scope.data.error = this_._process('sparklinePlus', d);
-            $scope.options.error = this_._setOption('sparklinePlus', d.length, color);
+            $scope.options.error = this_._setOption('sparklinePlus', d.length, myColor);
           }
         }
         if ($scope.show.loss) {
@@ -66,10 +67,11 @@ namespace application {
             $scope.data.loss = this_._process('lineChart', data.testLoss, data.trainLoss);
             $scope.options.loss = this_._setOption('lineChart', data.testLoss.length, color);
           } else {
-            if (conf.trainLoss) { color = color.slice(1); }
+            let myColor = color;
+            if (conf.trainLoss) { myColor = color.slice(1); }
             let d = conf.testLoss ? data.testLoss : data.trainLoss;
             $scope.data.loss = this_._process('sparklinePlus', d);
-            $scope.options.loss = this_._setOption('sparklinePlus', d.length, color);
+            $scope.options.loss = this_._setOption('sparklinePlus', d.length, myColor);
           }
         }
       };

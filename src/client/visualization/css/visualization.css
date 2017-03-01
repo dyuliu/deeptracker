@@ -47,17 +47,11 @@
 .layerbox:first-child:hover {
   border-top-color: #D6E1EA;
 }
-.level2 {
-  margin-left: 15px;
+.level2-off {
+  margin-left: 10px;
 }
-.level3 {
-  margin-left: 15px;
-}
-.counter-level2 {
-  margin-left: calc(-15px);
-}
-.counter-level3 {
-  margin-left: calc(-30px);
+.level3-off {
+  margin-left: 20px;
 }
 .tree:before {
   visibility: hidden;

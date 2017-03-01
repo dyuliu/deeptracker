@@ -119,13 +119,23 @@ namespace application {
         this_.Global.setSelectedDB(n);
         let [db, parser] = [n, 'json'];
         $('#label-data-loading').removeClass('invisible');
-        // cached seq
+        // cached label cls stat
         this_.DataManager.fetchImg({ db, type: 'cls_stat', seqidx: [49], cls: [], parser }, false)
           .then(data => {
             $('#label-data-loading').addClass('invisible');
             let labelData = this_.Global.getData('label');
             labelData.clsStat = data;
           });
+
+        // cached change ratio data
+        $('#layer-data-loading').removeClass('invisible');
+        this_.$q.all([
+          this_.DataManager.fetchLayer({ db, type: 's_cratio', seqidx: [0], parser }, false),
+          this_.DataManager.fetchLayer({ db, type: 'hl_s_cratio', seqidx: [0], parser }, false)
+        ]).then(data => {
+            $('#layer-data-loading').addClass('invisible');
+        });
+
         // prefetch data
         this_.$q.all({
           infoLayer: this_.DataManager.fetchInfo({ db, type: 'layer' }),

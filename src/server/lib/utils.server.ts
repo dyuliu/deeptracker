@@ -326,4 +326,8 @@ export let tables: ITables = {
 export let cacheData = {
 };
 
+export let cacheSeqData = {
+};
 
+export let cacheHLSeqData = {
+};

@@ -11,7 +11,8 @@
   <div class="widget-body">
     <div class="space-2"></div>
 
-    <div class="row scrollable" data-size="500">
+    <!--<div class="row scrollable" data-size="500">-->
+    <div class="row">
       <div class="col-xs-1 col-sm-1">
         <!--output-->
         <div ng-repeat-start="(key, value) in kData" ng-repeat-end>
@@ -20,8 +21,7 @@
             {{v[0]}}
           </p>
           <p ng-repeat-end>
-            {{v[1] + ' , '}}
-            {{v[2]/v[1] | number : 5}}
+            {{v[1] + ' , '}} {{v[2]/v[1] | number : 5}}
           </p>
         </div>
       </div>
@@ -37,44 +37,45 @@
               </span>
             </div>
 
-            <div ng-if="!opened[la.name] || !la.nodes" class="col-xs-10 col-sm-10">
-              <nvd3 options="options[la.name]" data="data[la.name]"></nvd3>
-              <!--<div pchartwithline options="options[la.name]" data="data[la.name]"></div>-->
-              <!--<div crchart options="options[la.name]" data="data[la.name]"></div>-->
+            <div ng-if="!opened[la.name]" class="col-xs-10 col-sm-10">
+              <nvd3 ng-if="showTypes[la.name] === 'nvd3' " options="options[la.name]" data="data[la.name]"></nvd3>
+              <div ng-if="showTypes[la.name] === 'cr' " crchart options="options[la.name]" data="data[la.name]"></div>
+              <div ng-if="showTypes[la.name] === 'pchart' " pchartwithline options="options[la.name]" data="data[la.name]"></div>
             </div>
           </div>
 
           <div ng-repeat-start="lan in la.nodes" id="{{lan.name}}" class="level2 no-padding" style="display: none" ng-class="{'layerbox': (!opened[lan.name] || !lan.nodes)}" ng-repeat-end>
             <div class="row">
               <div class="col-xs-2 col-sm-2">
-                <span class="tree-branch-name" ng-click="open(lan, 3)">
+                <span class="tree-branch-name level2-off" ng-click="open(lan, 3)">
                   <i class="icon-folder ace-icon" ng-class="{'invisible': !lan.nodes, 'tree-minus': opened[lan.name], 'tree-plus': !opened[lan.name]}"></i>
                   <span class="tree-label">{{lan.name}}</span>
                 </span>
               </div>
-              <div ng-if="!opened[lan.name] || !lan.nodes" class="col-xs-10 col-sm-10 counter-level2">
-                <nvd3 options="options[lan.name]" data="data[lan.name]"></nvd3>
-                <!--<div pchartwithline options="options[lan.name]" data="data[lan.name]"></div>-->
-                <!--<div crchart options="options[lan.name]" data="data[lan.name]"></div>-->
+              <div ng-if="opened[la.name] && !opened[lan.name]" class="col-xs-10 col-sm-10">
+                <nvd3 ng-if="showTypes[lan.name] === 'nvd3' " options="options[lan.name]" data="data[lan.name]"></nvd3>
+                <div ng-if="showTypes[lan.name] === 'cr' " crchart options="options[lan.name]" data="data[lan.name]"></div>
+                <div ng-if="showTypes[lan.name] === 'pchart' " pchartwithline options="options[lan.name]" data="data[lan.name]"></div>
               </div>
             </div>
 
             <div ng-repeat-start="lann in lan.nodes" id="{{lann.name}}" class="level3 layerbox no-padding" style="display: none" ng-repeat-end>
               <div class="row">
                 <div class="col-xs-2 col-sm-2">
-                  <span class="tree-branch-name" ng-click="open(lann, 3)">
-                    <i class="icon-folder ace-icon" ng-class="{'invisible': !lann.nodes, 'tree-minus': opened[lann.name], 'tree-plus': !opened[lann.name]}"></i>
+                  <span class="tree-branch-name level3-off" ng-click="open(lann, 4)">
                     <span class="tree-label">{{lann.name}}</span>
                   </span>
                 </div>
-                <div ng-if="!opened[lann.name] || !lann.nodes" class="col-xs-10 col-sm-10 counter-level3">
-                  <nvd3 options="options[lann.name]" data="data[lann.name]"></nvd3>
-                  <!--<div pchartwithline options="options[lann.name]" data="data[lann.name]"></div>-->
-                  <!--<div crchart options="options[lann.name]" data="data[lann.name]"></div>-->
+                <div ng-if="opened[lan.name]" class="col-xs-10 col-sm-10">
+                  <nvd3 ng-if="showTypes[lann.name] === 'nvd3' " options="options[lann.name]" data="data[lann.name]"></nvd3>
+                  <div ng-if="showTypes[lann.name] === 'cr' " crchart options="options[lann.name]" data="data[lann.name]"></div>
+                  <div ng-if="showTypes[lann.name] === 'pchart' " pchartwithline options="options[lann.name]" data="data[lann.name]"></div>
                 </div>
               </div>
             </div>
+
           </div>
+
         </div>
 
       </div>
