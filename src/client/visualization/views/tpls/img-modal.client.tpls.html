@@ -5,7 +5,7 @@
         <button type="button" class="close" ng-click="$hide()">&times;</button>
         <h4 class="modal-title" ng-bind-html="title">{{clsName}}</h4>
       </div>
-      <div class="modal-body">
+      <div ng-if="type==='class'" class="modal-body">
         <ul class="ace-thumbnails clearfix">
           <li ng-repeat="img in images">
             <a href="/assets/images/gallery/{{imgDatabase}}/{{clsName}}/{{img}}" data-rel="colorbox">
@@ -16,6 +16,9 @@
             </a>
           </li>
         </ul>
+      </div>
+      <div ng-if="type==='file'" class="modal-body">
+        <img src="/assets/images/gallery/{{imgDatabase}}/{{clsName}}/{{simg}}" />
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" ng-click="$hide()">Close</button>

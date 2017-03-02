@@ -108,9 +108,9 @@ namespace application {
               _.each(data, (dd, j) => {
                 if (min > dd.value[i]) { min = dd.value[i]; }
                 if (max < dd.value[i]) { max = dd.value[i]; }
-                dd.index = +j;
+                if (!dd.index) { dd.index = +j; }
               });
-              let nf = d4.scaleLinear().domain([min, max]).range([1, 0.02]).clamp(true);
+              let nf = d4.scaleLinear().domain([min, max]).range([0.01, 0.95]).clamp(true);
               _.each(data, dd => {
                 dd.value[i] = nf(dd.value[i]);
               });
@@ -229,7 +229,7 @@ namespace application {
           }
           $q.all(queryQueue).then(data => {
             $scope.data = {};
-            let ss = _.range(0, iterSet.size, 4);
+            let ss = _.range(0, iterSet.size, 2);
             for (let i = 0; i < data.length; i += 1) {
               data[i] = _.filter(data[i], (d: any) => iterSet.has(d.iter));
               let tmp = [];

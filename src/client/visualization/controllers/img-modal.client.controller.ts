@@ -10,17 +10,20 @@ namespace application {
       public Global: IGlobalService,
     ) {
       let this_ = this;
-      let name = this_.$scope.clsName;
-
       let dbName = this_.Global.getSelectedDB();
       if (_.startsWith(dbName, 'imagenet')) {
         $scope.imgDatabase = 'imagenet';
       } else if (_.startsWith(dbName, 'cifar')) {
         $scope.imgDatabase = 'cifar';
       }
+      $scope.clsName = $scope.cls;
+      if ($scope.type === 'class') {
+        let data = _.find(this_.Global.getData('info').cls, (o: any) => o.name === $scope.cls);
+        $scope.images = data.file;
+      } else if ($scope.type === 'file') {
+        $scope.simg = $scope.name;
+      }
 
-      let data = _.find(this_.Global.getData('info').cls, (o: any) => o.name === name);
-      $scope.images = data.file;
     }
   }
 

@@ -10,6 +10,8 @@ namespace application {
     emitLabelConfigChanged(msg: any): void;
     emitLayerConfigChanged(msg: any): void;
     emitTimeboxConfigChanged(msg: any): void;
+    emitShowModal(msg: any): void;
+    emitSyncHorizonScale(msg: any): void;
     onUrlChanged(scope: ng.IScope, cb: (msg: any) => void): void;
     onVlDiv(scope: ng.IScope, cb: (msg: any) => void): void;
     onModelChanged(scope: ng.IScope, cb: (msg: any) => void): void;
@@ -18,6 +20,8 @@ namespace application {
     onLabelConfigChanged(scope: ng.IScope, cb: (msg: any) => void): void;
     onLayerConfigChanged(scope: ng.IScope, cb: (msg: any) => void): void;
     onTimeboxConfigChanged(scope: ng.IScope, cb: (msg: any) => void): void;
+    onShowModal(scope: ng.IScope, cb: (msg: any) => void): void;
+    onSyncHorizonScale(scope: ng.IScope, cb: (msg: any) => void): void;
   }
 
   export class Pip {
@@ -65,6 +69,8 @@ namespace application {
       this.addEvent('labelConfigChanged');
       this.addEvent('layerConfigChanged');
       this.addEvent('timeboxConfigChanged');
+      this.addEvent('showModal');
+      this.addEvent('syncHorizonScale');
     }
   }
 

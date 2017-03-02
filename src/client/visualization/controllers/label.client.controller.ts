@@ -44,10 +44,18 @@ namespace application {
         controller: 'ImgModalController'
       });
 
-      $scope.showModal = function (name) {
-        modal.$scope.clsName = name;
+      $scope.showModal = function (name, type) {
+        modal.$scope.cls = name;
+        modal.$scope.type = 'class';
         modal.$promise.then(modal.show);
       };
+
+      Pip.onShowModal($scope, (msg: any) => {
+        modal.$scope.name = msg.key;
+        modal.$scope.cls = msg.cls;
+        modal.$scope.type = 'file';
+        modal.$promise.then(modal.show);
+      });
 
       $scope.click = function (type: string, clsName?: string) {
         if (type === 'open') {
@@ -61,8 +69,13 @@ namespace application {
           if ($scope.flip[clsName]) {
             showDetail(clsName);
           }
+        } else if (type === 'zoomin') {
+          $scope.$broadcast('zoom', {type: 'in', cls: clsName});
+        } else if (type === 'zoomout') {
+          $scope.$broadcast('zoom', {type: 'out', cls: clsName});
         }
       };
+
 
       Pip.onTimeChanged($scope, (iter) => {
         console.log('select iter: ', iter);
@@ -82,25 +95,20 @@ namespace application {
           cls: [clsName],
           parser: 'json'
         }, false).then((data: any) => {
-          console.log(data);
 
-          let pixelChart: any = _.map(data, (d: any) => {
-            let correct = _.map(d.answer, o => o === d.label ? 1 : 0);
-            return { iter: d.iter, value: correct, key: d.file };
-          });
+          $scope.optionsDetail[clsName] = this_._setOptions('pixelChartWithLine', data.length);
+          $scope.optionsDetail[clsName].threshold = $scope.optionsCls[clsName].threshold;
+          $scope.optionsDetail[clsName].max = $scope.optionsCls[clsName].max;
 
-          for (let i = 0; i < pixelChart.length; i += 1) { pixelChart[i].index = i; }
-          $scope.optionsDetail[clsName] = this_._setOptions('pixelChartWithLine', pixelChart.length + 5);
           $scope.dataDetail[clsName] = {
-            pixelChart: pixelChart,
-            lineChart: $scope.dataCls[clsName].heatmapData
+            pixelChart: data,
+            lineChart: $scope.dataCls[clsName].linechartData
           };
         });
       }
 
       function act(conf) {
         if (first) {
-          console.log('first processing data');
           $scope.optionsHeatLine = this_._setOptions('heatline');
           $scope.optionsHeatLine.height = 100;
           let gd = Global.getData();
@@ -118,15 +126,22 @@ namespace application {
           first = false;
         }
 
-        console.log('mds calc');
-        let selectedCls = [];
+        let selectedCls = [], maxPMax = Number.MIN_SAFE_INTEGER;
+        _.each($scope.dataCls, (d: any, k) => {
+          if (d.pmax > maxPMax) { maxPMax = d.pmax; }
+        });
+
         _.each($scope.dataCls, (d: any, k) => {
           if (d.pmax >= conf.threshold) {
             $scope.optionsCls[k] = this_._setOptions('heatline');
             $scope.optionsCls[k].threshold = conf.threshold;
+            $scope.optionsCls[k].max = maxPMax;
             selectedCls.push({ name: k, pmax: d.pmax });
           }
         });
+
+
+
         if (conf.mds) {
           let tmp = [];
           _.each(selectedCls, d => {
@@ -258,12 +273,12 @@ namespace application {
         case 'heatline':
           options = {
             width: this_.Global.getData('iter').num + 30,
-            height: height ? height : 30,
+            height: height ? height : 25,
             cellWidth: 1,
             margin: {
-              top: 10,
+              top: 2,
               right: 30,
-              bottom: 1,
+              bottom: 0,
               left: 0
             },
             lineChart: false
@@ -272,17 +287,18 @@ namespace application {
         case 'pixelChartWithLine':
           options = {
             width: this_.Global.getData('iter').num + 30,
-            height: height ? height : 18,
+            height: height ? height + 20 : 50,
             cellWidth: 1,
             pixelChart: true,
             lineChart: true,
             color: function (d) {
-              if (d === 0) { return '#7fc97f'; } else { return '#fdc086'; };
+              if (d === 1) { return '#7fc97f'; } else { return '#fdc086'; };
             },
+            marginTop: 10,
             margin: {
-              top: 0,
+              top: 10,
               right: 30,
-              bottom: 5,
+              bottom: 0,
               left: 0
             }
           };

@@ -6,7 +6,7 @@ import * as chalk from 'chalk';
 import * as _ from 'lodash';
 import * as utils from '../lib/utils.server';
 import { bson } from '../lib/bson.server';
-
+import { mdsLayout } from '../lib/mds.server';
 // begin of interface definition
 interface IOption extends application.IHTTPOptionConfig { };
 
@@ -141,7 +141,12 @@ function getConfig(options: IOption) {
 function postProcess(data: any[], options: IOption): any[] {
   switch (options.type) {
     case 'detail':
-      return data;
+      let tmp: any = _.map(data, (d: any) => {
+        let correct = _.map(d.answer, o => o === d.label ? 1 : 0);
+        return { iter: d.iter, value: correct, key: d.file, cls: d.cls };
+      });
+      mdsLayout(tmp);
+      return tmp;
     case 'model_stat':
       // let first = true;
       // let kconst = 0;
