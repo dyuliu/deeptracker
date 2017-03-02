@@ -115,6 +115,7 @@ namespace application {
       chart.append('path')
         .datum(lineData)
         .attr('fill', 'none')
+        .attr('stroke-opacity', 0.5)
         .attr('stroke', 'steelblue')
         .attr('stroke-opacity', 1)
         .attr('stroke-linejoin', 'round')

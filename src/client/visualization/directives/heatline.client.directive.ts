@@ -70,7 +70,43 @@ namespace application {
     public render(data: IDTypeHeatline) {
       let this_ = this;
       this_._paintHeatMap(data.heatmapData);
+      console.log(this_.options);
+      if (this_.options.threshold > 0) { this_._addTriangles(data.linechartData); }
       if (this_.options.lineChart) { this_._paintLineChart(data.linechartData, data.max); }
+    }
+
+    private _addTriangles(data: IDTypeEle) {
+      console.log('draw tri');
+      let this_ = this;
+      let threshold = this_.options.threshold;
+      let triangleData = [];
+      _.each(data, (d, i) => {
+        if (d.value >= threshold) {
+          triangleData.push({ x: i, y: d.value, iter: d.iter });
+        }
+      });
+
+      let color = d4.scaleSequential(d4.interpolateBlues);
+      let scale = d4.scaleLinear()
+        .domain(d4.extent(triangleData, d => d.y))
+        .range([50, 300]);
+
+      // _.each(triangleData, (d: any) => { d.y = scale(d.y); });
+
+      let arc = d3.svg.symbol().type('triangle-down')
+        .size(function (d) { return scale(d.y); });
+
+      let triangles = this_.svg.append('g');
+      triangles.selectAll('path')
+        .data(triangleData)
+        .enter().append('path')
+        .attr('d', arc)
+        .attr('fill', '#4682b4')
+        .attr('transform', (d: any) => 'translate(' + d.x + ', -2) scale(1,'
+          + (4 / Math.sqrt(scale(d.y))) + ')')
+        .append('title').text(d => 'iter: ' + d.iter + ' value: ' + d.y);
+      // .attr('transform', (d: any) => 'translate(' + d.x + ',' + 0 + ') scale(1,1)');
+
     }
 
     private _paintHeatMap(data: IDTypeEle) {
@@ -90,6 +126,7 @@ namespace application {
         ctx.stroke();
       }
     }
+
     private _paintLineChart(data: IDTypeEle, max: number) {
       let this_ = this;
       let size = data.length;

@@ -102,6 +102,7 @@ namespace application {
         if (first) {
           console.log('first processing data');
           $scope.optionsHeatLine = this_._setOptions('heatline');
+          $scope.optionsHeatLine.height = 100;
           let gd = Global.getData();
 
           $scope.dataModel = {
@@ -122,6 +123,7 @@ namespace application {
         _.each($scope.dataCls, (d: any, k) => {
           if (d.pmax >= conf.threshold) {
             $scope.optionsCls[k] = this_._setOptions('heatline');
+            $scope.optionsCls[k].threshold = conf.threshold;
             selectedCls.push({ name: k, pmax: d.pmax });
           }
         });
@@ -250,17 +252,18 @@ namespace application {
     }
 
     private _setOptions(type, height?) {
+      let this_ = this;
       let options;
       switch (type) {
         case 'heatline':
           options = {
-            width: 2000,
-            height: height ? height : 18,
+            width: this_.Global.getData('iter').num + 30,
+            height: height ? height : 30,
             cellWidth: 1,
             margin: {
-              top: 0,
-              right: 0,
-              bottom: 2,
+              top: 10,
+              right: 30,
+              bottom: 1,
               left: 0
             },
             lineChart: false
@@ -268,7 +271,7 @@ namespace application {
           break;
         case 'pixelChartWithLine':
           options = {
-            width: 2000,
+            width: this_.Global.getData('iter').num + 30,
             height: height ? height : 18,
             cellWidth: 1,
             pixelChart: true,
@@ -278,7 +281,7 @@ namespace application {
             },
             margin: {
               top: 0,
-              right: 0,
+              right: 30,
               bottom: 5,
               left: 0
             }

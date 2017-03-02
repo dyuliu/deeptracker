@@ -137,6 +137,7 @@ namespace application {
     }
 
     private _setOption(type, width?, color?) {
+      let this_ = this;
       let options;
       switch (type) {
         case 'sparklinePlus':
@@ -144,7 +145,7 @@ namespace application {
             chart: {
               type: 'sparklinePlus',
               height: 100,
-              width: width ? width : 750,
+              width: width ? width : this_.Global.getData('iter').num,
               margin: {
                 left: 0,
                 right: 0,
@@ -169,7 +170,7 @@ namespace application {
             chart: {
               type: 'lineChart',
               color: color,
-              width: width ? width : 750,
+              width: width ? width : this_.Global.getData('iter').num,
               height: 100,
               margin: {
                 top: 1,
@@ -191,7 +192,7 @@ namespace application {
           options = {
             chart: {
               type: 'scatterChart',
-              width: width ? width : 750,
+              width: width ? width : this_.Global.getData('iter').num,
               height: 100,
               margin: {
                 top: 1,
