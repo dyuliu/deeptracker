@@ -42,6 +42,7 @@ export let assets: mean.IAssets = {
         'public/lib/angular-strap/dist/angular-strap.js',
         'public/lib/angular-strap/dist/angular-strap.tpl.js',
         // endbower
+        'public/lib-my/d3/horizon.js',
         'public/assets/html-theme/js/spinbox.min.js',
         'public/assets/html-theme/js/jquery.nestable.min.js',
         'public/assets/html-theme/js/jquery.colorbox.min.js',
@@ -82,8 +83,8 @@ export let env: mean.IEnv = {
   livereload: true,
   db: {
     // uri: 'mongodb://msraiv:5000/cifar-resnet164',
-    uri: 'mongodb://msraiv:5000/final',
-    // uri: 'mongodb://localhost:27017/final',
+    // uri: 'mongodb://msraiv:5000/final',
+    uri: 'mongodb://localhost:27017/final',
     // uri: 'mongodb://localhost:27017/final',
     options: {
       user: '',
