@@ -129,82 +129,19 @@ namespace application {
 
 
       this.all.layerTypeList = [
-        { label: 'max', value: 'max' },
+        { label: 'mean magnitude (norm1)', value: 'norm1' },
+        { label: 'mean magnitude (norm2)', value: 'norm2' },
+        { label: 'sum', value: 'sum' },
         { label: 'mean', value: 'mean' },
+        { label: 'std', value: 'std' },
+        { label: 'var', value: 'var' }
+        { label: 'max', value: 'max' },
         { label: 'mid', value: 'mid' },
         { label: 'min', value: 'min' },
-        { label: 'norm1', value: 'norm1' },
-        { label: 'norm2', value: 'norm2' },
         { label: 'quarter1', value: 'quarter1' },
         { label: 'quarter3', value: 'quarter3' },
-        { label: 'std', value: 'std' },
-        { label: 'sum', value: 'sum' },
-        { label: 'var', value: 'var' }
         // { label: 'change ratio', value: 's_cratio' }
       ];
-      // this.all.layerTypeList = {
-      //   weight: [
-      //     'w_max',
-      //     'w_mean',
-      //     'w_mid',
-      //     'w_min',
-      //     'w_norm0',
-      //     'w_norm1',
-      //     'w_norm2',
-      //     'w_quarter1',
-      //     'w_quarter3',
-      //     'w_std',
-      //     'w_sum',
-      //     'w_var'
-      //   ],
-      //   gradient: [
-      //     'g_max',
-      //     'g_mean',
-      //     'g_mid',
-      //     'g_min',
-      //     'g_norm0',
-      //     'g_norm1',
-      //     'g_norm2',
-      //     'g_quarter1',
-      //     'g_quarter3',
-      //     'g_std',
-      //     'g_sum',
-      //     'g_var'
-      //   ],
-      //   seq: [
-      //     's_cratio',
-      //     's_histogram',
-      //     's_histogram'
-      //   ],
-      // };
-
-      this.all.kernelTypeList = {
-        weight: [],
-        gradient: [],
-        seq: [
-          'w_norm1',
-          'w_norm2'
-        ]
-      };
-
-      this.all.imgTypeList = {
-        type: [
-          'test',
-          'train'
-        ],
-        cls: [
-          'cls0',
-          'cls1',
-          'cls2',
-          'cls3',
-          'cls4',
-          'cls5',
-          'cls6',
-          'cls7',
-          'cls8',
-          'cls9'
-        ]
-      };
 
       // global static var
       this.all.imgDBList = ['imagenet', 'cifar'];
@@ -240,7 +177,8 @@ namespace application {
         iter: {
           num: 0,
           set: null,
-          array: null
+          array: null,
+          picked: null
         },
         tree: null,
         info: {
@@ -263,10 +201,10 @@ namespace application {
 
       this.all.config = {
         timebox: {
-          show: false
+          show: true
         },
         record: {
-          lr: false,
+          lr: true,
           testError: true,
           testLoss: true,
           trainError: true,
@@ -277,7 +215,7 @@ namespace application {
           mds: false,
           show: false,
           threshold: 5,
-          abnormal: 30
+          abnormal: 20
         },
         layer: {
           gw: 'g',

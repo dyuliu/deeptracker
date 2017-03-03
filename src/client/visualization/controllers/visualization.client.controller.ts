@@ -5,6 +5,7 @@ namespace application {
   interface IScope extends ng.IScope {
     vlDiv: boolean;
     config: any;
+    click: any;
   }
 
   class Controller {
@@ -18,7 +19,11 @@ namespace application {
     ) {
 
       $scope.vlDiv = false;
-      Pip.onVlDiv( $scope, e => { $scope.vlDiv = !$scope.vlDiv; });
+      Pip.onVlDiv($scope, e => { $scope.vlDiv = !$scope.vlDiv; });
+
+      $scope.click = function() {
+        Pip.emitTimePicked(null);
+      };
 
       $scope.config = Global.getConfig();
       Pip.onRecordConfigChanged($scope, (conf: any) => {
@@ -69,8 +74,8 @@ namespace application {
             if (widgets.hasOwnProperty(id)) {
               let state = widgets[id];
               let widget = $('#' + id);
-              if ( (state === 'shown' && widget.hasClass('collapsed')) ||
-              (state === 'hidden' && !widget.hasClass('collapsed')) ) {
+              if ((state === 'shown' && widget.hasClass('collapsed')) ||
+                (state === 'hidden' && !widget.hasClass('collapsed'))) {
                 widget.widget_box('toggleFast');
               } else if (state === 'closed') {
                 widget.widget_box('closeFast');
@@ -95,37 +100,33 @@ namespace application {
 
 
       $('#widget-container-labelinfo')
-        .mouseenter(function() {
+        .mouseenter(function () {
           $('#labelinfo-header').removeClass('invisible');
         })
-        .mouseleave(function() {
+        .mouseleave(function () {
           $('#labelinfo-header').addClass('invisible');
         });
       $('#widget-container-labelinfo-model')
-        .mouseenter(function() {
+        .mouseenter(function () {
           $('#widget-container-labelinfo-model .widget-header').removeClass('invisible');
         })
-        .mouseleave(function() {
+        .mouseleave(function () {
           $('#widget-container-labelinfo-model .widget-header').addClass('invisible');
         });
       $('#widget-container-labelinfo-cls')
-        .mouseenter(function() {
+        .mouseenter(function () {
           $('#widget-container-labelinfo-cls .widget-header').removeClass('invisible');
         })
-        .mouseleave(function() {
+        .mouseleave(function () {
           $('#widget-container-labelinfo-cls .widget-header').addClass('invisible');
         });
       $('#widget-container-labelinfo-detail')
-        .mouseenter(function() {
+        .mouseenter(function () {
           $('#widget-container-labelinfo-detail .widget-header').removeClass('invisible');
         })
-        .mouseleave(function() {
+        .mouseleave(function () {
           $('#widget-container-labelinfo-detail .widget-header').addClass('invisible');
         });
-      $('#main-widget-container').mousemove( function (e) {
-        let parentOffset = $(this).parent().offset();
-        $('.vl-div').css('left', e.pageX - parentOffset.left);
-      });
     }
     // end of constructor
 

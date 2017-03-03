@@ -153,7 +153,7 @@ namespace application {
             iterSet.add(data.labelStat[i].iter);
             iterArray.push(data.labelStat[i].iter);
           }
-          this_.Global.setData({ num: iterSet.size, set: iterSet, array: iterArray }, 'iter');
+          this_.Global.setData({ num: iterSet.size, set: iterSet, array: iterArray, picked: null }, 'iter');
           this_.Global.setData({
             lr: myFilter(data.lr, iterSet),
             testError: _.filter(data.testError, (d: any) => iterSet.has(d.iter)),

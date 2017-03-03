@@ -83,8 +83,8 @@ export let env: mean.IEnv = {
   livereload: true,
   db: {
     // uri: 'mongodb://msraiv:5000/cifar-resnet164',
-    // uri: 'mongodb://msraiv:5000/final',
-    uri: 'mongodb://localhost:27017/final',
+    uri: 'mongodb://msraiv:5000/final',
+    // uri: 'mongodb://localhost:27017/final',
     // uri: 'mongodb://localhost:27017/final',
     options: {
       user: '',

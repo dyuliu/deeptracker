@@ -6,6 +6,8 @@ namespace application {
     data: any;
     options: any;
     show: any;
+    btnShow: any;
+    click: any;
   }
 
   class Controller {
@@ -21,6 +23,16 @@ namespace application {
     ) {
       let this_ = this;
       this_._init();
+
+      $scope.click = function (type, ctype) {
+        if (type === 'zoomin') {
+          let tmp = $scope.options[ctype].chart.height + 100;
+          if (tmp <= 800) { $scope.options[ctype].chart.height = tmp; }
+        } else if (type === 'zoomout') {
+          let tmp = $scope.options[ctype].chart.height - 100;
+          if (tmp >= 20) { $scope.options[ctype].chart.height = tmp; }
+        }
+      };
 
       Pip.onModelChanged($scope, (msg) => {
         let data = Global.getData('record');
@@ -49,6 +61,8 @@ namespace application {
         if ($scope.show.lr) {
           $scope.data.lr = this_._process('sparklinePlus', data.lr);
           $scope.options.lr = this_._setOption('sparklinePlus', data.lr.length, color);
+          $scope.options.lr.chart.height = 15;
+          $scope.options.lr.chart.showMinMaxPoints = false;
         }
         if ($scope.show.error) {
           if (conf.testError && conf.trainError) {
@@ -92,10 +106,17 @@ namespace application {
       $('#widget-container-recordinfo')
         .mouseenter(function () {
           $('#widget-container-recordinfo .widget-header').removeClass('invisible');
+          this_.$scope.$apply(function () {
+            this_.$scope.btnShow = true;
+          });
         })
         .mouseleave(function () {
           $('#widget-container-recordinfo .widget-header').addClass('invisible');
+          this_.$scope.$apply(function () {
+            this_.$scope.btnShow = false;
+          });
         });
+
     }
 
     private _process(type, ...rest: any[]) {
@@ -144,7 +165,7 @@ namespace application {
           options = {
             chart: {
               type: 'sparklinePlus',
-              height: 100,
+              height: 50,
               width: width ? width : this_.Global.getData('iter').num,
               margin: {
                 left: 0,
@@ -153,7 +174,7 @@ namespace application {
                 bottom: 1
               },
               color: color,
-              showMinMaxPoints: false,
+              showMinMaxPoints: true,
               showLastValue: false,
               showCurrentPoint: false,
               x: function (d, i) { return d.x; },
@@ -171,7 +192,7 @@ namespace application {
               type: 'lineChart',
               color: color,
               width: width ? width : this_.Global.getData('iter').num,
-              height: 100,
+              height: 50,
               margin: {
                 top: 1,
                 right: 0,
@@ -193,7 +214,7 @@ namespace application {
             chart: {
               type: 'scatterChart',
               width: width ? width : this_.Global.getData('iter').num,
-              height: 100,
+              height: 50,
               margin: {
                 top: 1,
                 right: 0,

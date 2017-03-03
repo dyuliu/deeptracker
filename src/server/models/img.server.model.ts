@@ -145,7 +145,9 @@ function postProcess(data: any[], options: IOption): any[] {
         let correct = _.map(d.answer, o => o === d.label ? 1 : 0);
         return { iter: d.iter, value: correct, key: d.file, cls: d.cls };
       });
-      mdsLayout(tmp);
+      if (tmp.length < 520) {
+        mdsLayout(tmp);
+      }
       return tmp;
     case 'model_stat':
       // let first = true;

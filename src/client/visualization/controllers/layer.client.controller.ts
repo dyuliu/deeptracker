@@ -13,6 +13,7 @@ namespace application {
     opened: {};
     open: any;    // func to open hl layer
     conf: any;
+    size: {};
   }
 
   class Controller {
@@ -136,6 +137,7 @@ namespace application {
         $scope.optionsDetail = {};
         $scope.dataDetail = {};
         $scope.showTypes = {};
+        $scope.size = {};
         $scope.conf = conf;
         $scope.dataTree = tree;
 
@@ -153,6 +155,11 @@ namespace application {
           for (let d of tree) {
             $scope.opened[d.name] = false;
             $scope.options[d.name] = this_._setOptions('sparklinePlus');
+            $scope.size[d.name] = 0;
+            if (!d.nodes) {
+              $scope.size[d.name] = layers[d.name].kernelNum * layers[d.name].channels *
+                layers[d.name].kernelWidth + layers[d.name].kernelHeight;
+            }
             $scope.showTypes[d.name] = 'nvd3';
             if (d.nodes) {
               hlLayers.push(d.name);
@@ -160,6 +167,7 @@ namespace application {
                 dn.parent = d.name;
                 $scope.opened[dn.name] = false;
                 $scope.options[dn.name] = this_._setOptions('sparklinePlus');
+                $scope.size[dn.name] = 0;
                 $scope.showTypes[dn.name] = 'nvd3';
                 if (dn.nodes) {
                   hlLayers.push(dn.name);
@@ -167,6 +175,10 @@ namespace application {
                     dnn.parent = dn.name;
                     $scope.opened[dnn.name] = false;
                     $scope.options[dnn.name] = this_._setOptions('sparklinePlus');
+                    $scope.size[dnn.name] = layers[dnn.name].kernelNum * layers[dnn.name].channels *
+                      layers[dnn.name].kernelWidth + layers[dnn.name].kernelHeight;
+                    $scope.size[dn.name] += $scope.size[dnn.name];
+                    $scope.size[d.name] += $scope.size[dnn.name];
                     $scope.showTypes[dnn.name] = 'nvd3';
                   };
                 }
@@ -190,6 +202,19 @@ namespace application {
               if (conf.sameScale) { d.chart.yDomain = [min, max]; }
             });
             _.merge($scope.data, tmpStat[0], tmpHlStat[0]);
+            if (conf.type === 'norm1' || conf.type === 'norm2') {
+              let mmin = Number.MAX_SAFE_INTEGER, mmax = Number.MIN_SAFE_INTEGER;
+              _.each($scope.data, (v: any, k) => {
+                for (let i = 0; i < v.length; i += 1) {
+                  v[i].y /= $scope.size[k];
+                  if (v[i].y < mmin) { mmin = v[i].y; }
+                  if (v[i].y > mmax) { mmax = v[i].y; }
+                }
+              });
+              _.each($scope.options, (d: any) => {
+                if (conf.sameScale) { d.chart.yDomain = [mmin, mmax]; }
+              });
+            }
           });
 
         } else if (globalShowType === 'boxPlotChart') {

@@ -264,5 +264,5 @@ namespace application {
 
   angular
     .module('vis')
-    .directive('pchartwithline', Directive.factory());
+    .directive('kernelPixel', Directive.factory());
 }

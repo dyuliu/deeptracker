@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?igfmsy');
-  src:  url('fonts/icomoon.eot?igfmsy#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?igfmsy') format('truetype'),
-    url('fonts/icomoon.woff?igfmsy') format('woff'),
-    url('fonts/icomoon.svg?igfmsy#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?afzaay');
+  src:  url('fonts/icomoon.eot?afzaay#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?afzaay') format('truetype'),
+    url('fonts/icomoon.woff?afzaay') format('woff'),
+    url('fonts/icomoon.svg?afzaay#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-thefreeforty_ruler:before {
+  content: "\e901";
+}
 .icon-android-brain:before {
   content: "\e900";
 }

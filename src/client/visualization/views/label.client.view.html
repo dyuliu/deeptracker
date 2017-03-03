@@ -1,12 +1,12 @@
 <div class="widget-box transparent" ng-controller="LabelController">
-  <div class="widget-header widget-header-small invisible">
+  <!--<div class="widget-header widget-header-small invisible">
     <h6 class="widget-title lighter">Label Info</h6>
     <div class="widget-toolbar">
       <a href="#" data-action="close">
         <i class="ace-icon fa fa-times"></i>
       </a>
     </div>
-  </div>
+  </div>-->
 
   <div class="widget-body">
     <div class="space-2"></div>
@@ -18,29 +18,35 @@
           <div class="col-xs-1 col-sm-1"></div>
           <div class="col-xs-11 col-sm-11">
             <div ng-if="!open" class="row">
-              <div class="col-xs-2 col-sm-2 clickable" ng-click="click('open')">Label Info</div>
+              <div class="col-xs-2 col-sm-2 clickable" ng-click="click('open')">
+                <div class="float-right"> All Cls </div>
+              </div>
               <div class="col-xs-10 col-sm-10">
                 <div heatline data="dataModel" options="optionsHeatLine"></div>
               </div>
             </div>
             <div ng-if="open" class="row">
               <div class="col-xs-12 col-sm-12">
-                <div ng-repeat-start="cls in selectedCls" class="row" ng-repeat-end>
-                  <div class="col-xs-2 col-sm-2">
+                <div ng-repeat-start="cls in selectedCls" class="row" style="margin-bottom: -7px" ng-repeat-end>
+                  <div class="col-xs-2 col-sm-2" style="height: 16px">
                     <div class="float-right">
                       <div>
-                        <label class="clickable" ng-click="click('flip', cls.name)">{{cls.name}}</label>
-                        <button class="btn btn-info btn-minier">
-                         <i class="ace-icon fa fa-file-image-o" ng-click="showModal(cls.name, 'class')"></i>
-                        </button>
-                      </div>
+                        <small class="clickable" ng-click="click('flip', cls.name)">{{cls.name}}</small>
+                        <!--try image-->
+                        <img class="clickable" width="14" height="14" alt="14x14" src="{{cls.file}}" ng-click="showModal(cls.name, 'class')"/>
 
-                      <div ng-if="flip[cls.name]" class="float-right">
-                        <button class="btn btn-success btn-minier">
+                        <!--<button class="btn btn-info btn-minier">
+                         <i class="ace-icon fa fa-file-image-o" ng-click="showModal(cls.name, 'class')"></i>
+                        </button>-->
+                      </div>
+                        <div class="space-2" style="clear: both"></div>
+
+                      <div ng-if="flip[cls.name]" ng-show="btnShow">
+                        <button class="btn btn-success btn-minier float-right">
                           <i class="ace-icon fa fa-search-plus" ng-click="click('zoomin', cls.name)"></i>
                         </button>
-                        <br>
-                        <button class="btn btn-success btn-minier">
+                        <span> &nbsp; </span>
+                        <button class="btn btn-success btn-minier float-right">
                           <i class="ace-icon fa fa-search-minus" ng-click="click('zoomout', cls.name)"></i>
                         </button>
                       </div>
@@ -48,7 +54,7 @@
                   </div>
                   <div class="col-xs-10 col-sm-10">
                     <div ng-if="!flip[cls.name]" heatline data="dataCls[cls.name]" options="optionsCls[cls.name]"></div>
-                    <div ng-if="flip[cls.name]" pchartwithline data="dataDetail[cls.name]" options="optionsDetail[cls.name]"></div>
+                    <div ng-if="flip[cls.name]" img-pixel data="dataDetail[cls.name]" options="optionsDetail[cls.name]" style="z-index: 100"></div>
                   </div>
                 </div>
               </div>

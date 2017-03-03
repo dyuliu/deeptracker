@@ -17,13 +17,15 @@ namespace application {
         $scope.imgDatabase = 'cifar';
       }
       $scope.clsName = $scope.cls;
+      $scope.myStyle = {};
       if ($scope.type === 'class') {
         let data = _.find(this_.Global.getData('info').cls, (o: any) => o.name === $scope.cls);
         $scope.images = data.file;
+        // $scope.myStyle = {'width': '800px'};
       } else if ($scope.type === 'file') {
         $scope.simg = $scope.name;
+        // $scope.myStyle = {'width': '200px'};
       }
-
     }
   }
 

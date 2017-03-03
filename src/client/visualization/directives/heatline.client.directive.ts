@@ -14,6 +14,7 @@ namespace application {
   }
 
   class Painter {
+    public Pip: IPipService;
     private svg: d4.Selection<any, any, any, any>;
     private canvas: d4.Selection<any, any, any, any>;
     private rect: d4.Selection<any, any, any, any>;
@@ -48,17 +49,11 @@ namespace application {
         .style('top', 0)
         .style('width', options.width ? options.width + 'px' : '100%')
         .style('height', options.height ? options.height + 'px' : '80px');
-
-      this.rect = this.svg
+      this.rect = this.svg.append('rect')
         .attr('class', 'overlay')
-        .attr('width', ele.width() - options.margin.left - options.margin.right)
-        .attr('height', ele.height() - options.margin.top - options.margin.bottom);
-
-      this.svg = this.svg.append('g')
-        .attr('transform', 'translate(' +
-        options.margin.left + ',' +
-        options.margin.top + ')'
-        );
+        .attr('width', options.width)
+        .attr('height', options.height);
+      this.svg = this.svg.append('g');
 
       // init env variables
       this.offsetWidth = options.margin.left;
@@ -67,10 +62,32 @@ namespace application {
       this.height = ele.height() - options.margin.top - options.margin.bottom;
     }
 
-    public render(data: IDTypeHeatline) {
+    public render(data: IDTypeHeatline, Pip: IPipService) {
       let this_ = this;
+      this_.Pip = Pip;
+
+      this_.rect
+        .on('mouseover', mouseOverHandler)
+        .on('mouseout', mouseOutHandler)
+        .on('mousemove', mouseMoveHandler);
+
       this_._paintHeatMap(data.heatmapData);
       if (this_.options.threshold > 0) { this_._addTriangles(data.linechartData); }
+
+      function mouseOverHandler() {
+        let point = d4.mouse(this);
+        Pip.emitTimeMouseOver({ point, x: 0, y: 0, k: 1 });
+      }
+
+      function mouseOutHandler() {
+        let point = d4.mouse(this);
+        Pip.emitTimeMouseOut({ point, x: 0, y: 0, k: 1 });
+      }
+
+      function mouseMoveHandler() {
+        let point = d4.mouse(this);
+        Pip.emitTimeMouseMove({ point, x: 0, y: 0, k: 1 });
+      }
     }
 
     private _addTriangles(data: IDTypeEle) {
@@ -94,12 +111,17 @@ namespace application {
         .enter().append('polygon')
         .attr('points', d => {
           let w = scale(d.y);
-          return '0,10, ' + w + ',-2 -' + w + ',-2';
+          return '0,6, ' + w + ',-3 -' + w + ',-3';
         })
         .attr('fill', '#4682b4')
         .attr('opacity', 0.9)
-        .attr('transform', (d: any) => 'translate(' + d.x + ', 0)')
+        .attr('transform', (d: any) => 'translate(' + d.x + ', 3)')
+        .on('click', clickHandler)
         .append('title').text(d => 'iter: ' + d.iter + ' value: ' + d.y);
+
+      function clickHandler(d) {
+        this_.Pip.emitTimePicked([d.x, d.iter]);
+      }
 
     }
 
@@ -110,6 +132,7 @@ namespace application {
       let size = data.length;
       let lw = this_.options.cellWidth ? this_.options.cellWidth : 1;
       // let color = d4.scaleSequential(d4.interpolateYlOrRd);
+      // ctx.globalCompositeOperation = 'destination-over';
       let color = d4.scaleSequential(d4.interpolateRdYlGn);
       for (let i = 0; i < size; i += 1) {
         ctx.beginPath();
@@ -136,12 +159,12 @@ namespace application {
     };
 
     public static factory() {
-      let directive = function () { return new Directive(); };
-      directive.$inject = [];
+      let directive = function (Pip) { return new Directive(Pip); };
+      directive.$inject = ['Pip'];
       return directive;
     }
 
-    constructor() {
+    constructor(Pip: IPipService) {
       this.link = function (
         scope: IScope,
         element: ng.IAugmentedJQuery,
@@ -151,7 +174,7 @@ namespace application {
         let start = () => {
           element.empty();
           let board = new Painter(element, scope.options);
-          board.render(scope.data);
+          board.render(scope.data, Pip);
         };
         if (!_.isUndefined(scope.data)) { start(); };
         scope.$watch('data', (n, o) => { if (n !== o && n) { start(); } }, false);

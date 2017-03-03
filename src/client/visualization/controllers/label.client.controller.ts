@@ -14,6 +14,7 @@ namespace application {
     flip: any;
     click: any;
     showModal: any;
+    btnShow: any;
   }
 
   class Controller {
@@ -41,7 +42,8 @@ namespace application {
         scope: $scope,
         templateUrl: 'src/client/visualization/views/tpls/img-modal.client.tpls.html',
         show: false,
-        controller: 'ImgModalController'
+        controller: 'ImgModalController',
+        keyboard: true
       });
 
       $scope.showModal = function (name, type) {
@@ -70,9 +72,9 @@ namespace application {
             showDetail(clsName);
           }
         } else if (type === 'zoomin') {
-          $scope.$broadcast('zoom', {type: 'in', cls: clsName});
+          $scope.$broadcast('zoom', { type: 'in', cls: clsName });
         } else if (type === 'zoomout') {
-          $scope.$broadcast('zoom', {type: 'out', cls: clsName});
+          $scope.$broadcast('zoom', { type: 'out', cls: clsName });
         }
       };
 
@@ -131,12 +133,21 @@ namespace application {
           if (d.pmax > maxPMax) { maxPMax = d.pmax; }
         });
 
+        let root = '/assets/images/gallery/';
+        let currentDBName = this_.Global.getSelectedDB();
+        if (_.startsWith(currentDBName, 'imagenet')) {
+          root += 'imagenet/';
+        } else if (_.startsWith(currentDBName, 'cifar')) {
+          root += 'cifar/';
+        }
         _.each($scope.dataCls, (d: any, k) => {
+          let findedCls = _.find(Global.getData('info').cls, (o: any) => o.name === k);
+          let firstFile = findedCls.file[0];
           if (d.pmax >= conf.threshold) {
             $scope.optionsCls[k] = this_._setOptions('heatline');
             $scope.optionsCls[k].threshold = conf.threshold;
             $scope.optionsCls[k].max = maxPMax;
-            selectedCls.push({ name: k, pmax: d.pmax });
+            selectedCls.push({ name: k, pmax: d.pmax, file: root + k + '/' + firstFile });
           }
         });
 
@@ -234,9 +245,15 @@ namespace application {
       $('#widget-container-labelinfo')
         .mouseenter(function () {
           $('#widget-container-labelinfo .widget-header:first-child').removeClass('invisible');
+          this_.$scope.$apply(function () {
+            this_.$scope.btnShow = true;
+          });
         })
         .mouseleave(function () {
           $('#widget-container-labelinfo .widget-header:first-child').addClass('invisible');
+          this_.$scope.$apply(function () {
+            this_.$scope.btnShow = false;
+          });
         });
     }
     private _processData(type, ...rest: any[]) {
@@ -273,10 +290,10 @@ namespace application {
         case 'heatline':
           options = {
             width: this_.Global.getData('iter').num + 30,
-            height: height ? height : 25,
+            height: height ? height : 16,
             cellWidth: 1,
             margin: {
-              top: 2,
+              top: 1,
               right: 30,
               bottom: 0,
               left: 0
@@ -294,9 +311,9 @@ namespace application {
             color: function (d) {
               if (d === 1) { return '#7fc97f'; } else { return '#fdc086'; };
             },
-            marginTop: 10,
+            marginTop: 9,
             margin: {
-              top: 10,
+              top: 9,
               right: 30,
               bottom: 0,
               left: 0
@@ -312,13 +329,3 @@ namespace application {
     .module('vis')
     .controller('LabelController', Controller);
 }
-
-
-// let optDetail: IHTTPOptionConfig = {
-//   db: Global.getSelectedDB(),
-//   type: 'detail',
-//   cls: ['n01498041'],
-//   parser: 'json'
-// };
-
-// DataManager.fetchImg(optDetail, false)

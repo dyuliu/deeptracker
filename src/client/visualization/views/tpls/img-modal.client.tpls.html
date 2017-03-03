@@ -1,6 +1,6 @@
 <div class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="img-modal modal-content" ng-style="myStyle">
       <div class="modal-header" hidden="true">
         <button type="button" class="close" ng-click="$hide()">&times;</button>
         <h4 class="modal-title" ng-bind-html="title">{{clsName}}</h4>
@@ -17,8 +17,8 @@
           </li>
         </ul>
       </div>
-      <div ng-if="type==='file'" class="modal-body">
-        <img src="/assets/images/gallery/{{imgDatabase}}/{{clsName}}/{{simg}}" />
+      <div ng-if="type==='file'" class="modal-body" style="margin: auto; text-align: center; background: none">
+        <img src="/assets/images/gallery/{{imgDatabase}}/{{clsName}}/{{simg}}"/>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" ng-click="$hide()">Close</button>
