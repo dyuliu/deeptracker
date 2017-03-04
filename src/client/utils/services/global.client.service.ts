@@ -201,7 +201,8 @@ namespace application {
 
       this.all.config = {
         timebox: {
-          show: true
+          show: true,
+          pin: false
         },
         record: {
           lr: true,

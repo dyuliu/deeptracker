@@ -12,6 +12,7 @@ namespace application {
     labelRender: any;
     recordTypeList: any;
     layerTypeList: any;
+    pin: any;
     click: any; // emit event
   }
 
@@ -65,10 +66,15 @@ namespace application {
 
     private _setBtnEvent() {
       let this_ = this;
+      this_.$scope.pin = this_.Global.getConfig('timebox').pin;
+
       this_.$scope.click = function (eType) {
         switch (eType) {
-          case 'vlDiv':
-            this_.Pip.emitVlDiv(null);
+          case 'pin':
+            // this_.Pip.emitVlDiv(null);
+            let cf = this_.Global.getConfig('timebox');
+            cf.pin = !cf.pin;
+            this_.$scope.pin = cf.pin;
             break;
           case 'reset':
             ace.data.remove('demo', 'widget-state');
@@ -133,7 +139,7 @@ namespace application {
           this_.DataManager.fetchLayer({ db, type: 's_cratio', seqidx: [0], parser }, false),
           this_.DataManager.fetchLayer({ db, type: 'hl_s_cratio', seqidx: [0], parser }, false)
         ]).then(data => {
-            $('#layer-data-loading').addClass('invisible');
+          $('#layer-data-loading').addClass('invisible');
         });
 
         // prefetch data

@@ -69,7 +69,7 @@ namespace application {
       this.height = options.height - options.margin.top - options.margin.bottom;
     }
 
-    public render(data, Pip: IPipService, scope) {
+    public render(data, Pip: IPipService, scope, Global: IGlobalService) {
       let this_ = this;
       this_.Pip = Pip;
       let sx = 0, sy = 0, sk = 1; // saved transform
@@ -121,10 +121,11 @@ namespace application {
         ctx.save();
         ctx.setLineDash([4, 4]);
         ctx.beginPath();
+        ctx.translate(0.5, 0.5);
         ctx.moveTo(msg.point[0], 0);
         ctx.lineTo(msg.point[0], canvasHeight);
         ctx.strokeStyle = '#2184f5';
-        ctx.lineWidth = 0.5;
+        ctx.lineWidth = 1;
         ctx.stroke();
         ctx.restore();
         if (this_.options.hScale > 4) { this_._horizonLine(); }
@@ -143,6 +144,7 @@ namespace application {
         let canvasWidth = this_.canvas.property('width'),
           canvasHeight = this_.canvas.property('height');
         ctx.save();
+        ctx.imageSmoothingEnabled = false;
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         ctx.translate(sx, 0);
         ctx.scale(sk, this_.options.hScale);
@@ -162,8 +164,12 @@ namespace application {
         let point = d4.mouse(this);
         let row = Math.trunc(point[1] / this_.options.hScale);
         let col = Math.trunc((point[0] - sx) / sk);
-        console.log(row, col);
-        Pip.emitShowModal(_.find(data.pixelChart, (d: any) => d.index === row));
+        let tmp = _.find(data.pixelChart, (d: any) => d.index === row);
+        if (Global.getConfig('timebox').pin) {
+          Pip.emitTimePicked([col, tmp.iter[col]]);
+        } else {
+          Pip.emitShowModal(tmp);
+        }
       }
 
       function mouseOverHandler() {
@@ -195,35 +201,43 @@ namespace application {
 
       while (off < height) {
         // ctx.setLineDash([5, 15]);
+        ctx.save();
         ctx.beginPath();
+        ctx.translate(0.5, 0.5);
         ctx.lineWidth = 0.5;
+        // ctx.strokeStyle = 'white';
         ctx.strokeStyle = '#4c4c4c';
         ctx.moveTo(0, off);
         ctx.lineTo(width, off);
         ctx.stroke();
         off += this_.options.hScale;
+        ctx.restore();
       }
 
     }
 
     private _verticalLine(x, y, k) {
-      // let this_ = this;
-      // let ctx: CanvasRenderingContext2D = this_.canvas.node().getContext('2d');
-      // let height = this_.canvas.property('height');
-      // let width = this_.canvas.property('width') * k;
-      // let off = k;
-      // ctx.save();
-      // ctx.translate(x, 0);
-      // while (off < width) {
-      //   ctx.beginPath();
-      //   ctx.strokeStyle = '#4c4c4c';
-      //   ctx.moveTo(off, 0);
-      //   ctx.lineTo(off, height);
-      //   ctx.lineWidth = 1;
-      //   ctx.stroke();
-      //   off += k;
-      // }
-      // ctx.restore();
+      let this_ = this;
+      let ctx: CanvasRenderingContext2D = this_.canvas.node().getContext('2d');
+      let height = this_.canvas.property('height');
+      let width = this_.canvas.property('width') * k;
+      let off = k;
+      ctx.save();
+      ctx.translate(x, 0);
+      while (off < width) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(0.5, 0.5);
+        ctx.lineWidth = 0.5;
+        // ctx.strokeStyle = 'white';
+        ctx.strokeStyle = '#4c4c4c';
+        ctx.moveTo(off, 0);
+        ctx.lineTo(off, height);
+        ctx.stroke();
+        off += k;
+        ctx.restore();
+      }
+      ctx.restore();
 
     }
 
@@ -290,12 +304,12 @@ namespace application {
     };
 
     public static factory() {
-      let directive = function (Pip) { return new Directive(Pip); };
-      directive.$inject = ['Pip'];
+      let directive = function (Pip, Global) { return new Directive(Pip, Global); };
+      directive.$inject = ['Pip', 'Global'];
       return directive;
     }
 
-    constructor(Pip: IPipService) {
+    constructor(Pip: IPipService, Global: IGlobalService) {
       this.link = function (
         scope: IScope,
         element: ng.IAugmentedJQuery,
@@ -308,7 +322,7 @@ namespace application {
           element.empty();
           scope.options.hScale = hScale;
           let board = new Painter(element, scope.options, scope.data);
-          board.render(scope.data, Pip, scope);
+          board.render(scope.data, Pip, scope, Global);
         };
         if (!_.isUndefined(scope.data)) { start(); };
         scope.$watch('data', (n, o) => { if (n !== o && n) { start(); } }, false);
@@ -325,7 +339,7 @@ namespace application {
             element.empty();
             scope.options.hScale = hScale;
             let board = new Painter(element, scope.options, scope.data);
-            board.render(scope.data, Pip, scope);
+            board.render(scope.data, Pip, scope, Global);
           }
         });
       };

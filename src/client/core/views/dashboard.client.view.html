@@ -16,8 +16,9 @@
     </button>
 
     <!-- toggle line  -->
-    <button class="btn btn-danger" ng-click="click('vlDiv')">
-      <i class="ace-icon icon-thefreeforty_ruler"> </i>
+    <button class="btn btn-danger" ng-class="{ 'active': pin}" ng-click="click('pin')">
+      <i class="ace-icon fa fa-eyedropper"></i>
+      <!--<i class="ace-icon icon-thefreeforty_ruler"> </i>-->
       <!--<i class="ace-icon fa fa-pencil"></i>-->
     </button>
   </div>
@@ -197,6 +198,10 @@
         </div>
 
         <div class="space-4"></div>
+        <a href="#" class="btn btn-app btn-primary no-radius">
+          <i class="ace-icon fa fa-pencil-square-o bigger-230"></i> Edit
+          <span class="badge badge-warning badge-left">11</span>
+        </a>
 
         <div class="row control-group">
           <div class="col-xs-6">

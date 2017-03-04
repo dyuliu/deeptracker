@@ -18,8 +18,8 @@ namespace application {
       public Pip: IPipService
     ) {
 
-      $scope.vlDiv = false;
-      Pip.onVlDiv($scope, e => { $scope.vlDiv = !$scope.vlDiv; });
+      // $scope.vlDiv = false;
+      // Pip.onVlDiv($scope, e => { $scope.vlDiv = !$scope.vlDiv; });
 
       $scope.click = function() {
         Pip.emitTimePicked(null);

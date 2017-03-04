@@ -26,6 +26,7 @@ namespace application {
       let svg, focus, rect, svgContainer, picked;
       let scale = null;
       let sx = 0, sy = 0, sk = 1;
+      let vlDivContainer = d4.select('#vl-div-container');
 
       Pip.onModelChanged($scope, (msg) => {
         $scope.show = true;
@@ -46,8 +47,8 @@ namespace application {
         rect = svg.append('rect')
           .attr('class', 'overlay')
           .attr('width', iterInfo.num + 10)
-          .attr('height', 34)
-          .style('cursor', 'crosshair');
+          .attr('height', 34);
+          // .style('cursor', 'crosshair');
 
         svgContainer = svg.append('g');
 
@@ -103,13 +104,15 @@ namespace application {
 
       });
 
-      $scope.reset = function() {
+      $scope.reset = function () {
         iterInfo.picked = null;
         $(picked.node()).empty();
+        $('.vl-div-pin').remove();
       };
 
       // handle mouse event
       Pip.onTimePicked($scope, (msg) => {
+        if (!Global.getConfig('timebox').pin) { return; }
         let ci, cv;
         if (!msg) {
           ci = currentIdx;
@@ -121,10 +124,16 @@ namespace application {
           .attr('cx', scale(cv))
           .attr('cy', 20)
           .attr('r', 2)
-          .attr('fill', 'orange');
+          .attr('fill', '#438EB9');
 
-        // if (!iterInfo.picked) { iterInfo.picked = []; }
-        // iterInfo.picked.push(msg);
+        let offset = $('#timebox').offset().left - $('.vl-div-global').parent().offset().left;
+
+        vlDivContainer.append('div')
+          .attr('class', 'vl-div-pin')
+          .style('left', offset + scale(cv) + 'px');
+
+        if (!iterInfo.picked) { iterInfo.picked = []; }
+        iterInfo.picked.push(msg);
       });
 
       Pip.onTimeMouseOver($scope, (msg) => {
@@ -143,7 +152,6 @@ namespace application {
         focus.select('text').text(iterInfo.array[currentIdx].toString());
         let offset = $('#timebox').offset().left - $('.vl-div-global').parent().offset().left;
         $('.vl-div-global').css('left', offset + v);
-        $('.vl-div-current').css('left', offset + point[0]);
       });
 
 
