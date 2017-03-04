@@ -331,3 +331,5 @@ export let cacheSeqData = {
 
 export let cacheHLSeqData = {
 };
+
+export let cacheKernel = {};

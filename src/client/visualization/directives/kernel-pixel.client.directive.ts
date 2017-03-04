@@ -13,7 +13,9 @@ namespace application {
   export interface IImgDataType extends Array<IImgDataEle> { };
 
   class Painter {
+    public Pip: IPipService;
     private container: d4.Selection<any, any, any, any>;
+    private vldiv: d4.Selection<any, any, any, any>;
     private svg: d4.Selection<any, any, any, any>;
     private rect: d4.Selection<any, any, any, any>;
     private canvas: d4.Selection<any, any, any, any>;
@@ -32,15 +34,7 @@ namespace application {
         .style('height', (options.marginTop + dh * options.hScale) + 'px')
         .style('position', 'relative')
         .style('background', 'white');
-      // initialize svg configuration
-      this.svg = this.container
-        .append('svg')
-        .style('position', 'absolute')
-        .style('width', (dw + 15) + 'px')
-        .style('height', (options.marginTop + 10) + 'px');
 
-      this.svg = this.svg.append('g')
-        .attr('transform', 'translate(0,' + options.marginTop + ')');
 
       // initialize canvas configuration
       this.canvas = this.container
@@ -62,15 +56,18 @@ namespace application {
       this.height = options.height - options.margin.top - options.margin.bottom;
     }
 
-    public render(data, Pip: IPipService, scope) {
+    public render(data, Pip: IPipService, scope, Global: IGlobalService) {
       let this_ = this;
+      this_.Pip = Pip;
+      let sx = 0, sy = 0, sk = 1; // saved transform
 
       // add zoom in & zoom out
-      this_.canvas.call(d4.zoom().scaleExtent([1, 10]).on('zoom', zoomed));
-      this_.canvas.on('click', clickHandler);
-
-      let svgContainer = this_.svg.append('g');
-      this_._addTriangles(svgContainer, data.lineChart);
+      this_.canvas.call(d4.zoom().scaleExtent([1, 10]).on('zoom', zoomed))
+        .on('wheel', function() { console.log('we'); d4.event.preventDefault(); });
+      this_.canvas
+        .on('mouseover', mouseOverHandler)
+        .on('mouseout', mouseOutHandler)
+        .on('mousemove', mouseMoveHandler);
 
       this_._paintPixelChart(this_.fakeCanvas.node().getContext('2d'), data.pixelChart);
       let ctx: CanvasRenderingContext2D = this_.canvas.node().getContext('2d');
@@ -79,25 +76,42 @@ namespace application {
       ctx.drawImage(this_.fakeCanvas.node(), 0, 0);
       ctx.restore();
 
-      if (this_.options.hScale > 4) {
-        this_._horizonLine();
-      }
-
       Pip.onSyncHorizonScale(scope, (msg: any) => {
+        let {x, y, k} = msg;
+        [sx, sy, sk] = [x, y, k];   // update x y z
+        drawImage();
+      });
+
+      Pip.onTimeMouseMove(scope, (msg: any) => {
+        let canvasHeight = this_.canvas.property('height');
+        drawImage();
+        ctx.save();
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.translate(0.5, 0.5);
+        ctx.moveTo(msg.point[0], 0);
+        ctx.lineTo(msg.point[0], canvasHeight);
+        ctx.strokeStyle = '#fb652d';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      Pip.onTimeMouseOut(scope, (msg: any) => {
+        drawImage();
+      });
+
+      function drawImage() {
         let canvasWidth = this_.canvas.property('width'),
           canvasHeight = this_.canvas.property('height');
-        let {x, y, k} = msg;
         ctx.save();
+        ctx.imageSmoothingEnabled = false;
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-        ctx.translate(x, 0);
-        ctx.scale(k, this_.options.hScale);
+        ctx.translate(sx, 0);
+        ctx.scale(sk, this_.options.hScale);
         ctx.drawImage(this_.fakeCanvas.node(), 0, 0);
         ctx.restore();
-        if (k > 4) {
-          this_._verticalLine(x, y, k);
-        }
-        svgContainer.attr('transform', 'translate(' + x + ', 0) scale(' + k + ',1)');
-      });
+      };
 
       function zoomed() {
         let x = d4.event.transform.x;
@@ -107,79 +121,21 @@ namespace application {
         Pip.emitSyncHorizonScale({ x, y, k });
       }
 
-      function clickHandler() {
+      function mouseOverHandler() {
         let point = d4.mouse(this);
-        // let idx = Math.trunc((point[1] - y) / k);
-        // Pip.emitShowModal(_.find(data.pixelChart, (d: any) => d.index === idx));
+        Pip.emitTimeMouseOver({ point, x: sx, y: sy, k: sk });
       }
 
-    }
-
-    private _horizonLine() {
-      let this_ = this;
-      let ctx: CanvasRenderingContext2D = this_.canvas.node().getContext('2d');
-      let height = this_.canvas.property('height');
-      let width = this_.canvas.property('width');
-      let off = this_.options.hScale;
-
-      while (off < height) {
-        // ctx.setLineDash([5, 15]);
-        ctx.beginPath();
-        ctx.lineWidth = 0.5;
-        ctx.strokeStyle = '#4c4c4c';
-        ctx.moveTo(0, off);
-        ctx.lineTo(width, off);
-        ctx.stroke();
-        off += this_.options.hScale;
+      function mouseOutHandler() {
+        let point = d4.mouse(this);
+        Pip.emitTimeMouseOut({ point, x: sx, y: sy, k: sk });
       }
 
-    }
-
-    private _verticalLine(x, y, k) {
-      let this_ = this;
-      let ctx: CanvasRenderingContext2D = this_.canvas.node().getContext('2d');
-      let height = this_.canvas.property('height');
-      let width = this_.canvas.property('width') * k;
-      let off = k;
-      ctx.save();
-      ctx.translate(x, 0);
-      while (off < width) {
-        ctx.beginPath();
-        ctx.lineWidth = 0.5;
-        ctx.strokeStyle = '#4c4c4c';
-        ctx.moveTo(off, 0);
-        ctx.lineTo(off, height);
-        ctx.stroke();
-        off += k;
+      function mouseMoveHandler() {
+        let point = d4.mouse(this);
+        Pip.emitTimeMouseMove({ point, x: sx, y: sy, k: sk });
       }
-      ctx.restore();
 
-    }
-
-    private _addTriangles(container, data) {
-      let this_ = this;
-      if (!this_.options.threshold) { return; }
-      let triangleData = [];
-      _.each(data, (d, i) => {
-        if (d.value >= this_.options.threshold) {
-          triangleData.push({ x: i, y: d.value, iter: d.iter });
-        }
-      });
-      let scale = d4.scaleLinear()
-        .domain([this_.options.threshold, this_.options.max])
-        .range([6, 17]);
-      let panel = container.append('g');
-      panel.selectAll('polygon')
-        .data(triangleData)
-        .enter().append('polygon')
-        .attr('points', d => {
-          let w = scale(d.y);
-          return '0,0 ' + w + ',-8 -' + w + ',-8';
-        })
-        .attr('fill', '#4682b4')
-        .attr('opacity', 0.9)
-        .attr('transform', (d: any) => 'translate(' + d.x + ', 0)')
-        .append('title').text(d => 'iter: ' + d.iter + ' value: ' + d.y);
     }
 
     private _paintPixelChart(ctx: CanvasRenderingContext2D, data) {
@@ -220,12 +176,12 @@ namespace application {
     };
 
     public static factory() {
-      let directive = function (Pip) { return new Directive(Pip); };
-      directive.$inject = ['Pip'];
+      let directive = function (Pip, Global) { return new Directive(Pip, Global); };
+      directive.$inject = ['Pip', 'Global'];
       return directive;
     }
 
-    constructor(Pip: IPipService) {
+    constructor(Pip: IPipService, Global: IGlobalService) {
       this.link = function (
         scope: IScope,
         element: ng.IAugmentedJQuery,
@@ -238,26 +194,26 @@ namespace application {
           element.empty();
           scope.options.hScale = hScale;
           let board = new Painter(element, scope.options, scope.data);
-          board.render(scope.data, Pip, scope);
+          board.render(scope.data, Pip, scope, Global);
         };
         if (!_.isUndefined(scope.data)) { start(); };
         scope.$watch('data', (n, o) => { if (n !== o && n) { start(); } }, false);
 
-        scope.$on('zoom', (evt, msg: any) => {
-          if (scope.data && scope.data.pixelChart[0].cls === msg.cls) {
-            if (msg.type === 'in') {
-              hScale += 1;
-            } else {
-              hScale -= 1;
-            }
-            hScale = hScale < 1 ? 1 : hScale;
-            hScale = hScale > 10 ? 10 : hScale;
-            element.empty();
-            scope.options.hScale = hScale;
-            let board = new Painter(element, scope.options, scope.data);
-            board.render(scope.data, Pip, scope);
-          }
-        });
+        // scope.$on('zoom', (evt, msg: any) => {
+        //   if (scope.data && scope.data.pixelChart[0].cls === msg.cls) {
+        //     if (msg.type === 'in') {
+        //       hScale += 1;
+        //     } else {
+        //       hScale -= 1;
+        //     }
+        //     hScale = hScale < 1 ? 1 : hScale;
+        //     hScale = hScale > 15 ? 15 : hScale;
+        //     element.empty();
+        //     scope.options.hScale = hScale;
+        //     let board = new Painter(element, scope.options, scope.data);
+        //     board.render(scope.data, Pip, scope, Global);
+        //   }
+        // });
       };
     }
   }

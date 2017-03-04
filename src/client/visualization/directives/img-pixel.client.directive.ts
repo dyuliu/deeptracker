@@ -35,10 +35,6 @@ namespace application {
         .style('position', 'relative')
         .style('background', 'white');
 
-      // this.vldiv = this.container.append('div')
-      //   .attr('class', 'vl-div vl-div-pixelchart')
-      //   .style('height', (options.marginTop + dh * options.hScale) + 'px')
-      //   .style('display', 'none');
       // initialize svg configuration
       this.svg = this.container
         .append('svg')

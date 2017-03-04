@@ -75,27 +75,34 @@ export function respond(options: IOption, res: Response) {
   let [cond, project, sort] = getConfig(options);
   console.log(cond, project, sort);
 
-  col.find(cond, project)
-    .lean()
-    .sort(sort)
-    .exec((err, data: any[]) => {
-      if (err) { return console.log(chalk.bgRed(err)); }
-      data = postProcess(data, options);
-      console.timeEnd(colName);
-      if (options.parser === 'json') {
-        res.json(data);
-      } else if (options.parser === 'bson') {
-        res.type('arraybuffer');
-        for (let d of data) {
-          let b = bson.serialize(d);
-          let buf = Buffer.alloc(4);
-          buf.writeInt32LE(b.byteLength, 0);
-          res.write(buf);
-          res.write(b);
+  let cached = false;
+  // if (_.startsWith(options.type, 'i_') && !_.isEmpty(options.layer)) {
+  //   let data = utils.cacheKernel[options.db];
+  // };
+  if (!cached) {
+    col.find(cond, project)
+      .lean()
+      .sort(sort)
+      .exec((err, data: any[]) => {
+        if (err) { return console.log(chalk.bgRed(err)); }
+        data = postProcess(data, options);
+        console.timeEnd(colName);
+        if (options.parser === 'json') {
+          res.json(data);
+        } else if (options.parser === 'bson') {
+          res.type('arraybuffer');
+          for (let d of data) {
+            let b = bson.serialize(d);
+            let buf = Buffer.alloc(4);
+            buf.writeInt32LE(b.byteLength, 0);
+            res.write(buf);
+            res.write(b);
+          }
+          res.end(null);
         }
-        res.end(null);
-      }
-    });
+      });
+  }
+
 };
 
 function getConfig(options: IOption) {
@@ -128,42 +135,50 @@ function postProcess(data: any[], options: IOption): any[] {
   if (_.startsWith(options.type, 'i_') && options.iter) {
     let tmp = [];
     for (let layer of data) {
+      if (layer.lid === 267 && layer.name === 'fc1000') { continue; }
+      if (layer.lid === 1 && layer.name === 'conv1') { continue; }
       _.each(layer.value, (v, k) => {
         tmp.push({ lid: layer.lid, idx: k, name: layer.name, value: v });
       });
     }
     tmp = _.sortBy(tmp, ['value']);
     if (options.type !== 'i_cosine') { tmp = _.reverse(tmp); }
-
-    let m = new Map();
-    let r = [];
-    let idx = 0;
-    for (let i = 0; i < 20; i += 1) {
-      if (!m.has(tmp[i].name)) {
-        m.set(tmp[i].name, idx++);
-        r.push([tmp[i].name, 0, 0]);
-      }
-      r[m.get(tmp[i].name)][1] += 1;
-      r[m.get(tmp[i].name)][2] += tmp[i].value;
-    }
-    tmp = _.sortBy(r, d => d[1]);
-    return _.reverse(tmp);
+    return tmp.slice(0, 100);
   } else if (_.startsWith(options.type, 'i_') && options.layer) {  // one layer
-    let r = [];
-    let size = data[0].value.length;
-    for (let i = 0; i < size; i += 1) {
-      let tmp = { key: i, iter: [], value: [] };
-      for (let d of data) {
-        tmp.iter.push(d.iter);
-        tmp.value.push(d.value[i]);
+    if (!_.isEmpty(options.seqidx)) {
+      _.each(data, (d: any) => {
+        let tmp = [];
+        for (let i = 0; i < options.seqidx.length; i += 1) {
+          tmp.push(d.value[options.seqidx[i]]);
+        }
+        d.value = tmp;
+      });
+      let r = [];
+      let size = options.seqidx.length;
+      for (let i = 0; i < size; i += 1) {
+        let tmp = { key: options.seqidx[i], value: [] };
+        for (let d of data) {
+          tmp.value.push({iter: d.iter, value: d.value[i]});
+        }
+        r.push(tmp);
       }
-      r.push(tmp);
+      return r;
+    } else {
+      let r = [];
+      let size = data[0].value.length;
+      for (let i = 0; i < size; i += 1) {
+        let tmp = { key: i, iter: [], value: [] };
+        for (let d of data) {
+          tmp.iter.push(d.iter);
+          tmp.value.push(d.value[i]);
+        }
+        r.push(tmp);
+      }
+      if (r.length < 520) {
+        mdsLayout(r);
+      }
+      return r;
     }
-    if (r.length < 520) {
-      mdsLayout(r);
-    }
-    // console.log('mds calc done!!!!');
-    return r;
   } else {
     let m = new Map();
     let r = [];

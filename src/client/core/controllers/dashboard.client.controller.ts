@@ -87,6 +87,9 @@ namespace application {
           case 'save':
             console.log('save your db file');
             break;
+          case 'showTopKernel':
+            this_.Pip.emitShowTopKernel(null);
+            break;
           default:
             break;
         };

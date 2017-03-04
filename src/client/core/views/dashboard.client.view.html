@@ -146,6 +146,11 @@
 
         <div class="space-4"></div>
 
+        <label style="margin-left: 10px">
+          <input ng-model="config.layer.triangle" name="form-field-checkbox" type="checkbox" class="ace" />
+          <span class="lbl"> Mark Abnormal</span>
+        </label>
+
         <div class="ace-spinner middle" style="width: 100%">
           <div class="col-xs-4">
             <label style="margin-top: 10px">threshold:</label>
@@ -198,10 +203,12 @@
         </div>
 
         <div class="space-4"></div>
-        <a href="#" class="btn btn-app btn-primary no-radius">
-          <i class="ace-icon fa fa-pencil-square-o bigger-230"></i> Edit
-          <span class="badge badge-warning badge-left">11</span>
-        </a>
+
+        <div>
+          <button class="btn btn-success" ng-click="click('showTopKernel')">
+            correlation
+          </button>
+        </div>
 
         <div class="row control-group">
           <div class="col-xs-6">

@@ -146,6 +146,7 @@ namespace application {
           if (d.pmax >= conf.threshold) {
             $scope.optionsCls[k] = this_._setOptions('heatline');
             $scope.optionsCls[k].threshold = conf.threshold;
+            $scope.optionsCls[k].triangle = conf.threshold;
             $scope.optionsCls[k].max = maxPMax;
             selectedCls.push({ name: k, pmax: d.pmax, file: root + k + '/' + firstFile });
           }
@@ -292,12 +293,14 @@ namespace application {
             width: this_.Global.getData('iter').num + 30,
             height: height ? height : 16,
             cellWidth: 1,
+            color: d4.scaleSequential(d4.interpolateRdYlGn),
             margin: {
               top: 1,
               right: 30,
               bottom: 0,
               left: 0
             },
+            type: 'cls',
             lineChart: false
           };
           break;

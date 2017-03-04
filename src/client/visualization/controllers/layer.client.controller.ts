@@ -5,8 +5,10 @@ namespace application {
   interface IScope extends ng.IScope {
     data: {};
     dataDetail: {};
+    dataTopK: {};
     options: {};
     optionsDetail: {};
+    optionsTopK: {};
     showTypes: {};
     kData: {};
     dataTree: any[];
@@ -32,8 +34,66 @@ namespace application {
 
       let this_ = this;
       let layers, hlLayers = [], allLayers;
+      $scope.showTypes = {};
 
       this_._init();
+
+      Pip.onShowTopKernel($scope, (msg => {
+        let parser = 'json', type = 'i_cosine', db = Global.getSelectedDB();
+        let iterInfo = Global.getData('iter');
+        let allQuery = [];
+        for (let iter of iterInfo.picked) {
+          allQuery.push(DataManager.fetchKernel({ db, type, iter: iter[1], parser }, false));
+        }
+        $q.all(allQuery).then(data => {
+          // computer intersect
+          let map = new Map();
+          _.each(data, (d: any) => {
+            for (let i = 0; i < d.length; i += 1) {
+              let name = d[i].lid.toString() + '.' + d[i].idx.toString();
+              if (!map.has(name)) { map.set(name, { count: 0, d: [] }); }
+              let td = map.get(name);
+              td.count += 1;
+              td.d.push(d[i]);
+            }
+          });
+          let lmap = new Map();
+          map.forEach((v, k) => {
+            if (v.count === data.length) {
+              if (!lmap.has(v.d[0].name)) { lmap.set(v.d[0].name, { v: [], lid: v.d[0].lid }); };
+              let tmp = lmap.get(v.d[0].name);
+              tmp.v.push(v.d[0].idx);
+            }
+          });
+
+          let qArray = {};
+          lmap.forEach((v, k) => {
+            qArray[k] = DataManager.fetchKernel({
+              db, type, layer: [v.lid], seqidx: v.v, parser
+            }, false);
+          });
+          $scope.dataTopK = {};
+          $scope.optionsTopK = {};
+          if (!_.isEmpty(qArray)) {
+            $q.all(qArray).then(kernelData => {
+              _.each(kernelData, (v, k) => {
+                $scope.dataTopK[k] = _.map(v, (vd: any) => {
+                  return {
+                    heatmapData: vd.value,
+                    linechartData: null
+                  };
+                });
+                $scope.showTypes[k] = 'topk';
+                $scope.optionsTopK[k] = this_._setOptions('heatline');
+                console.log(k, v);
+                // auto open
+              });
+            });
+          }
+
+        });
+      }));
+
 
       Pip.onTimeChanged($scope, (iter) => {
         console.log('select iter: ', iter);
@@ -470,6 +530,7 @@ namespace application {
     }
 
     private _setOptions(type) {
+      let this_ = this;
       let options;
       switch (type) {
         case 'sparklinePlus':
@@ -477,12 +538,12 @@ namespace application {
             chart: {
               type: 'sparklinePlus',
               width: 757,
-              height: 60,
+              height: 35,
               margin: {
                 left: 0,
                 right: 0,
-                top: 2,
-                bottom: 2
+                top: 1,
+                bottom: 0
               },
               color: function (d, i) { return '#4682b4'; },
               // yDomain: [0, 50],
@@ -543,6 +604,22 @@ namespace application {
             ratio: null
           };
           break;
+        case 'heatline':
+          options = {
+            width: this_.Global.getData('iter').num + 30,
+            height: 16,
+            cellWidth: 1,
+            color: d4.scaleSequential(d4.interpolateBlues),
+            margin: {
+              top: 1,
+              right: 30,
+              bottom: 0,
+              left: 0
+            },
+            type: 'kernel',
+            lineChart: false
+          };
+          break;
         case 'pixelChartWithLine':
           options = {
             width: 757,
@@ -551,6 +628,7 @@ namespace application {
             pixelChart: true,
             lineChart: false,
             color: d4.scaleSequential(d4.interpolateBlues),
+            marginTop: 0,
             margin: {
               top: 2,
               right: 0,

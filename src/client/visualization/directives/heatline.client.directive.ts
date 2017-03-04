@@ -72,7 +72,7 @@ namespace application {
         .on('mousemove', mouseMoveHandler);
 
       this_._paintHeatMap(data.heatmapData);
-      if (this_.options.threshold > 0) { this_._addTriangles(data.linechartData); }
+      if (this_.options.triangle && this_.options.threshold > 0) { this_._addTriangles(data.linechartData); }
 
       function mouseOverHandler() {
         let point = d4.mouse(this);
@@ -131,16 +131,31 @@ namespace application {
       let ctx: CanvasRenderingContext2D = this_.canvas.node().getContext('2d');
       let size = data.length;
       let lw = this_.options.cellWidth ? this_.options.cellWidth : 1;
+      let color = this_.options.color;
       // let color = d4.scaleSequential(d4.interpolateYlOrRd);
       // ctx.globalCompositeOperation = 'destination-over';
-      let color = d4.scaleSequential(d4.interpolateRdYlGn);
-      for (let i = 0; i < size; i += 1) {
-        ctx.beginPath();
-        ctx.moveTo(this_.offsetWidth + i * lw, this_.offsetHeight);
-        ctx.lineTo(this_.offsetWidth + i * lw, this_.offsetHeight + this_.height);
-        ctx.lineWidth = lw;
-        ctx.strokeStyle = color(1 - data[i].value).toString();
-        ctx.stroke();
+      if (this_.options.type === 'kernel') {
+        let scale = d4.scaleLinear()
+          .domain(d4.extent(data, d => d.value))
+          .range([0.01, 0.95])
+          .clamp(true);
+        for (let i = 0; i < size; i += 1) {
+          ctx.beginPath();
+          ctx.moveTo(this_.offsetWidth + i * lw, this_.offsetHeight);
+          ctx.lineTo(this_.offsetWidth + i * lw, this_.offsetHeight + this_.height);
+          ctx.lineWidth = lw;
+          ctx.strokeStyle = color(scale(data[i].value)).toString();
+          ctx.stroke();
+        }
+      } else {
+        for (let i = 0; i < size; i += 1) {
+          ctx.beginPath();
+          ctx.moveTo(this_.offsetWidth + i * lw, this_.offsetHeight);
+          ctx.lineTo(this_.offsetWidth + i * lw, this_.offsetHeight + this_.height);
+          ctx.lineWidth = lw;
+          ctx.strokeStyle = color(1 - data[i].value).toString();
+          ctx.stroke();
+        }
       }
     }
 
@@ -173,6 +188,9 @@ namespace application {
 
         let start = () => {
           element.empty();
+          if (scope.options.type === 'kernel') {
+            console.log('heatline for kernel', scope.data);
+          }
           let board = new Painter(element, scope.options);
           board.render(scope.data, Pip);
         };

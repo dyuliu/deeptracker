@@ -16,6 +16,7 @@ namespace application {
     emitTimeMouseOut(msg: any): void;
     emitTimeMouseMove(msg: any): void;
     emitTimePicked(msg: any): void;
+    emitShowTopKernel(msg: any): void;
     onUrlChanged(scope: ng.IScope, cb: (msg: any) => void): void;
     onVlDiv(scope: ng.IScope, cb: (msg: any) => void): void;
     onModelChanged(scope: ng.IScope, cb: (msg: any) => void): void;
@@ -30,6 +31,7 @@ namespace application {
     onTimeMouseOut(scope: ng.IScope, cb: (msg: any) => void): void;
     onTimeMouseMove(scope: ng.IScope, cb: (msg: any) => void): void;
     onTimePicked(scope: ng.IScope, cb: (msg: any) => void): void;
+    onShowTopKernel(scope: ng.IScope, cb: (msg: any) => void): void;
   }
 
   export class Pip {
@@ -83,6 +85,7 @@ namespace application {
       this.addEvent('timeMouseOut');
       this.addEvent('timeMouseMove');
       this.addEvent('timePicked');
+      this.addEvent('showTopKernel');
     }
   }
 

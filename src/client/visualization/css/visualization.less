@@ -17,6 +17,7 @@
   position: absolute;
   left: 0;
   border-left: 1px dashed rgba(0, 0, 255, 0.6);
+  // border-left: 1px dashed #ee5f2a;
   z-index: 99;
 }
 
@@ -24,6 +25,7 @@
   height: 100%;
   position: absolute;
   border-left: 1px dashed rgba(0, 0, 255, 0.6);
+  // border-left: 1px dashed #ee5f2a;
   z-index: 99;
 }
 
@@ -54,34 +56,24 @@
   margin-top: -1px;
   position: relative;
   // height: 60px;
-  padding: 12px 0 12px 0;
+  // padding: 12px 0 12px 0;
+  padding: 0;
   border: 1px dotted;
-  border-color: #DDD #FFF #FFF;
-  border-color: rgba(0, 0, 0, .11) transparent transparent
+  border-color: #686969 #FFF #686969 #FFF;
+  // border-color: rgba(0, 0, 0, .11) transparent transparent
 }
 
 .layerbox:hover {
     background-color: #F7F7F7;
     border-color: #D6E1EA;
     border-style: solid;
-    z-index: 1
+    // z-index: 1
 }
 
-// .layerbox:first-child {
-//     border-top-color: transparent
-// }
-
-.layerbox:last-child {
-  border-bottom-color: #DDD
+.layerbox:first-child {
+  border-top-color: #DDD;
 }
 
-.layerbox:first-child:hover {
-  border-top-color: #D6E1EA
-}
-
-// .level1 {
-//   height: 100px;
-// }
 
 @level-offset: 10px;
 
@@ -118,3 +110,14 @@
 .clickable {
   cursor: pointer;
 }
+
+
+.nv-boxplot-whisker, .nv-boxplot-tick {
+  stroke-width: 2px;
+  stroke-opacity: 0.5;
+}
+
+.nv-boxplot-median {
+  stroke-opacity: 0.5;
+}
+

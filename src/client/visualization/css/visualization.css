@@ -46,22 +46,17 @@
 .layerbox {
   margin-top: -1px;
   position: relative;
-  padding: 12px 0 12px 0;
+  padding: 0;
   border: 1px dotted;
-  border-color: #DDD #FFF #FFF;
-  border-color: rgba(0, 0, 0, 0.11) transparent transparent;
+  border-color: #686969 #FFF #686969 #FFF;
 }
 .layerbox:hover {
   background-color: #F7F7F7;
   border-color: #D6E1EA;
   border-style: solid;
-  z-index: 1;
 }
-.layerbox:last-child {
-  border-bottom-color: #DDD;
-}
-.layerbox:first-child:hover {
-  border-top-color: #D6E1EA;
+.layerbox:first-child {
+  border-top-color: #DDD;
 }
 .level2-off {
   margin-left: 10px;
@@ -94,4 +89,12 @@
 }
 .clickable {
   cursor: pointer;
+}
+.nv-boxplot-whisker,
+.nv-boxplot-tick {
+  stroke-width: 2px;
+  stroke-opacity: 0.5;
+}
+.nv-boxplot-median {
+  stroke-opacity: 0.5;
 }

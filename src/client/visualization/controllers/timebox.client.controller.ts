@@ -10,13 +10,14 @@ namespace application {
   }
 
   class Controller {
-    public static $inject: string[] = ['$scope', 'Pip', 'Global', '$q'];
+    public static $inject: string[] = ['$scope', 'Pip', 'Global', '$q', 'DataManager'];
 
     constructor(
       public $scope: IScope,
       public Pip: IPipService,
       public Global: IGlobalService,
-      $q: ng.IQService
+      public $q: ng.IQService,
+      public DataManager: IDataManagerService
     ) {
       let this_ = this;
 
@@ -48,7 +49,7 @@ namespace application {
           .attr('class', 'overlay')
           .attr('width', iterInfo.num + 10)
           .attr('height', 34);
-          // .style('cursor', 'crosshair');
+        // .style('cursor', 'crosshair');
 
         svgContainer = svg.append('g');
 
@@ -112,7 +113,7 @@ namespace application {
 
       // handle mouse event
       Pip.onTimePicked($scope, (msg) => {
-        if (!Global.getConfig('timebox').pin) { return; }
+        if (!msg && !Global.getConfig('timebox').pin) { return; }
         let ci, cv;
         if (!msg) {
           ci = currentIdx;
@@ -133,7 +134,8 @@ namespace application {
           .style('left', offset + scale(cv) + 'px');
 
         if (!iterInfo.picked) { iterInfo.picked = []; }
-        iterInfo.picked.push(msg);
+        iterInfo.picked.push([ci, cv]);
+
       });
 
       Pip.onTimeMouseOver($scope, (msg) => {
@@ -155,7 +157,7 @@ namespace application {
       });
 
 
-      $('#widget-container-timebox')
+      $('#timebox-title')
         .mouseenter(function () {
           this_.$scope.$apply(function () {
             this_.$scope.btnShow = true;

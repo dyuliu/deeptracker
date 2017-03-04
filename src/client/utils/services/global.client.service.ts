@@ -216,7 +216,8 @@ namespace application {
           mds: false,
           show: false,
           threshold: 5,
-          abnormal: 20
+          abnormal: 20,
+          triangle: false
         },
         layer: {
           gw: 'g',
