@@ -46,7 +46,7 @@
                       <div ng-if="showTypes[la.name] === 'hgraph' " horizon-graph options="optionsHGraph[la.name]" data="dataHGraph[la.name]" style="z-index: 100"></div>
                       <div ng-if="showTypes[la.name] === 'topk' ">
                         <div class="space-2"></div>
-                        <div ng-repeat-start="dTopK in dataTopK[la.name]" heatline data="dTopK" options="optionsTopK[la.name]" ng-repeat-end> </div>
+                        <div ng-repeat-start="dTopK in dataTopK[la.name]" heatline data="dTopK" options="optionsTopK[la.name]" style="z-index: 100" ng-repeat-end> </div>
                         <div class="space-2"></div>
                       </div>
                     </div>
@@ -97,7 +97,7 @@
                           <div ng-if="showTypes[lann.name] === 'pchart' " kernel-pixel options="optionsDetail[lann.name]" data="dataDetail[lann.name]" style="z-index: 100"></div>
                           <div ng-if="showTypes[lann.name] === 'topk' ">
                             <small>{{dataTopK[lann.name].length + '/' + optionsTopK[lann.name].num}}</small>
-                            <div ng-repeat-start="dTopK in dataTopK[lann.name]" heatline data="dTopK" options="optionsTopK[lann.name]" ng-repeat-end> </div>
+                            <div ng-repeat-start="dTopK in dataTopK[lann.name]" heatline data="dTopK" options="optionsTopK[lann.name]" style="z-index: 100" ng-repeat-end> </div>
                             <div class="space-2"></div>
                           </div>
                         </div>
