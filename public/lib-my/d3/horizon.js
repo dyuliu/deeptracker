@@ -7,7 +7,8 @@
         y = d3_horizonY,
         w = 960,
         h = 40,
-        duration = 0;
+        duration = 0,
+        max = null;
 
     var color = d3.scale.linear()
         .domain([-1, 0, 0, 1])
@@ -35,6 +36,8 @@
           if (yv > yMax) yMax = yv;
           return [xv, yv];
         });
+
+        if (max) { yMax = max; }
 
         // Compute the new x- and y-scales, and transform.
         var x1 = d3.scale.linear().domain([xMin, xMax]).range([0, w]),
@@ -167,6 +170,12 @@
     horizon.height = function(x) {
       if (!arguments.length) return h;
       h = +x;
+      return horizon;
+    };
+
+    horizon.max = function(m) {
+      if (!arguments.length) return m;
+      max = m;
       return horizon;
     };
 

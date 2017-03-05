@@ -6,13 +6,13 @@
     </button>
 
     <!-- upload dataset-->
-    <button class="btn btn-info" ng-click="click('upload')">
-      <i class="ace-icon fa fa-cloud-upload"></i>
+    <button class="btn btn-info" ng-click="click('triangle')">
+      <i class="ace-icon icon-triangle-down"></i>
     </button>
 
     <!-- save current explore state-->
-    <button class="btn btn-warning" ng-click="click('save')">
-      <i class="ace-icon fa fa-floppy-o"></i>
+    <button class="btn btn-warning" ng-click="click('showTopKernel')">
+      <i class="ace-icon fa fa-search"></i>
     </button>
 
     <!-- toggle line  -->
@@ -45,13 +45,13 @@
 <div class="space-6"></div>
 
 <ul class="nav nav-list">
-  <li ng-class="{'active': actives.info}">
+  <!--<li ng-class="{'active': actives.info}">
     <a ui-sref="home.info">
       <i class="menu-icon fa fa-info"></i>
       <span class="menu-text"> Info </span>
     </a>
     <b class="arrow"></b>
-  </li>
+  </li>-->
 
   <li ng-class="{'active': actives.gallery}">
     <a ui-sref="home.gallery">
@@ -146,14 +146,19 @@
 
         <div class="space-4"></div>
 
-        <label style="margin-left: 10px">
-          <input ng-model="config.layer.triangle" name="form-field-checkbox" type="checkbox" class="ace" />
-          <span class="lbl"> Mark Abnormal</span>
-        </label>
+        <div style="margin-left: 15px">
+          <label>
+             <input ng-model="config.label.immediate" name="form-field-checkbox" type="checkbox" class="ace" />
+             <span class="lbl"> &nbsp; Immediate Change</span>
+          </label>
+        </div>
 
         <div class="ace-spinner middle" style="width: 100%">
           <div class="col-xs-4">
-            <label style="margin-top: 10px">threshold:</label>
+            <label>
+              <input ng-model="config.label.triangle" name="form-field-checkbox" type="checkbox" class="ace" />
+              <span class="lbl">threshold</span>
+            </label>
           </div>
           <div class="col-xs-8">
             <div class="input-group">
@@ -204,15 +209,57 @@
 
         <div class="space-4"></div>
 
-        <div>
-          <button class="btn btn-success" ng-click="click('showTopKernel')">
-            correlation
-          </button>
+        <div class="control-group">
+          Chart Type:
+          <div ng-repeat-start="type in layerChartType" class="radio" ng-repeat-end>
+            <label>
+              <input ng-model="config.layer.chartType" name="form-field-radio0" type="radio" class="ace" value="{{type.value}}"/>
+              <span class="lbl"> {{type.label}}</span>
+            </label>
+          </div>
         </div>
 
-        <div class="row control-group">
+        <hr>
+
+        <div ng-if="config.layer.chartType !== 'crChart'" style="margin-left: 15px">
+          <!--<label>
+             <input ng-model="config.layer.sameScale" name="form-field-checkbox5" type="checkbox" class="ace" />
+             <span class="lbl"> &nbsp; Same Scale:</span>
+          </label>-->
+          <label>
+            Same Scale:
+            <input ng-model="config.layer.sameScale" name="switch-field-1" class="ace ace-switch ace-switch-2" type="checkbox" />
+            <span class="lbl">&nbsp;</span>
+          </label>
+        </div>
+
+        <div ng-if="config.layer.chartType === 'horizonGraph'" class="ace-spinner middle" style="width: 100%; margin-bottom: 5px;">
+          <div class="col-xs-4">
+            <label>
+              <!--<input ng-model="config.label.triangle" name="form-field-checkbox" type="checkbox" class="ace" />-->
+              <span class="lbl">Band</span>
+            </label>
+          </div>
+          <div class="col-xs-8">
+            <div class="input-group">
+              <input ng-model="config.layer.band" type="text" class="spinbox-input form-control text-center">
+              <div class="spinbox-buttons input-group-btn btn-group-vertical">
+                <button ng-click="spinnerChange(1, 'band')" type="button" class="btn spinbox-up btn-sm btn-info">
+                <i class="ace-icon fa fa-chevron-up"></i>
+              </button>
+                <button ng-click="spinnerChange(-1, 'band')" type="button" class="btn spinbox-down btn-sm btn-info">
+                <i class="ace-icon fa fa-chevron-down"></i>
+              </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div ng-if="config.layer.chartType === 'lineChart' || config.layer.chartType === 'horizonGraph'" class="row control-group">
           <div class="col-xs-6">
-            <div>
+            <div style="margin-left: 10px">
               <label>
                 <input ng-model="config.layer.gw" name="form-field-radio1" type="radio" class="ace" value="w"/>
                 <span class="lbl"> weight </span>
@@ -220,7 +267,7 @@
             </div>
           </div>
           <div class="col-xs-6">
-            <div>
+            <div style="margin-left: -5px">
               <label>
                 <input ng-model="config.layer.gw" name="form-field-radio1" type="radio" class="ace" value="g"/>
                 <span class="lbl"> gradient </span>
@@ -229,50 +276,36 @@
           </div>
         </div>
 
-        <div class="space-4"></div>
-
-        <div class="control-group">
-          Single Attr:
-          <div ng-repeat-start="type in layerTypeList" class="radio" ng-repeat-end="">
-            <label>
+        <div ng-if="config.layer.chartType === 'lineChart' || config.layer.chartType === 'horizonGraph'" class="row control-group">
+          <div class="control-group" style="margin-left: 15px">
+            <div ng-repeat-start="type in layerTypeList" class="radio" ng-repeat-end="">
+              <label>
               <input ng-model="config.layer.type" name="form-field-radio2" type="radio" class="ace" value="{{type.value}}"/>
               <span class="lbl"> {{type.label}}</span>
             </label>
+            </div>
           </div>
         </div>
 
-        <div class="control-group">
-          Special:
-          <div class="radio">
-            <label>
-                <input ng-model="config.layer.type" name="form-field-radio2" type="radio" class="ace" value="s_cratio"/>
-                <span class="lbl"> change ratio </span>
-              </label>
-          </div>
-          <div class="radio">
-            <label>
-                <input ng-model="config.layer.type" name="form-field-radio2" type="radio" class="ace" value="box"/>
-                <span class="lbl"> boxplot </span>
-              </label>
-          </div>
+
+
+      </div>
+
+      <div ng-if="config.layer.chartType === 'crChart'" class="row">
+        <div class="col-xs-10 col-xs-offset-1">
+          Pick Your Ratios:&nbsp;
+          <button type="button" class="btn btn-default" ng-model="config.layer.selectedRatio" data-html="1" data-multiple="1" bs-options="ratio.value as ratio.label for ratio in ratioList" bs-select>
+            Pick Your Ratios <span class="caret"></span>
+          </button>
+          <!--<select class="form-control" ng-model="selectedRatio" multiple="true">
+            <option ng-repeat-start="ratio in ratioList" value="{{ratio.value}}" ng-repeat-end>
+              {{ratio.label}}
+            </option>
+          </select>-->
+          <label></label>
         </div>
       </div>
 
-      <!--<div class="row">
-        <div class="col-xs-12">
-          <label>Ratios:&nbsp;</label>
-          <button type="button" class="btn btn-default" ng-model="selectedRatio" data-html="1" data-multiple="1"
-            bs-options="ratio as ratio.label for ratio in ratioList" bs-select>
-            Action <span class="caret"></span>
-          </button>
-        </div>
-      </div>-->
-
-      <label>
-        Same Scale:
-        <input ng-model="config.layer.sameScale" name="switch-field-1" class="ace ace-switch ace-switch-2" type="checkbox" />
-        <span class="lbl">&nbsp;</span>
-      </label>
 
       <div class="space-8"></div>
 

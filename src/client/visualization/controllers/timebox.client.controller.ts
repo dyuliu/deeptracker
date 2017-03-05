@@ -6,6 +6,7 @@ namespace application {
     iter: any;
     show: any;
     reset: any;
+    clean: any;
     btnShow: any;
   }
 
@@ -109,6 +110,16 @@ namespace application {
         iterInfo.picked = null;
         $(picked.node()).empty();
         $('.vl-div-pin').remove();
+      };
+
+      $scope.clean = function () {
+        let disp = $('.vl-div-pin').css('display');
+        console.log(disp);
+        if (disp === 'none') {
+          $('.vl-div-pin').css('display', 'inline');
+        } else {
+          $('.vl-div-pin').css('display', 'none');
+        }
       };
 
       // handle mouse event

@@ -4,9 +4,13 @@ namespace application {
 
   interface IScope extends ng.IScope {
     data: {};
+    dataCR: {};
+    dataHGraph: {};
     dataDetail: {};
     dataTopK: {};
     options: {};
+    optionsCR: {};
+    optionsHGraph: {};
     optionsDetail: {};
     optionsTopK: {};
     showTypes: {};
@@ -15,7 +19,10 @@ namespace application {
     opened: {};
     open: any;    // func to open hl layer
     conf: any;
+    btnShow: any;
     size: {};
+    click: any;
+    layers: any;
   }
 
   class Controller {
@@ -33,10 +40,34 @@ namespace application {
     ) {
 
       let this_ = this;
+      let layerTree = {};
       let layers, hlLayers = [], allLayers;
+      let previousOpen = null;
+      let oldShowType = {};
       $scope.showTypes = {};
 
       this_._init();
+
+      $scope.click = function (type, name) {
+        if ($scope.showTypes[name] === 'nvd3') {
+          if (type === 'zoomin') {
+            let tmp = $scope.options[name].chart.height;
+            tmp *= 1.5;
+            if (tmp <= 800) { $scope.options[name].chart.height = tmp; }
+          } else if (type === 'zoomout') {
+            let tmp = $scope.options[name].chart.height;
+            tmp /= 1.5;
+            if (tmp >= 40) { $scope.options[name].chart.height = tmp; }
+          };
+        } else if ($scope.showTypes[name] === 'pchart' || $scope.showTypes[name] === 'cr') {
+          if (type === 'zoomin') {
+            $scope.$broadcast('zoom', { type: 'in', name });
+          } else {
+            $scope.$broadcast('zoom', { type: 'out', name });
+          }
+        }
+
+      };
 
       Pip.onShowTopKernel($scope, (msg => {
         let parser = 'json', type = 'i_cosine', db = Global.getSelectedDB();
@@ -45,6 +76,7 @@ namespace application {
         for (let iter of iterInfo.picked) {
           allQuery.push(DataManager.fetchKernel({ db, type, iter: iter[1], parser }, false));
         }
+        $('#layer-data-loading').removeClass('invisible');
         $q.all(allQuery).then(data => {
           // computer intersect
           let map = new Map();
@@ -59,11 +91,11 @@ namespace application {
           });
           let lmap = new Map();
           map.forEach((v, k) => {
-            if (v.count === data.length) {
-              if (!lmap.has(v.d[0].name)) { lmap.set(v.d[0].name, { v: [], lid: v.d[0].lid }); };
-              let tmp = lmap.get(v.d[0].name);
-              tmp.v.push(v.d[0].idx);
-            }
+            // if (v.count === data.length) {
+            if (!lmap.has(v.d[0].name)) { lmap.set(v.d[0].name, { v: [], lid: v.d[0].lid }); };
+            let tmp = lmap.get(v.d[0].name);
+            tmp.v.push(v.d[0].idx);
+            // }
           });
 
           let qArray = {};
@@ -76,6 +108,7 @@ namespace application {
           $scope.optionsTopK = {};
           if (!_.isEmpty(qArray)) {
             $q.all(qArray).then(kernelData => {
+              $('#layer-data-loading').addClass('invisible');
               _.each(kernelData, (v, k) => {
                 $scope.dataTopK[k] = _.map(v, (vd: any) => {
                   return {
@@ -85,8 +118,21 @@ namespace application {
                 });
                 $scope.showTypes[k] = 'topk';
                 $scope.optionsTopK[k] = this_._setOptions('heatline');
-                console.log(k, v);
-                // auto open
+                $scope.optionsTopK[k].num = $scope.layers[k].kernelNum;
+                let cnode = layerTree[k];
+                let count = 0;
+                if (cnode.parent) {
+                  // console.log(cnode.parent);
+                  // console.log(cnode.parent.parent);
+                  $scope.opened[cnode.parent.parent.name] = true;
+                  $scope.opened[cnode.parent.name] = true;
+                  $('#' + cnode.parent.parent.name).show();
+                  $('#' + cnode.parent.parent.name + ' .level2').show();
+                  $('#' + cnode.parent.name + ' .level3').show();
+                  count += 1;
+                }
+                // console.log(count);
+                // console.log(k, v);
               });
             });
           }
@@ -94,23 +140,6 @@ namespace application {
         });
       }));
 
-
-      Pip.onTimeChanged($scope, (iter) => {
-        console.log('select iter: ', iter);
-        // print kernel with maximum change
-        // let typeArray = ['euclidean', 'manhattan', 'cosine', 'norm1', 'nomr2'];
-        let typeArray = ['cosine', 'norm1', 'nomr2'];
-        let allQuery = {}, parser = 'json';
-        for (let type of typeArray) {
-          allQuery[type] = DataManager.fetchKernel({
-            db: Global.getSelectedDB(), type: 'i_' + type, iter, parser
-          }, false);
-        }
-        $q.all(allQuery).then(data => {
-          console.log('kernel data', data);
-          $scope.kData = data;
-        });
-      });
       Pip.onLayerConfigChanged($scope, (conf: any) => {
         if (conf.show === true) { act(conf); }
       });
@@ -125,11 +154,14 @@ namespace application {
         let lid = _.find(layerArray, (o: any) => o.name === d.name).lid;
         let [db, parser] = [Global.getSelectedDB(), 'json'];
         let type = 'i_cosine';
+        $('#layer-data-loading').removeClass('invisible');
         DataManager.fetchKernel({ db, type, layer: [lid], parser }, false)
           // DataManager.fetchKernel({ db, type: 'i_norm1', layer: [lid], parser }, false)
           .then(data => {
+            $('#layer-data-loading').addClass('invisible');
             $scope.optionsDetail[d.name] = this_._setOptions('pixelChartWithLine');
             $scope.optionsDetail[d.name].height = data.length + 4;
+            $scope.optionsDetail[d.name].name = d.name;
 
             // global scale
             // let f = d4.scaleLinear();
@@ -176,7 +208,6 @@ namespace application {
                 dd.value[i] = nf(dd.value[i]);
               });
             }
-            console.log(data);
             $scope.dataDetail[d.name] = {
               pixelChart: data,
               lineChart: null
@@ -192,25 +223,21 @@ namespace application {
           iterSet = globalData.iter.set;
         allLayers = _.map(layerArray, (d: any) => d.lid);
         layers = _.keyBy(layerArray, (o: any) => o.name); // turn array to object with key layername
+        $scope.layers = layers;
         $scope.opened = {};
         $scope.options = {};
         $scope.optionsDetail = {};
+        $scope.optionsHGraph = {};
+        $scope.optionsCR = {};
+        $scope.dataCR = {};
         $scope.dataDetail = {};
+        $scope.dataHGraph = {};
         $scope.showTypes = {};
         $scope.size = {};
         $scope.conf = conf;
         $scope.dataTree = tree;
 
-        let globalShowType;
-        if (conf.type === 's_cratio') {
-          globalShowType = 'crChart';
-        } else if (conf.type === 'box') {
-          globalShowType = 'boxPlotChart';
-        } else {
-          globalShowType = 'sparklinePlus';
-        }
-
-        if (globalShowType === 'sparklinePlus') {
+        if (conf.chartType === 'lineChart') {
 
           for (let d of tree) {
             $scope.opened[d.name] = false;
@@ -221,18 +248,20 @@ namespace application {
                 layers[d.name].kernelWidth + layers[d.name].kernelHeight;
             }
             $scope.showTypes[d.name] = 'nvd3';
+            layerTree[d.name] = d;
             if (d.nodes) {
               hlLayers.push(d.name);
               for (let dn of d.nodes) {
-                dn.parent = d.name;
+                dn.parent = d;
                 $scope.opened[dn.name] = false;
                 $scope.options[dn.name] = this_._setOptions('sparklinePlus');
                 $scope.size[dn.name] = 0;
                 $scope.showTypes[dn.name] = 'nvd3';
+                layerTree[dn.name] = dn;
                 if (dn.nodes) {
                   hlLayers.push(dn.name);
                   for (let dnn of dn.nodes) {
-                    dnn.parent = dn.name;
+                    dnn.parent = dn;
                     $scope.opened[dnn.name] = false;
                     $scope.options[dnn.name] = this_._setOptions('sparklinePlus');
                     $scope.size[dnn.name] = layers[dnn.name].kernelNum * layers[dnn.name].channels *
@@ -240,17 +269,19 @@ namespace application {
                     $scope.size[dn.name] += $scope.size[dnn.name];
                     $scope.size[d.name] += $scope.size[dnn.name];
                     $scope.showTypes[dnn.name] = 'nvd3';
+                    layerTree[dnn.name] = dnn;
                   };
                 }
               }
             }
           }
           let db = Global.getSelectedDB(), parser = 'json';
-
+          $('#layer-data-loading').removeClass('invisible');
           $q.all([
             DataManager.fetchLayer({ db, type: conf.gw + '_' + conf.type, parser }, false),
             DataManager.fetchLayer({ db, type: 'hl_' + conf.gw + '_' + conf.type, parser }, false)
           ]).then(data => {
+            $('#layer-data-loading').addClass('invisible');
             $scope.data = {};
             data[0] = _.filter(data[0], (d: any) => iterSet.has(d.iter));
             data[1] = _.filter(data[1], (d: any) => iterSet.has(d.iter));
@@ -277,26 +308,29 @@ namespace application {
             }
           });
 
-        } else if (globalShowType === 'boxPlotChart') {
+        } else if (conf.chartType === 'boxPlot') {
 
           for (let d of tree) {
             $scope.opened[d.name] = false;
             $scope.options[d.name] = this_._setOptions('boxPlotChart');
             $scope.showTypes[d.name] = 'nvd3';
+            layerTree[d.name] = d;
             if (d.nodes) {
               hlLayers.push(d.name);
               for (let dn of d.nodes) {
-                dn.parent = d.name;
+                dn.parent = d;
                 $scope.opened[dn.name] = false;
                 $scope.options[dn.name] = this_._setOptions('boxPlotChart');
                 $scope.showTypes[dn.name] = 'nvd3';
+                layerTree[dn.name] = dn;
                 if (dn.nodes) {
                   hlLayers.push(dn.name);
                   for (let dnn of dn.nodes) {
-                    dnn.parent = dn.name;
+                    dnn.parent = dn;
                     $scope.opened[dnn.name] = false;
                     $scope.options[dnn.name] = this_._setOptions('boxPlotChart');
                     $scope.showTypes[dnn.name] = 'nvd3';
+                    layerTree[dnn.name] = dnn;
                   };
                 }
               }
@@ -312,7 +346,9 @@ namespace application {
           for (let type of types) {
             queryQueue.push(DataManager.fetchLayer({ db, type: 'hl_' + type, parser }, false));
           }
+          $('#layer-data-loading').removeClass('invisible');
           $q.all(queryQueue).then(data => {
+            $('#layer-data-loading').addClass('invisible');
             $scope.data = {};
             let ss = _.range(0, iterSet.size, 2);
             for (let i = 0; i < data.length; i += 1) {
@@ -329,58 +365,144 @@ namespace application {
               if (conf.sameScale) { d.chart.yDomain = [min, max]; }
             });
             _.merge($scope.data, tmpStat[0], tmpHlStat[0]);
-            console.log($scope.data);
           });
 
-        } else if (globalShowType === 'crChart') {
-
+        } else if (conf.chartType === 'crChart') {
           for (let d of tree) {
             $scope.opened[d.name] = false;
-            $scope.options[d.name] = this_._setOptions('crChart');
+            $scope.optionsCR[d.name] = this_._setOptions('crChart');
+            $scope.optionsCR[d.name].name = d.name;
             $scope.showTypes[d.name] = 'cr';
+            layerTree[d.name] = d;
             if (d.nodes) {
               hlLayers.push(d.name);
               for (let dn of d.nodes) {
-                dn.parent = d.name;
+                dn.parent = d;
                 $scope.opened[dn.name] = false;
-                $scope.options[dn.name] = this_._setOptions('crChart');
+                $scope.optionsCR[dn.name] = this_._setOptions('crChart');
+                $scope.optionsCR[dn.name].name = d.name;
                 $scope.showTypes[dn.name] = 'cr';
+                layerTree[dn.name] = dn;
                 if (dn.nodes) {
                   hlLayers.push(dn.name);
                   for (let dnn of dn.nodes) {
-                    dnn.parent = dn.name;
+                    dnn.parent = dn;
                     $scope.opened[dnn.name] = false;
-                    $scope.options[dnn.name] = this_._setOptions('crChart');
+                    $scope.optionsCR[dnn.name] = this_._setOptions('crChart');
+                    $scope.optionsCR[dnn.name].name = d.name;
                     $scope.showTypes[dnn.name] = 'cr';
+                    layerTree[dnn.name] = dnn;
                   };
                 }
               }
             }
           }
+          $('#layer-data-loading').removeClass('invisible');
 
-          let db = Global.getSelectedDB(), parser = 'json', seqidx = [10, 20, 30];
+          let db = Global.getSelectedDB(), parser = 'json', seqidx = conf.selectedRatio;
           $q.all([
             DataManager.fetchLayer({ db, type: 's_cratio', seqidx, parser }, false),
             DataManager.fetchLayer({ db, type: 'hl_s_cratio', seqidx, parser }, false)
           ]).then(data => {
-            $scope.data = {};
+            $('#layer-data-loading').addClass('invisible');
+            $scope.dataCR = {};
             _.merge(
-              $scope.data,
+              $scope.dataCR,
               this_._processData('seq', layers, data[0]),
               this_._processData('hl_seq', hlLayers, data[1])
             );
-            _.each($scope.options, (d: any) => { d.width = iterSet.size; });
+            _.each($scope.optionsCR, (d: any) => { d.width = iterSet.size; });
 
             // filter
-            _.each($scope.data, (d: any) => {
+            _.each($scope.dataCR, (d: any) => {
               d.value = _.filter(d.value, (o, i) => iterSet.has(d.iter[i]));
               d.iter = _.filter(d.iter, o => iterSet.has(o));
             });
-            console.log($scope.data);
           });
 
+        } else if (conf.chartType === 'horizonGraph') {
+          for (let d of tree) {
+            $scope.opened[d.name] = false;
+            $scope.optionsHGraph[d.name] = this_._setOptions('horizonGraph');
+            $scope.size[d.name] = 0;
+            if (!d.nodes) {
+              $scope.size[d.name] = layers[d.name].kernelNum * layers[d.name].channels *
+                layers[d.name].kernelWidth + layers[d.name].kernelHeight;
+            }
+            $scope.showTypes[d.name] = 'hgraph';
+            layerTree[d.name] = d;
+            if (d.nodes) {
+              hlLayers.push(d.name);
+              for (let dn of d.nodes) {
+                dn.parent = d;
+                $scope.opened[dn.name] = false;
+                $scope.optionsHGraph[dn.name] = this_._setOptions('horizonGraph');
+                $scope.size[dn.name] = 0;
+                $scope.showTypes[dn.name] = 'hgraph';
+                layerTree[dn.name] = dn;
+                if (dn.nodes) {
+                  hlLayers.push(dn.name);
+                  for (let dnn of dn.nodes) {
+                    dnn.parent = dn;
+                    $scope.opened[dnn.name] = false;
+                    $scope.optionsHGraph[dnn.name] = this_._setOptions('horizonGraph');
+                    $scope.size[dnn.name] = layers[dnn.name].kernelNum * layers[dnn.name].channels *
+                      layers[dnn.name].kernelWidth + layers[dnn.name].kernelHeight;
+                    $scope.size[dn.name] += $scope.size[dnn.name];
+                    $scope.size[d.name] += $scope.size[dnn.name];
+                    $scope.showTypes[dnn.name] = 'hgraph';
+                    layerTree[dnn.name] = dnn;
+                  };
+                }
+              }
+            }
+          }
+          let db = Global.getSelectedDB(), parser = 'json';
+          $('#layer-data-loading').removeClass('invisible');
+          $q.all([
+            DataManager.fetchLayer({ db, type: conf.gw + '_' + conf.type, parser }, false),
+            DataManager.fetchLayer({ db, type: 'hl_' + conf.gw + '_' + conf.type, parser }, false)
+          ]).then(data => {
+            $('#layer-data-loading').addClass('invisible');
+            $scope.dataHGraph = {};
+            data[0] = _.filter(data[0], (d: any) => iterSet.has(d.iter));
+            data[1] = _.filter(data[1], (d: any) => iterSet.has(d.iter));
+            let tmpStat = this_._processData('stat_hgraph', layers, data[0]),
+              tmpHlStat = this_._processData('hl_stat_hgraph', hlLayers, data[1]);
+            let [min, max] = [Math.min(tmpStat[1], tmpHlStat[1]), Math.max(tmpStat[2], tmpHlStat[2])];
+            console.log(tmpStat[1], tmpHlStat[1], tmpStat[2], tmpHlStat[2]);
+            _.each($scope.optionsHGraph, (d: any) => {
+              d.width = iterSet.size;
+              d.band = conf.band;
+              if (conf.sameScale) { d.yDomain = [min, max]; }
+            });
+            _.merge($scope.dataHGraph, tmpStat[0], tmpHlStat[0]);
+            if (conf.type === 'norm1' || conf.type === 'norm2') {
+              let mmin = Number.MAX_SAFE_INTEGER, mmax = Number.MIN_SAFE_INTEGER;
+              _.each($scope.dataHGraph, (v: any, k) => {
+                for (let i = 0; i < v.length; i += 1) {
+                  v[i][1] /= $scope.size[k];
+                  if (v[i][1] < mmin) { mmin = v[i][1]; }
+                  if (v[i][1] > mmax) { mmax = v[i][1]; }
+                }
+              });
+              _.each($scope.optionsHGraph, (d: any) => {
+                if (conf.sameScale) { d.yDomain = [mmin, mmax]; }
+              });
+            }
+
+          });
         }
 
+        if (!previousOpen) { previousOpen = $scope.opened; }
+        else { $scope.opened = previousOpen; }
+
+        $timeout(function () {
+          $('.tree-btn').hover(
+            function () { $(this).find('.zoombtn').show(); },
+            function () { $(this).find('.zoombtn').hide(); }
+          );
+        }, 1000);
       }
 
       $scope.open = function (d, level) {
@@ -397,14 +519,11 @@ namespace application {
         } else {
           $scope.opened[d.name] = !$scope.opened[d.name];
           if ($scope.opened[d.name]) {
+            oldShowType[d.name] = $scope.showTypes[d.name];
             $scope.showTypes[d.name] = 'pchart';
             openPixelChart(d);
           } else {
-            if ($scope.conf.type === 's_cratio') {
-              $scope.showTypes[d.name] = 'cr';
-            } else {
-              $scope.showTypes[d.name] = 'nvd3';
-            }
+            $scope.showTypes[d.name] = oldShowType[d.name];
           }
         }
       };
@@ -427,10 +546,22 @@ namespace application {
       $('#widget-container-layerinfo')
         .mouseenter(function () {
           $('#widget-container-layerinfo .widget-header').removeClass('invisible');
+          // this_.$scope.$apply(function () {
+          //   this_.$scope.btnShow = true;
+          // });
         })
         .mouseleave(function () {
           $('#widget-container-layerinfo .widget-header').addClass('invisible');
+          // this_.$scope.$apply(function () {
+          //   this_.$scope.btnShow = false;
+          // });
         });
+
+      // nvd3 mouse event
+      $('.vl-div-global').on('nvd3-mouse-hover', function (evt, msg) {
+        this_.Pip.emitTimeMouseMove({ point: [msg, 0], x: 0, y: 0, k: 1 });
+      });
+
     }
 
     private _processData(type, ...rest: any[]) {
@@ -469,6 +600,24 @@ namespace application {
               min = dv.value[name] < min ? dv.value[name] : min;
               max = dv.value[name] > max ? dv.value[name] : max;
               return { x: dv.iter, y: dv.value[name] };
+            });
+          });
+          return [result, min, max];
+        case 'stat_hgraph':
+          _.each(layers, (v) => {
+            result[v.name] = _.map(data, (dv: any) => {
+              min = dv.value[v.lid] < min ? dv.value[v.lid] : min;
+              max = dv.value[v.lid] > max ? dv.value[v.lid] : max;
+              return [dv.iter, dv.value[v.lid]];
+            });
+          });
+          return [result, min, max];
+        case 'hl_stat_hgraph':
+          _.each(layers, name => {
+            result[name] = _.map(data, (dv: any) => {
+              min = dv.value[name] < min ? dv.value[name] : min;
+              max = dv.value[name] > max ? dv.value[name] : max;
+              return [dv.iter, dv.value[name]];
             });
           });
           return [result, min, max];
@@ -545,6 +694,7 @@ namespace application {
                 top: 1,
                 bottom: 0
               },
+              showLastValue: false,
               color: function (d, i) { return '#4682b4'; },
               // yDomain: [0, 50],
               x: function (d, i) { return d.x; },
@@ -563,7 +713,7 @@ namespace application {
           options = {
             chart: {
               type: 'boxPlotChart',
-              height: 80,
+              height: 35,
               margin: {
                 left: 0,
                 right: 0,
@@ -593,12 +743,13 @@ namespace application {
         case 'crChart':
           options = {
             width: 757,
-            height: 60,
+            height: 35,
             cellWidth: 1,
+            marginTop: 1,
             margin: {
-              top: 2,
+              top: 1,
               right: 0,
-              bottom: 2,
+              bottom: 1,
               left: 0
             },
             ratio: null
@@ -607,17 +758,32 @@ namespace application {
         case 'heatline':
           options = {
             width: this_.Global.getData('iter').num + 30,
-            height: 16,
+            height: 12,
             cellWidth: 1,
             color: d4.scaleSequential(d4.interpolateBlues),
             margin: {
               top: 1,
-              right: 30,
+              right: 0,
               bottom: 0,
               left: 0
             },
             type: 'kernel',
             lineChart: false
+          };
+          break;
+        case 'horizonGraph':
+          options = {
+            width: this_.Global.getData('iter').num + 30,
+            height: 35,
+            cellWidth: 1,
+            marginTop: 1,
+            color: d4.scaleSequential(d4.interpolateBlues),
+            margin: {
+              top: 1,
+              right: 0,
+              bottom: 0,
+              left: 0
+            }
           };
           break;
         case 'pixelChartWithLine':
@@ -638,7 +804,8 @@ namespace application {
           };
           break;
         default:
-          alert('wrong chart type');
+          return null;
+        // alert('wrong chart type');
       }
       return options;
     }

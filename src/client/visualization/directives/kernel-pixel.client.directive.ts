@@ -63,7 +63,7 @@ namespace application {
 
       // add zoom in & zoom out
       this_.canvas.call(d4.zoom().scaleExtent([1, 10]).on('zoom', zoomed))
-        .on('wheel', function() { console.log('we'); d4.event.preventDefault(); });
+        .on('wheel', function () { console.log('we'); d4.event.preventDefault(); });
       this_.canvas
         .on('mouseover', mouseOverHandler)
         .on('mouseout', mouseOutHandler)
@@ -91,14 +91,37 @@ namespace application {
         ctx.translate(0.5, 0.5);
         ctx.moveTo(msg.point[0], 0);
         ctx.lineTo(msg.point[0], canvasHeight);
-        ctx.strokeStyle = '#fb652d';
-        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#FFFF00';
+        ctx.lineWidth = 0.5;
         ctx.stroke();
         ctx.restore();
       });
 
       Pip.onTimeMouseOut(scope, (msg: any) => {
         drawImage();
+      });
+
+      scope.$on('zoom', (evt, msg: any) => {
+        let hScale = this_.options.hScale;
+        if (scope.data && scope.options.name === msg.name) {
+          if (msg.type === 'in') {
+            hScale += 0.5;
+          } else {
+            hScale -= 0.5;
+          }
+          hScale = hScale < 1 ? 1 : hScale;
+          hScale = hScale > 15 ? 15 : hScale;
+          this_.options.hScale = hScale;
+          console.log('redraw');
+          let [dw, dh] = [data.pixelChart[0].iter.length, data.pixelChart.length];
+          this_.container
+            .style('width', (dw + 15) + 'px')
+            .style('height', (this_.options.marginTop + dh * this_.options.hScale) + 'px');
+          this_.canvas
+            .attr('width', dw + 'px')
+            .attr('height', (dh * this_.options.hScale) + 'px');
+          drawImage();
+        }
       });
 
       function drawImage() {
@@ -199,21 +222,6 @@ namespace application {
         if (!_.isUndefined(scope.data)) { start(); };
         scope.$watch('data', (n, o) => { if (n !== o && n) { start(); } }, false);
 
-        // scope.$on('zoom', (evt, msg: any) => {
-        //   if (scope.data && scope.data.pixelChart[0].cls === msg.cls) {
-        //     if (msg.type === 'in') {
-        //       hScale += 1;
-        //     } else {
-        //       hScale -= 1;
-        //     }
-        //     hScale = hScale < 1 ? 1 : hScale;
-        //     hScale = hScale > 15 ? 15 : hScale;
-        //     element.empty();
-        //     scope.options.hScale = hScale;
-        //     let board = new Painter(element, scope.options, scope.data);
-        //     board.render(scope.data, Pip, scope, Global);
-        //   }
-        // });
       };
     }
   }

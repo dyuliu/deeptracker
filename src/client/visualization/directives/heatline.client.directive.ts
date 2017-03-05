@@ -72,7 +72,14 @@ namespace application {
         .on('mousemove', mouseMoveHandler);
 
       this_._paintHeatMap(data.heatmapData);
-      if (this_.options.triangle && this_.options.threshold > 0) { this_._addTriangles(data.linechartData); }
+      if (this_.options.threshold > 0) {
+        this_._addTriangles(data.linechartData);
+        if (this_.options.triangle === true) {
+          this_.svg.selectAll('polygon').style('display', 'inline');
+        } else {
+          this_.svg.selectAll('polygon').style('display', 'none');
+        }
+      }
 
       function mouseOverHandler() {
         let point = d4.mouse(this);
@@ -104,6 +111,10 @@ namespace application {
       let scale = d4.scaleLinear()
         .domain([this_.options.threshold, this_.options.max])
         .range([6, 17]);
+
+      if (this_.options.immediate) {
+        scale.range([3, 3]);
+      }
 
       let triangles = this_.svg.append('g');
       triangles.selectAll('polygon')
@@ -188,9 +199,9 @@ namespace application {
 
         let start = () => {
           element.empty();
-          if (scope.options.type === 'kernel') {
-            console.log('heatline for kernel', scope.data);
-          }
+          // if (scope.options.type === 'kernel') {
+          //   console.log('heatline for kernel', scope.data);
+          // }
           let board = new Painter(element, scope.options);
           board.render(scope.data, Pip);
         };

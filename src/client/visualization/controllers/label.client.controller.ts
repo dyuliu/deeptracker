@@ -87,6 +87,7 @@ namespace application {
         // act();
       });
       Pip.onLabelConfigChanged($scope, (conf: any) => {
+        console.log(conf);
         if (conf.show === true) { act(conf); }
       });
 
@@ -110,6 +111,7 @@ namespace application {
       }
 
       function act(conf) {
+        console.log('act');
         if (first) {
           $scope.optionsHeatLine = this_._setOptions('heatline');
           $scope.optionsHeatLine.height = 100;
@@ -146,7 +148,8 @@ namespace application {
           if (d.pmax >= conf.threshold) {
             $scope.optionsCls[k] = this_._setOptions('heatline');
             $scope.optionsCls[k].threshold = conf.threshold;
-            $scope.optionsCls[k].triangle = conf.threshold;
+            $scope.optionsCls[k].triangle = conf.triangle;
+            $scope.optionsCls[k].immediate = conf.immediate;
             $scope.optionsCls[k].max = maxPMax;
             selectedCls.push({ name: k, pmax: d.pmax, file: root + k + '/' + firstFile });
           }

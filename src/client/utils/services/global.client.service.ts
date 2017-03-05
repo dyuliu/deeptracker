@@ -60,6 +60,7 @@ namespace application {
     setConfig(d: any, type?: string): void;
     getRecordTypeList(type?: string): IRecordTypeList;
     getLayerTypeList(type?: string): ILayerTypeList;
+    getLayerChartType(type?: string): any;
     getKernelTypeList(type?: string): IKernelTypeList;
     getImgTypeList(type?: string): IImgTypeList;
     getImgDBList(type?: string): string[];
@@ -67,6 +68,7 @@ namespace application {
     getSelectedDB(type?: string): string;
     getData(type?: string): any;
     getConfig(type?: string): any;
+    getRatioList(): any;
   }
 
   export class Global {
@@ -91,12 +93,14 @@ namespace application {
       this._addAPI('recordTypeList');
       this._addAPI('layerTypeList');
       this._addAPI('kernelTypeList');
+      this._addAPI('layerChartType');
       this._addAPI('imgTypeList');
       this._addAPI('imgDBList');
       this._addAPI('modelList');
       this._addAPI('selectedDB');
       this._addAPI('data');
       this._addAPI('config');
+      this._addAPI('ratioList');
     }
 
     private _addAPI(name: string) {
@@ -134,13 +138,20 @@ namespace application {
         { label: 'sum', value: 'sum' },
         { label: 'mean', value: 'mean' },
         { label: 'std', value: 'std' },
-        { label: 'var', value: 'var' }
+        { label: 'var', value: 'var' },
         { label: 'max', value: 'max' },
         { label: 'mid', value: 'mid' },
         { label: 'min', value: 'min' },
         { label: 'quarter1', value: 'quarter1' },
         { label: 'quarter3', value: 'quarter3' },
         // { label: 'change ratio', value: 's_cratio' }
+      ];
+
+      this.all.layerChartType = [
+        { label: 'crchart', value: 'crChart' },
+        { label: 'boxplot', value: 'boxPlot' },
+        { label: 'linechart', value: 'lineChart' },
+        { label: 'horizon graph', value: 'horizonGraph' }
       ];
 
       // global static var
@@ -213,20 +224,43 @@ namespace application {
           show: false
         },
         label: {
+          immediate: false,
           mds: false,
           show: false,
           threshold: 5,
-          abnormal: 20,
+          abnormal: 30,
+          // abnormal: 0,
           triangle: false
         },
         layer: {
           gw: 'g',
           type: 'norm1',
+          chartType: 'boxPlot',
+          band: 1,
           show: false,
           sameScale: false,
-          level: 0
+          level: 0,
+          selectedRatio: [9, 18, 27, 36]
         }
       };
+
+      this.all.ratioList = this._genRatios(6, 1);
+    }
+
+    private _genRatios(scales: number, step: number): any[] {
+      let this_ = this;
+      let s = 0.1;
+      let r = [];
+      let idx = 1;
+      r.push({ value: 0, label: 'unlimited' });
+      for (let i = 0; i < scales; i += 1) {
+        for (let j = 9; j > 0; j -= step) {
+          r.push({ value: idx, label: '<' + d4.format('.1r')(s * j) });
+          idx++;
+        }
+        s /= 10;
+      }
+      return r;
     }
 
   }

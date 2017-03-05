@@ -13,6 +13,9 @@ namespace application {
     recordTypeList: any;
     layerTypeList: any;
     pin: any;
+    layerChartType: any;
+    selectedRatio: any;
+    ratioList: any;
     click: any; // emit event
   }
 
@@ -31,6 +34,9 @@ namespace application {
 
       let this_ = this;
       // bug: to activate sidebar
+
+      $scope.ratioList = Global.getRatioList();
+
       setTimeout(() => {
         $('#sidebar-collapse').trigger('click');
         if ($('#sidebar').hasClass('menu-min')) {
@@ -46,14 +52,41 @@ namespace application {
         Pip.emitRecordConfigChanged(n);
       }, true);
 
-      $scope.$watch('config.label', (n: any, o) => {
-        let clsStat = this_.Global.getData('label').clsStat;
-        if (n.show && !o.show && !clsStat) {
-          $scope.config.label.show = false;
-          return;
-        }
-        if (n.show) { Pip.emitLabelConfigChanged(n); }
+      $scope.$watch('config.label.show', (n: any, o) => {
+        // let clsStat = this_.Global.getData('label').clsStat;
+        // if (n.show && !o.show && !clsStat) {
+        //   $scope.config.label.show = false;
+        //   return;
+        // }
+        if (n === true) { Pip.emitLabelConfigChanged($scope.config.label); }
       }, true);
+
+      $scope.$watch('config.label.triangle', (n: any, o) => {
+        if (n === true) {
+          $('polygon').css('display', 'inline');
+        } else {
+          $('polygon').css('display', 'none');
+        }
+      });
+
+      $scope.$watch('config.label.immediate', (n: any, o) => {
+        if (n === true) {
+          $scope.config.label.abnormal = 0;
+          $scope.config.label.threshold = 30;
+        } else {
+          $scope.config.label.abnormal = 30;
+          $scope.config.label.threshold = 5;
+        }
+        let [db, parser] = [this_.Global.getSelectedDB(), 'json'];
+        $('#label-data-loading').removeClass('invisible');
+        this_.DataManager.fetchImg({ db, type: 'cls_stat', seqidx: [$scope.config.label.abnormal], cls: [], parser }, false)
+          .then(data => {
+            $('#label-data-loading').addClass('invisible');
+            let labelData = this_.Global.getData('label');
+            labelData.clsStat = data;
+            if ($scope.config.label.show) { Pip.emitLabelConfigChanged($scope.config.label); }
+          });
+      });
 
       $scope.$watch('config.layer', (n: any, o) => {
         Pip.emitLayerConfigChanged(n);
@@ -84,8 +117,8 @@ namespace application {
           case 'upload':
             console.log('upload your db file');
             break;
-          case 'save':
-            console.log('save your db file');
+          case 'triangle':
+            this_.Pip.emitLabelConfigChanged(this_.Global.getConfig('label'));
             break;
           case 'showTopKernel':
             this_.Pip.emitShowTopKernel(null);
@@ -129,7 +162,7 @@ namespace application {
         let [db, parser] = [n, 'json'];
         $('#label-data-loading').removeClass('invisible');
         // cached label cls stat
-        this_.DataManager.fetchImg({ db, type: 'cls_stat', seqidx: [49], cls: [], parser }, false)
+        this_.DataManager.fetchImg({ db, type: 'cls_stat', seqidx: [this_.Global.getConfig('label').abnormal], cls: [], parser }, false)
           .then(data => {
             $('#label-data-loading').addClass('invisible');
             let labelData = this_.Global.getData('label');
@@ -203,6 +236,8 @@ namespace application {
 
       this_.$scope.recordTypeList = this_.Global.getRecordTypeList();
       this_.$scope.layerTypeList = this_.Global.getLayerTypeList();
+      this_.$scope.layerChartType = this_.Global.getLayerChartType();
+      console.log(this_.$scope.layerChartType);
 
       this_.$scope.timeSlider = {
         min: 10,
@@ -238,10 +273,16 @@ namespace application {
 
       // label info
       this_.$scope.spinnerChange = function (step, key) {
-        let val = +this_.$scope.config.label[key] + step;
-        if (val < 0) { return; }
-        if (key === 'abnormal' && val > 100) { return; }
-        this_.$scope.config.label[key] = val;
+        if (key === 'threshold') {
+          let val = +this_.$scope.config.label[key] + step;
+          if (val < 0) { return; }
+          if (key === 'abnormal' && val > 100) { return; }
+          this_.$scope.config.label[key] = val;
+        } else if (key === 'band') {
+          let val = +this_.$scope.config.layer[key] + step;
+          if (val <= 1) { return; }
+          this_.$scope.config.layer[key] = val;
+        }
       };
 
       this_.$scope.labelRender = function (step, key) {

@@ -199,6 +199,13 @@ namespace application {
                 bottom: 1,
                 left: 0
               },
+              interactiveLayer: {
+                dispatch: {
+                  elementMousemove: function(msg) {
+                    this_.Pip.emitTimeMouseMove({ point: [msg.mouseX, msg.mouseY], x: 0, y: 0, k: 1 });
+                  }
+                }
+              },
               noData: ' ',
               x: function (d) { return d.x; },
               y: function (d) { return d.y; },
