@@ -1,6 +1,5 @@
 app.log
 
-/public/lib
 /public/assets/images/gallery
 /build
 /node_modules
