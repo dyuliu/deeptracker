@@ -280,7 +280,7 @@ namespace application {
           this_.$scope.config.label[key] = val;
         } else if (key === 'band') {
           let val = +this_.$scope.config.layer[key] + step;
-          if (val <= 1) { return; }
+          if (val < 1) { return; }
           this_.$scope.config.layer[key] = val;
         }
       };

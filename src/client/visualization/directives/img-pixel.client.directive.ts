@@ -71,7 +71,8 @@ namespace application {
       let sx = 0, sy = 0, sk = 1; // saved transform
 
       // add zoom in & zoom out
-      this_.canvas.call(d4.zoom().scaleExtent([1, 10]).on('zoom', zoomed));
+      this_.canvas.call(d4.zoom().scaleExtent([1, 10]).on('zoom', zoomed))
+        .on('wheel', function () { d4.event.preventDefault(); });
       this_.canvas
         .on('click', clickHandler)
         .on('mouseover', mouseOverHandler)

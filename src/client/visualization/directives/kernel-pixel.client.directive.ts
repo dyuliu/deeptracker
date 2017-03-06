@@ -63,7 +63,7 @@ namespace application {
 
       // add zoom in & zoom out
       this_.canvas.call(d4.zoom().scaleExtent([1, 10]).on('zoom', zoomed))
-        .on('wheel', function () { console.log('we'); d4.event.preventDefault(); });
+        .on('wheel', function () { d4.event.preventDefault(); });
       this_.canvas
         .on('mouseover', mouseOverHandler)
         .on('mouseout', mouseOutHandler)

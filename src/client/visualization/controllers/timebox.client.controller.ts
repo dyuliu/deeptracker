@@ -29,6 +29,8 @@ namespace application {
       let scale = null;
       let sx = 0, sy = 0, sk = 1;
       let vlDivContainer = d4.select('#vl-div-container');
+      let color = d3.scale.category10().range();
+
 
       Pip.onModelChanged($scope, (msg) => {
         $scope.show = true;
@@ -132,20 +134,26 @@ namespace application {
         } else {
           [ci, cv] = msg;
         }
+
+        if (!iterInfo.picked) { iterInfo.picked = []; }
+        iterInfo.picked.push([ci, cv]);
+
+        let myColor = color[iterInfo.picked.length];
         picked.append('circle')
           .attr('cx', scale(cv))
           .attr('cy', 20)
           .attr('r', 2)
-          .attr('fill', '#438EB9');
+          .attr('fill', myColor);
 
         let offset = $('#timebox').offset().left - $('.vl-div-global').parent().offset().left;
 
         vlDivContainer.append('div')
           .attr('class', 'vl-div-pin')
+          .style('border-left', '1px dashed ' + myColor)
+          .style('opacity', 0.5)
           .style('left', offset + scale(cv) + 'px');
 
-        if (!iterInfo.picked) { iterInfo.picked = []; }
-        iterInfo.picked.push([ci, cv]);
+
 
       });
 
@@ -158,7 +166,7 @@ namespace application {
       });
 
       Pip.onTimeMouseMove($scope, (msg) => {
-        let {point, x, y, k} = msg;
+        let { point, x, y, k } = msg;
         let v = (point[0] - x) / k;
         focus.attr('transform', 'translate(' + v + ',' + 20 + ')');
         currentIdx = Math.trunc(v);
