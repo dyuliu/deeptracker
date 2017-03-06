@@ -33,6 +33,7 @@ namespace application {
 
 
       Pip.onModelChanged($scope, (msg) => {
+
         $scope.show = true;
         iterInfo = Global.getData('iter');
 

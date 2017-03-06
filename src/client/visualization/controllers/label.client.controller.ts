@@ -68,6 +68,7 @@ namespace application {
           }
         } else if (type === 'flip') {
           $scope.flip[clsName] = !$scope.flip[clsName];
+          $scope.optionsDetail[clsName].triangle = Global.getConfig('label').triangle;
           if ($scope.flip[clsName]) {
             showDetail(clsName);
           }
@@ -87,7 +88,6 @@ namespace application {
         // act();
       });
       Pip.onLabelConfigChanged($scope, (conf: any) => {
-        console.log(conf);
         if (conf.show === true) { act(conf); }
       });
 
@@ -111,7 +111,6 @@ namespace application {
       }
 
       function act(conf) {
-        console.log('act');
         if (first) {
           $scope.optionsHeatLine = this_._setOptions('heatline');
           $scope.optionsHeatLine.height = 100;
@@ -156,8 +155,9 @@ namespace application {
         });
 
 
-
-        if (conf.mds) {
+        console.log(selectedCls.length);
+        if (conf.mds && selectedCls.length < 100) {
+          console.log('calc mds !!');
           let tmp = [];
           _.each(selectedCls, d => {
             let v = _.map($scope.dataCls[d.name].heatmapData, (o: any) => o.value);

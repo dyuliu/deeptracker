@@ -73,6 +73,7 @@ namespace application {
 
       this_._paintHeatMap(data.heatmapData);
       if (this_.options.threshold > 0) {
+        console.log('here', this_.options.triangle, this_.options.threshold);
         this_._addTriangles(data.linechartData);
         if (this_.options.triangle === true) {
           this_.svg.selectAll('polygon').style('display', 'inline');

@@ -148,7 +148,6 @@ namespace application {
           hScale = hScale < 1 ? 1 : hScale;
           hScale = hScale > 15 ? 15 : hScale;
           this_.options.hScale = hScale;
-          console.log('redraw');
           let [dw, dh] = [data.pixelChart[0].iter.length, data.pixelChart.length];
           this_.container
             .style('width', (dw + 15) + 'px')
@@ -264,7 +263,7 @@ namespace application {
     private _addTriangles(container, data, scale, tr) {
       let [x, y, k] = tr;
       let this_ = this;
-      if (!this_.options.threshold) { return; }
+      if (!this_.options.threshold || this_.options.threshold === 0) { return; }
 
       $(container.node()).empty();
       let panel = container.append('g');

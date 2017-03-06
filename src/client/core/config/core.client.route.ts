@@ -20,7 +20,7 @@ namespace application {
       });
 
       // redirect to / when route not found
-      $urlRouterProvider.otherwise('/home');
+      $urlRouterProvider.otherwise('/home/visualization');
 
       $stateProvider
         .state('home', {
