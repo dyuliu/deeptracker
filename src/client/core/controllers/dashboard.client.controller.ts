@@ -17,6 +17,7 @@ namespace application {
     selectedRatio: any;
     ratioList: any;
     click: any; // emit event
+    layerKernelScale: any;
   }
 
   class Controller {
@@ -35,6 +36,7 @@ namespace application {
       let this_ = this;
       // bug: to activate sidebar
 
+      $scope.ratioList = Global.getRatioList();
       $scope.ratioList = Global.getRatioList();
 
       setTimeout(() => {
@@ -237,7 +239,7 @@ namespace application {
       this_.$scope.recordTypeList = this_.Global.getRecordTypeList();
       this_.$scope.layerTypeList = this_.Global.getLayerTypeList();
       this_.$scope.layerChartType = this_.Global.getLayerChartType();
-      console.log(this_.$scope.layerChartType);
+      this_.$scope.layerKernelScale = this_.Global.getLayerKernelScale();
 
       this_.$scope.timeSlider = {
         min: 10,

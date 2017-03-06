@@ -61,6 +61,7 @@ namespace application {
     getRecordTypeList(type?: string): IRecordTypeList;
     getLayerTypeList(type?: string): ILayerTypeList;
     getLayerChartType(type?: string): any;
+    getLayerKernelScale(type?: string): any;
     getKernelTypeList(type?: string): IKernelTypeList;
     getImgTypeList(type?: string): IImgTypeList;
     getImgDBList(type?: string): string[];
@@ -94,6 +95,7 @@ namespace application {
       this._addAPI('layerTypeList');
       this._addAPI('kernelTypeList');
       this._addAPI('layerChartType');
+      this._addAPI('layerKernelScale');
       this._addAPI('imgTypeList');
       this._addAPI('imgDBList');
       this._addAPI('modelList');
@@ -152,6 +154,12 @@ namespace application {
         { label: 'boxplot', value: 'boxPlot' },
         { label: 'linechart', value: 'lineChart' },
         { label: 'horizon graph', value: 'horizonGraph' }
+      ];
+
+      this.all.layerKernelScale = [
+        { label: 'global', value: 'global' },
+        { label: 'horizon', value: 'horizon' },
+        { label: 'vertical', value: 'vertical' }
       ];
 
       // global static var
@@ -235,7 +243,8 @@ namespace application {
         layer: {
           gw: 'g',
           type: 'norm1',
-          chartType: 'boxPlot',
+          chartType: 'crChart',
+          kernelScale: 'horizon',
           band: 1,
           show: false,
           sameScale: false,

@@ -306,8 +306,17 @@
         </div>
       </div>
 
+      <div class="space-4"></div>
 
-      <div class="space-8"></div>
+      <div class="control-group" style="margin-left: 5px">
+        Kernel Scale:
+        <div ng-repeat-start="type in layerKernelScale" class="radio" ng-repeat-end>
+          <label>
+            <input ng-model="config.layer.kernelScale" name="form-field-radio5" type="radio" class="ace" value="{{type.value}}"/>
+            <span class="lbl"> {{type.label}}</span>
+          </label>
+        </div>
+      </div>
 
     </div>
 

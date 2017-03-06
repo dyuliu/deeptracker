@@ -142,15 +142,15 @@ namespace application {
         picked.append('circle')
           .attr('cx', scale(cv))
           .attr('cy', 20)
-          .attr('r', 2)
-          .attr('fill', myColor);
+          .attr('r', 4)
+          .attr('fill', '#438EB9');
 
         let offset = $('#timebox').offset().left - $('.vl-div-global').parent().offset().left;
 
         vlDivContainer.append('div')
           .attr('class', 'vl-div-pin')
-          .style('border-left', '1px dashed ' + myColor)
-          .style('opacity', 0.5)
+          // .style('border-left', '1px dashed ' + myColor)
+          // .style('opacity', 0.5)
           .style('left', offset + scale(cv) + 'px');
 
 

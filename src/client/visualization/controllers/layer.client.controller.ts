@@ -77,8 +77,9 @@ namespace application {
           allQuery.push(DataManager.fetchKernel({ db, type, iter: iter[1], parser }, false));
         }
         $('#layer-data-loading').removeClass('invisible');
-        $q.all(allQuery).then(data => {
+        $q.all(allQuery).then((data: any) => {
           // computer intersect
+          if (iterInfo.picked.length === 1) { data[0] = data[0].slice(0, 20); }
           let map = new Map();
           _.each(data, (d: any) => {
             for (let i = 0; i < d.length; i += 1) {
@@ -91,11 +92,11 @@ namespace application {
           });
           let lmap = new Map();
           map.forEach((v, k) => {
-            // if (v.count === data.length) {
-            if (!lmap.has(v.d[0].name)) { lmap.set(v.d[0].name, { v: [], lid: v.d[0].lid }); };
-            let tmp = lmap.get(v.d[0].name);
-            tmp.v.push(v.d[0].idx);
-            // }
+            if (v.count === data.length) {
+              if (!lmap.has(v.d[0].name)) { lmap.set(v.d[0].name, { v: [], lid: v.d[0].lid }); };
+              let tmp = lmap.get(v.d[0].name);
+              tmp.v.push(v.d[0].idx);
+            }
           });
 
           let qArray = {};
@@ -163,50 +164,52 @@ namespace application {
             $scope.optionsDetail[d.name].height = data.length + 4;
             $scope.optionsDetail[d.name].name = d.name;
 
-            // global scale
-            // let f = d4.scaleLinear();
-            // if (type === 'i_cosine') { f.range([1, 0]); }
-            //   else { f.range([0, 1]); }
-            // let [min, max] = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER];
+            let scaleType = Global.getConfig('layer').kernelScale;
 
-            // _.each(data, (dd, i) => {
-            //   let [mmin, mmax] = d4.extent(dd.value);
-            //   if (min > mmin) { min = mmin; }
-            //   if (max < mmax) { max = mmax; }
-            // });
-            // f.domain([min, max]);
-            // _.each(data, (dd, i) => {
-            //   dd.value = _.map(dd.value, (o: any) => {
-            //     let t = f(o);
-            //     return t;
-            //   });
-            //   dd.index = +i;
-            // });
-
-            // horizon scale
-            // _.each(data, (dd, i) => {
-            //   let [mmin, mmax] = d4.extent(dd.value);
-            //   let nf = d4.scaleLinear().domain([mmin, mmax]).range([1, 0]).clamp(true);
-            //   console.log(mmin, mmax, nf(1));
-            //   dd.value = _.map(dd.value, (o: any) => {
-            //     let t = nf(o);
-            //     return 0;
-            //   });
-            //   dd.index = +i;
-            // });
-
-            // vertical scale
-            for (let i = 0; i < data[0].iter.length; i += 1) {
+            if (scaleType === 'global') {
+              // global scale
+              let f = d4.scaleLinear();
+              f.range([0.01, 0.95]);
               let [min, max] = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER];
-              _.each(data, (dd, j) => {
-                if (min > dd.value[i]) { min = dd.value[i]; }
-                if (max < dd.value[i]) { max = dd.value[i]; }
-                if (!dd.index) { dd.index = +j; }
+
+              _.each(data, (dd, i) => {
+                let [mmin, mmax] = d4.extent(dd.value);
+                if (min > mmin) { min = mmin; }
+                if (max < mmax) { max = mmax; }
               });
-              let nf = d4.scaleLinear().domain([min, max]).range([0.01, 0.95]).clamp(true);
-              _.each(data, dd => {
-                dd.value[i] = nf(dd.value[i]);
+              f.domain([min, max]);
+              _.each(data, (dd, i) => {
+                dd.value = _.map(dd.value, (o: any) => {
+                  let t = f(o);
+                  return t;
+                });
+                if (!dd.index) { dd.index = +i; }
               });
+            } else if (scaleType === 'horizon') {
+              // horizon scale
+              _.each(data, (dd, i) => {
+                let [mmin, mmax] = d4.extent(dd.value);
+                let nf = d4.scaleLinear().domain([mmin, mmax]).range([0.01, 0.95]).clamp(true);
+                dd.value = _.map(dd.value, (o: any) => {
+                  let t = nf(o);
+                  return t;
+                });
+                if (!dd.index) { dd.index = +i; }
+              });
+            } else if (scaleType === 'vertical') {
+              // vertical scale
+              for (let i = 0; i < data[0].iter.length; i += 1) {
+                let [min, max] = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER];
+                _.each(data, (dd, j) => {
+                  if (min > dd.value[i]) { min = dd.value[i]; }
+                  if (max < dd.value[i]) { max = dd.value[i]; }
+                  if (!dd.index) { dd.index = +j; }
+                });
+                let nf = d4.scaleLinear().domain([min, max]).range([0.01, 0.95]).clamp(true);
+                _.each(data, dd => {
+                  dd.value[i] = nf(dd.value[i]);
+                });
+              }
             }
             $scope.dataDetail[d.name] = {
               pixelChart: data,
