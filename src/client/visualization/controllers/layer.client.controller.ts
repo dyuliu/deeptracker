@@ -59,7 +59,7 @@ namespace application {
             tmp /= 1.5;
             if (tmp >= 40) { $scope.options[name].chart.height = tmp; }
           };
-        } else if ($scope.showTypes[name] === 'pchart' || $scope.showTypes[name] === 'cr') {
+        } else if ($scope.showTypes[name] === 'pchart' || $scope.showTypes[name] === 'cr' || $scope.showTypes[name] === 'hgraph') {
           if (type === 'zoomin') {
             $scope.$broadcast('zoom', { type: 'in', name });
           } else {
@@ -340,8 +340,8 @@ namespace application {
             }
           }
           let db = Global.getSelectedDB(), parser = 'json';
-          let types = [conf.gw + '_min', conf.gw + '_quarter1', conf.gw + '_mean',
-          conf.gw + '_quarter3', conf.gw + '_max'];
+          let types = ['w' + '_min', 'w' + '_quarter1', 'w' + '_mean',
+          'w' + '_quarter3', 'w' + '_max'];
           let queryQueue = [];
           for (let type of types) {
             queryQueue.push(DataManager.fetchLayer({ db, type, parser }, false));
@@ -427,6 +427,7 @@ namespace application {
           for (let d of tree) {
             $scope.opened[d.name] = false;
             $scope.optionsHGraph[d.name] = this_._setOptions('horizonGraph');
+            $scope.optionsHGraph[d.name].name = d.name;
             $scope.size[d.name] = 0;
             if (!d.nodes) {
               $scope.size[d.name] = layers[d.name].kernelNum * layers[d.name].channels *
@@ -440,6 +441,7 @@ namespace application {
                 dn.parent = d;
                 $scope.opened[dn.name] = false;
                 $scope.optionsHGraph[dn.name] = this_._setOptions('horizonGraph');
+                $scope.optionsHGraph[dn.name].name = dn.name;
                 $scope.size[dn.name] = 0;
                 $scope.showTypes[dn.name] = 'hgraph';
                 layerTree[dn.name] = dn;
@@ -449,6 +451,7 @@ namespace application {
                     dnn.parent = dn;
                     $scope.opened[dnn.name] = false;
                     $scope.optionsHGraph[dnn.name] = this_._setOptions('horizonGraph');
+                    $scope.optionsHGraph[dnn.name].name = dnn.name;
                     $scope.size[dnn.name] = layers[dnn.name].kernelNum * layers[dnn.name].channels *
                       layers[dnn.name].kernelWidth + layers[dnn.name].kernelHeight;
                     $scope.size[dn.name] += $scope.size[dnn.name];
@@ -473,7 +476,6 @@ namespace application {
             let tmpStat = this_._processData('stat_hgraph', layers, data[0]),
               tmpHlStat = this_._processData('hl_stat_hgraph', hlLayers, data[1]);
             let [min, max] = [Math.min(tmpStat[1], tmpHlStat[1]), Math.max(tmpStat[2], tmpHlStat[2])];
-            console.log(tmpStat[1], tmpHlStat[1], tmpStat[2], tmpHlStat[2]);
             _.each($scope.optionsHGraph, (d: any) => {
               d.width = iterSet.size;
               d.band = conf.band;

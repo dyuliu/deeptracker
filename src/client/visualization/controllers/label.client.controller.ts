@@ -132,7 +132,7 @@ namespace application {
         let selectedCls = [], maxPMax = Number.MIN_SAFE_INTEGER;
         _.each($scope.dataCls, (d: any, k) => {
           if (d.pmax > maxPMax) { maxPMax = d.pmax; }
-          if (d.rpmax > maxPMax) { maxPMax = d.rpmax; }
+          // if (d.rpmax > maxPMax) { maxPMax = d.rpmax; }
         });
 
         let root = '/assets/images/gallery/';

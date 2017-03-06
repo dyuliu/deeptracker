@@ -162,14 +162,14 @@ namespace application {
         if (!n) { return; }
         this_.Global.setSelectedDB(n);
         let [db, parser] = [n, 'json'];
-        $('#label-data-loading').removeClass('invisible');
-        // cached label cls stat
-        this_.DataManager.fetchImg({ db, type: 'cls_stat', seqidx: [this_.Global.getConfig('label').abnormal], cls: [], parser }, false)
-          .then(data => {
-            $('#label-data-loading').addClass('invisible');
-            let labelData = this_.Global.getData('label');
-            labelData.clsStat = data;
-          });
+        // $('#label-data-loading').removeClass('invisible');
+        // // cached label cls stat
+        // this_.DataManager.fetchImg({ db, type: 'cls_stat', seqidx: [this_.Global.getConfig('label').abnormal], cls: [], parser }, false)
+        //   .then(data => {
+        //     $('#label-data-loading').addClass('invisible');
+        //     let labelData = this_.Global.getData('label');
+        //     labelData.clsStat = data;
+        //   });
 
         // cached change ratio data
         $('#layer-data-loading').removeClass('invisible');
@@ -192,6 +192,13 @@ namespace application {
           labelStat: this_.DataManager.fetchImg({ db, type: 'model_stat', parser }, false)
         }).then((data: any) => {
 
+          if (_.startsWith(db, 'cifar')) {
+            // filter
+            let fa = _.range(0, data.labelStat.length, 2);
+            let tmp = [];
+            for (let i = 0; i < fa.length; i += 1) { tmp.push(data.labelStat[fa[i]]); }
+            data.labelStat = tmp;
+          }
           let iterSet = new Set(), iterArray = [];
           for (let i = 0; i < data.labelStat.length; i += 1) {
             iterSet.add(data.labelStat[i].iter);

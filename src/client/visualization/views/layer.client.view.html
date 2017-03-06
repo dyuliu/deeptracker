@@ -43,7 +43,7 @@
                       <nvd3 ng-if="showTypes[la.name] === 'nvd3' " options="options[la.name]" data="data[la.name]"></nvd3>
                       <div ng-if="showTypes[la.name] === 'cr' " crchart options="optionsCR[la.name]" data="dataCR[la.name]" style="z-index: 100"></div>
                       <div ng-if="showTypes[la.name] === 'pchart' " kernel-pixel options="optionsDetail[la.name]" data="dataDetail[la.name]" style="z-index: 100"></div>
-                      <div ng-if="showTypes[la.name] === 'hgraph' " horizon-graph options="optionsHGraph[la.name]" data="dataHGraph[la.name]" style="z-index: 100"></div>
+                      <div ng-if="showTypes[la.name] === 'hgraph' " horizon-graph options="optionsHGraph[la.name]" data="dataHGraph[la.name]"></div>
                       <div ng-if="showTypes[la.name] === 'topk' ">
                         <div class="space-2"></div>
                         <div ng-repeat-start="dTopK in dataTopK[la.name]" heatline data="dTopK" options="optionsTopK[la.name]" style="z-index: 100" ng-repeat-end> </div>
@@ -71,7 +71,7 @@
                       <div ng-if="opened[la.name] && !opened[lan.name]" class="col-xs-10 col-sm-10">
                         <nvd3 ng-if="showTypes[lan.name] === 'nvd3' " options="options[lan.name]" data="data[lan.name]"></nvd3>
                         <div ng-if="showTypes[lan.name] === 'cr' " crchart options="optionsCR[lan.name]" data="dataCR[lan.name]" style="z-index: 100"></div>
-                        <div ng-if="showTypes[lan.name] === 'hgraph' " horizon-graph options="optionsHGraph[lan.name]" data="dataHGraph[lan.name]" style="z-index: 100"></div>
+                        <div ng-if="showTypes[lan.name] === 'hgraph' " horizon-graph options="optionsHGraph[lan.name]" data="dataHGraph[lan.name]"></div>
                       </div>
                     </div>
                     <div ng-repeat-start="lann in lan.nodes" id="{{lann.name}}" class="level3 layerbox no-padding" style="display: none" ng-repeat-end>
@@ -93,7 +93,7 @@
                         <div ng-if="opened[lan.name]" class="col-xs-10 col-sm-10">
                           <nvd3 ng-if="showTypes[lann.name] === 'nvd3' " options="options[lann.name]" data="data[lann.name]"></nvd3>
                           <div ng-if="showTypes[lann.name] === 'cr' " crchart options="optionsCR[lann.name]" data="dataCR[lann.name]" style="z-index: 100"></div>
-                          <div ng-if="showTypes[lann.name] === 'hgraph' " horizon-graph options="optionsHGraph[lann.name]" data="dataHGraph[lann.name]" style="z-index: 100"></div>
+                          <div ng-if="showTypes[lann.name] === 'hgraph' " horizon-graph options="optionsHGraph[lann.name]" data="dataHGraph[lann.name]"></div>
                           <div ng-if="showTypes[lann.name] === 'pchart' " kernel-pixel options="optionsDetail[lann.name]" data="dataDetail[lann.name]" style="z-index: 100"></div>
                           <div ng-if="showTypes[lann.name] === 'topk' ">
                             <small>{{dataTopK[lann.name].length + '/' + optionsTopK[lann.name].num}}</small>

@@ -57,17 +57,26 @@ namespace application {
         $scope.options = {};
 
         let color = d3.scale.category10().range();
-
         if ($scope.show.lr) {
           $scope.data.lr = this_._process('sparklinePlus', data.lr);
-          $scope.options.lr = this_._setOption('sparklinePlus', data.lr.length, color);
-          $scope.options.lr.chart.height = 15;
-          $scope.options.lr.chart.showMinMaxPoints = false;
+          // $scope.options.lr = this_._setOption('sparklinePlus', data.lr.length, color);
+          // $scope.options.lr.chart.height = 15;
+          // $scope.options.lr.chart.showMinMaxPoints = false;
 
           $('#lr-svg').empty();
           let svg = d4.select('#lr-svg');
           svg.attr('width', data.lr.length)
             .attr('height', 15);
+          let aniRect = svg.append('rect')
+            .attr('class', 'overlay')
+            .attr('width', data.lr.length)
+            .attr('height', 15);
+          svg
+            .on('mouseover', mouseOverHandler)
+            .on('mouseout', mouseOutHandler)
+            .on('mousemove', mouseMoveHandler);
+          svg = svg.append('g');
+
           let st = 0, cur = 0;
           let rect = [];
           while (cur + 1 < data.lr.length) {
@@ -116,6 +125,21 @@ namespace application {
           }
         }
       };
+
+      function mouseOverHandler() {
+        let point = d4.mouse(this);
+        Pip.emitTimeMouseOver({ point, x: 0, y: 0, k: 1 });
+      }
+
+      function mouseOutHandler() {
+        let point = d4.mouse(this);
+        Pip.emitTimeMouseOut({ point, x: 0, y: 0, k: 1 });
+      }
+
+      function mouseMoveHandler() {
+        let point = d4.mouse(this);
+        Pip.emitTimeMouseMove({ point, x: 0, y: 0, k: 1 });
+      }
 
       function buildColorMap(index: number) {
         let colorMappingTable = {

@@ -243,7 +243,7 @@ namespace application {
         layer: {
           gw: 'g',
           type: 'norm1',
-          chartType: 'crChart',
+          chartType: 'horizonGraph',
           kernelScale: 'horizon',
           band: 1,
           show: false,

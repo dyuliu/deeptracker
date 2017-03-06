@@ -223,7 +223,7 @@ namespace application {
         ctx.save();
         ctx.beginPath();
         ctx.translate(0.5, 0.5);
-        ctx.lineWidth = 0.5;
+        ctx.lineWidth = 1;
         // ctx.strokeStyle = 'white';
         ctx.strokeStyle = '#6b6a6a';
         ctx.moveTo(0, off);

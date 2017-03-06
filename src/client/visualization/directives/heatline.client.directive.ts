@@ -130,7 +130,7 @@ namespace application {
         })
         .attr('fill', '#4682b4')
         .attr('opacity', 0.9)
-        .attr('transform', (d: any) => 'translate(' + d.x + ', 2)')
+        .attr('transform', (d: any) => 'translate(' + d.x + ', 4)')
         .on('click', clickHandler)
         .append('title').text(d => 'iter: ' + d.iter + ' value: ' + d.y);
 

@@ -13,7 +13,9 @@ namespace application {
 
   class Painter {
     private svg: d4.Selection<any, any, any, any>;
+    private svgContainer: d4.Selection<any, any, any, any>;
     private canvas: d4.Selection<any, any, any, any>;
+    private rect: d4.Selection<any, any, any, any>;
     private container: d4.Selection<any, any, any, any>;
     private width: number;
     private height: number;
@@ -38,7 +40,12 @@ namespace application {
         .style('left', 0)
         .style('top', options.marginTop + 'px')
         .style('width', (dw + 15) + 'px')
-        .style('height', (dh * options.hScale) + 'px')
+        .style('height', (dh * options.hScale) + 'px');
+      this.rect = this.svg.append('rect')
+        .attr('class', 'overlay')
+        .attr('width', (dw + 15))
+        .attr('height', (dh * options.hScale));
+      this.svgContainer = this.svg
         .append('g')
         .attr('transform', 'translate(' + options.margin.left + ',' + options.margin.top + ')');
 
@@ -50,9 +57,14 @@ namespace application {
 
     }
 
-    public render(data: IDTypeCrChart) {
+    public render(data: any, scope, Pip) {
       let this_ = this;
-      console.log(this_.options.band);
+
+      this_.svg
+        .on('mouseover', mouseOverHandler)
+        .on('mouseout', mouseOutHandler)
+        .on('mousemove', mouseMoveHandler);
+
       let chart = d3.horizon()
         .width(this_.width)
         .height(this_.height)
@@ -65,16 +77,52 @@ namespace application {
         let tmax = Math.max(Math.abs(t[0]), Math.abs(t[1]));
         chart.max(tmax);
       };
-      // let arr = [];
-      // let k = 1;
-      // _.each(_.range(50), i => {
-      //   if (i % 10 === 0) { k *= -1; }
-      //   arr.push([i, k * 50 * Math.random()]);
-      // });
-      // this_.svg.data([arr]).call(chart);
-      this_.svg.data([data]).call(chart);
-      // console.log([arr]);
-      // console.log(data);
+      this_.svgContainer.data([data]).call(chart);
+
+      function mouseOverHandler() {
+        let point = d4.mouse(this);
+        Pip.emitTimeMouseOver({ point, x: 0, y: 0, k: 1 });
+      }
+
+      function mouseOutHandler() {
+        let point = d4.mouse(this);
+        Pip.emitTimeMouseOut({ point, x: 0, y: 0, k: 1 });
+      }
+
+      function mouseMoveHandler() {
+        let point = d4.mouse(this);
+        Pip.emitTimeMouseMove({ point, x: 0, y: 0, k: 1 });
+      }
+
+      scope.$on('zoom', (evt, msg: any) => {
+        let hScale = this_.options.hScale;
+        if (scope.data && scope.options.name === msg.name) {
+          if (msg.type === 'in') {
+            hScale += 0.5;
+          } else {
+            hScale -= 0.5;
+          }
+          hScale = hScale < 1 ? 1 : hScale;
+          hScale = hScale > 15 ? 15 : hScale;
+          this_.options.hScale = hScale;
+
+          let [dw, dh] = [data.length, this_.options.height];
+          this_.container
+            .style('width', (dw + 15) + 'px')
+            .style('height', (this_.options.marginTop + dh * this_.options.hScale) + 'px');
+          $(this_.svgContainer.node()).empty();
+          this_.svg
+            .style('width', dw + 'px')
+            .style('height', (dh * this_.options.hScale) + 'px');
+          this_.rect
+            .attr('width', dw)
+            .attr('height', (dh * this_.options.hScale));
+          chart.height(dh * this_.options.hScale);
+          this_.svgContainer.data([data]).call(chart);
+
+        }
+      });
+
     }
 
   }
@@ -110,7 +158,7 @@ namespace application {
           element.empty();
           scope.options.hScale = hScale;
           let board = new Painter(element, scope.options, scope.data);
-          board.render(scope.data);
+          board.render(scope.data, scope, Pip);
         };
         if (!_.isUndefined(scope.data)) { start(); };
         scope.$watch('data', (n, o) => { if (n !== o && n) { start(); } }, false);
