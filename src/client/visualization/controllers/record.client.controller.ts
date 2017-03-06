@@ -63,6 +63,33 @@ namespace application {
           $scope.options.lr = this_._setOption('sparklinePlus', data.lr.length, color);
           $scope.options.lr.chart.height = 15;
           $scope.options.lr.chart.showMinMaxPoints = false;
+
+          $('#lr-svg').empty();
+          let svg = d4.select('#lr-svg');
+          svg.attr('width', data.lr.length)
+            .attr('height', 15);
+          let st = 0, cur = 0;
+          let rect = [];
+          while (cur + 1 < data.lr.length) {
+            if (data.lr[cur + 1].value !== data.lr[st].value) {
+              rect.push([st, cur]);
+              st = cur + 1;
+            }
+            cur += 1;
+          }
+          rect.push([st, cur]);
+          let rColor = buildColorMap(rect.length);
+          let i = 0;
+          for (let r of rect) {
+            svg.append('rect')
+              .attr('x', r[0])
+              .attr('y', 0)
+              .attr('width', r[1] - r[0] + 1)
+              .attr('height', 15)
+              .attr('fill', rColor[i])
+              .attr('opacity', 0.9);
+            i += 1;
+          }
         }
         if ($scope.show.error) {
           if (conf.testError && conf.trainError) {
@@ -89,6 +116,22 @@ namespace application {
           }
         }
       };
+
+      function buildColorMap(index: number) {
+        let colorMappingTable = {
+          '2': ['#fc6621', '#a7ed6d'],
+          '3': ['#fc8d59', '#ffffbf', '#91cf60'],
+          '4': ['#d7191c', '#fdae61', '#a6d96a', '#1a9641'],
+          '5': ['#d7191c', '#fdae61', '#ffffbf', '#a6d96a', '#1a9641'],
+          '6': ['#d73027', '#fc8d59', '#fee08b', '#d9ef8b', '#91cf60', '#1a9850'],
+          '7': ['#d73027', '#fc8d59', '#fee08b', '#ffffbf', '#d9ef8b', '#91cf60', '#1a9850'],
+          '8': ['#d73027', '#f46d43', '#fdae61', '#fee08b', '#d9ef8b', '#a6d96a', '#66bd63', '#1a9850'],
+          '9': ['#d73027', '#f46d43', '#fdae61', '#fee08b', '#ffffbf', '#d9ef8b', '#a6d96a', '#66bd63', '#1a9850'],
+          '10': ['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee08b', '#d9ef8b', '#a6d96a', '#66bd63', '#1a9850', '#006837'],
+          '11': ['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee08b', '#ffffbf', '#d9ef8b', '#a6d96a', '#66bd63', '#1a9850', '#006837']
+        };
+        return colorMappingTable[index];
+      }
 
     }
 
@@ -201,7 +244,7 @@ namespace application {
               },
               interactiveLayer: {
                 dispatch: {
-                  elementMousemove: function(msg) {
+                  elementMousemove: function (msg) {
                     this_.Pip.emitTimeMouseMove({ point: [msg.mouseX, msg.mouseY], x: 0, y: 0, k: 1 });
                   }
                 }
