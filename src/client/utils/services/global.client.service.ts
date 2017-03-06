@@ -233,10 +233,10 @@ namespace application {
         },
         label: {
           immediate: false,
-          mds: false,
+          mds: true,
           show: false,
           threshold: 5,
-          abnormal: 30,
+          abnormal: 40,
           // abnormal: 0,
           triangle: false
         },

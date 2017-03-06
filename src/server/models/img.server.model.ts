@@ -127,7 +127,8 @@ function getConfig(options: IOption) {
   } else if (options.type === 'cls_stat') {
     cond = {};
     if (!_.isEmpty(options.cls)) { cond.cls = { $in: options.cls }; }
-    project = { _id: 0, iter: 1, abLeft: 1, testError: 1, cls: 1 };
+    // project = { _id: 0, iter: 1, abLeft: 1, testError: 1, cls: 1 };
+    project = { _id: 0};
     if (_.isEmpty(options.seqidx)) { options.seqidx = [49]; }
     sort = { iter: 1 };
   } else if (options.type === 'testinfo') {
@@ -167,7 +168,8 @@ function postProcess(data: any[], options: IOption): any[] {
           cls: d.cls,
           iter: d.iter,
           testError: d.testError,
-          value: d.abLeft[options.seqidx[0]]
+          value: d.abLeft[options.seqidx[0]],
+          valueR: d.abRight[options.seqidx[0]]
         };
       });
       return data;

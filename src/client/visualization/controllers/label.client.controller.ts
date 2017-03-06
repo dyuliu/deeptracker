@@ -68,7 +68,7 @@ namespace application {
           }
         } else if (type === 'flip') {
           $scope.flip[clsName] = !$scope.flip[clsName];
-          $scope.optionsDetail[clsName].triangle = Global.getConfig('label').triangle;
+          $scope.optionsCls[clsName].triangle = Global.getConfig('label').triangle;
           if ($scope.flip[clsName]) {
             showDetail(clsName);
           }
@@ -132,6 +132,7 @@ namespace application {
         let selectedCls = [], maxPMax = Number.MIN_SAFE_INTEGER;
         _.each($scope.dataCls, (d: any, k) => {
           if (d.pmax > maxPMax) { maxPMax = d.pmax; }
+          if (d.rpmax > maxPMax) { maxPMax = d.rpmax; }
         });
 
         let root = '/assets/images/gallery/';
@@ -144,6 +145,7 @@ namespace application {
         _.each($scope.dataCls, (d: any, k) => {
           let findedCls = _.find(Global.getData('info').cls, (o: any) => o.name === k);
           let firstFile = findedCls.file[0];
+          // if (d.pmax >= conf.threshold || d.rpmax >= conf.threshold) {
           if (d.pmax >= conf.threshold) {
             $scope.optionsCls[k] = this_._setOptions('heatline');
             $scope.optionsCls[k].threshold = conf.threshold;
@@ -154,16 +156,22 @@ namespace application {
           }
         });
 
+        if (selectedCls.length > 588) {
+          selectedCls = selectedCls.slice(0, 588);
+        }
 
-        console.log(selectedCls.length);
-        if (conf.mds && selectedCls.length < 100) {
+        if (conf.mds && selectedCls.length < 600) {
           console.log('calc mds !!');
           let tmp = [];
           _.each(selectedCls, d => {
             let v = _.map($scope.dataCls[d.name].heatmapData, (o: any) => o.value);
             tmp.push({ name: d.name, value: v });
           });
-          $scope.selectedCls = mdsLayout(tmp);
+          tmp = mdsLayout(tmp);
+          $scope.selectedCls = [];
+          for (let i = 0; i < selectedCls.length; i += 1) {
+            $scope.selectedCls.push(selectedCls[tmp[i]]);
+          }
         } else {
           $scope.selectedCls = _.reverse(_.sortBy(selectedCls, ['pmax']));
         }
@@ -197,7 +205,7 @@ namespace application {
         coordinate = _.sortBy(coordinate, d => d[1]);
         for (let i = 0; i < data.length; i += 1) {
           let idx = coordinate[i][0];
-          result.push({ name: data[idx].name, pmax: data[idx.pmax] });
+          result.push(idx);
         }
         return result;
 
@@ -269,11 +277,12 @@ namespace application {
           [data, max] = [rest[0], rest[1]];
           for (let d of data) {
             if (!result[d.cls]) {
-              result[d.cls] = { heatmapData: [], linechartData: [], max, pmax: -1 };
+              result[d.cls] = { heatmapData: [], linechartData: [], max, pmax: -1, rpmax: -1 };
             }
             result[d.cls].heatmapData.push({ iter: d.iter, value: d.testError });
-            result[d.cls].linechartData.push({ iter: d.iter, value: d.value });
+            result[d.cls].linechartData.push({ iter: d.iter, value: d.value, valueR: d.valueR });
             result[d.cls].pmax = result[d.cls].pmax < d.value ? d.value : result[d.cls].pmax;
+            result[d.cls].rpmax = result[d.cls].rpmax < d.valueR ? d.valueR : result[d.cls].rpmax;
           }
           _.each(result, (d: any) => {
             d.heatmapData = _.sortBy(d.heatmapData, ['iter']);

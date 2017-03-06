@@ -1,7 +1,7 @@
 namespace application {
   'use strict';
 
-  interface IDTypeEle extends Array<{ iter: number, value: number }> { };
+  interface IDTypeEle extends Array<{ iter: number, value: number, valueR: number }> { };
   export interface IDTypeHeatline {
     heatmapData: IDTypeEle;
     linechartData: IDTypeEle;
@@ -73,7 +73,6 @@ namespace application {
 
       this_._paintHeatMap(data.heatmapData);
       if (this_.options.threshold > 0) {
-        console.log('here', this_.options.triangle, this_.options.threshold);
         this_._addTriangles(data.linechartData);
         if (this_.options.triangle === true) {
           this_.svg.selectAll('polygon').style('display', 'inline');
@@ -101,17 +100,21 @@ namespace application {
     private _addTriangles(data: IDTypeEle) {
       let this_ = this;
       let threshold = this_.options.threshold;
-      let triangleData = [];
+      let triangleData = [], downTriangleData = [];
       _.each(data, (d, i) => {
         if (d.value >= threshold) {
           triangleData.push({ x: i, y: d.value, iter: d.iter });
+        }
+        if (d.valueR >= threshold) {
+          downTriangleData.push({ x: i, y: d.valueR, iter: d.iter });
         }
       });
 
       // let color = d4.scaleSequential(d4.interpolateBlues);
       let scale = d4.scaleLinear()
         .domain([this_.options.threshold, this_.options.max])
-        .range([6, 17]);
+        // .range([5, 14]);
+        .range([5, 14]);
 
       if (this_.options.immediate) {
         scale.range([3, 3]);
@@ -123,14 +126,28 @@ namespace application {
         .enter().append('polygon')
         .attr('points', d => {
           let w = scale(d.y);
-          return '0,6, ' + w + ',-3 -' + w + ',-3';
+          return '0,3, ' + w + ',-3 -' + w + ',-3';
         })
         .attr('fill', '#4682b4')
         .attr('opacity', 0.9)
-        .attr('transform', (d: any) => 'translate(' + d.x + ', 3)')
+        .attr('transform', (d: any) => 'translate(' + d.x + ', 2)')
         .on('click', clickHandler)
         .append('title').text(d => 'iter: ' + d.iter + ' value: ' + d.y);
 
+      let downTriangles = this_.svg.append('g')
+        .attr('transform', 'translate(0,' + this_.options.height + ')');
+      downTriangles.selectAll('polygon')
+        .data(downTriangleData)
+        .enter().append('polygon')
+        .attr('points', d => {
+          let w = scale(d.y);
+          return w + ',0 -' + w + ',0 ' + '0,-6';
+        })
+        .attr('fill', '#4682b4')
+        .attr('opacity', 0.9)
+        .attr('transform', (d: any) => 'translate(' + d.x + ', 0)')
+        .on('click', clickHandler)
+        .append('title').text(d => 'iter: ' + d.iter + ' value: ' + d.y);
       function clickHandler(d) {
         this_.Pip.emitTimePicked([d.x, d.iter]);
       }
