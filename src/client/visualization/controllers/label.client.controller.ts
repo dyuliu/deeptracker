@@ -6,7 +6,9 @@ namespace application {
     optionsHeatLine: any;
     optionsDetail: any;
     optionsCls: {};
+    optionsMatrix: {};
     dataModel: any;
+    dataMatrix: any;
     dataCls: any;
     dataDetail: any;
     selectedCls: any[];
@@ -176,7 +178,134 @@ namespace application {
           $scope.selectedCls = _.reverse(_.sortBy(selectedCls, ['pmax']));
         }
 
+        let iterInfo = Global.getData('iter');
+        let iterSet = new Set();
+        let rec = [];
+        let resMap = new Map();
+        for (let i = 0; i < $scope.selectedCls.length; i += 1) {
+          rec.push(new Set());
+          let d = $scope.dataCls[$scope.selectedCls[i].name].linechartData;
+          for (let j = 0; j < d.length; j += 1) {
+            if (d[j].value >= 3) { iterSet.add(iterInfo.array[j]); rec[i].add(iterInfo.array[j]); }
+            if (d[j].valueR >= 3) { iterSet.add(iterInfo.array[j]); rec[i].add(iterInfo.array[j]); }
+          }
+        }
+
+        let allQuery = {};
+        let parser = 'json', type = 'i_cosine', db = Global.getSelectedDB();
+        iterSet.forEach((v) => {
+          allQuery[v] = DataManager.fetchKernel({ db, type, iter: v, parser }, false);
+          // allQuery.push(DataManager.fetchKernel({ db, type, iter: v, parser }, false));
+        });
+        // console.log($scope.dataCls, $scope.selectedCls, iterSet);
+        console.log('fetch ing!!!!');
+        console.time('startA');
+        console.log($scope.selectedCls);
+        let lidtoName = {};
+        $q.all(allQuery).then((data: any) => {
+          // console.log(data);
+          console.timeEnd('startA');
+          for (let i = 0; i < $scope.selectedCls.length; i += 1) {
+            rec[i].forEach((v) => {
+              let d = data[v];
+              for (let j = 0; j < d.length; j += 1) {
+                if (!lidtoName[d[j].lid]) { lidtoName[d[j].lid] = d[j].name; }
+                if (!resMap.has(d[j].lid)) { resMap.set(d[j].lid, {}); }
+                let o = resMap.get(d[j].lid);
+                if (!o[i]) { o[i] = []; };
+                o[i].push(d[j].idx);
+              }
+            });
+          }
+          $scope.dataMatrix = resMap;
+          $scope.optionsMatrix = {
+            class: $scope.selectedCls,
+            classNum: $scope.selectedCls.length,
+            lidtoName,
+            width: 800,
+            height: 600,
+            margin: {
+              top: 80,
+              right: 0,
+              bottom: 10,
+              left: 80
+            }
+          };
+        });
+
       }
+
+      Pip.onShowTopKernel($scope, (msg => {
+        let parser = 'json', type = 'i_cosine', db = Global.getSelectedDB();
+        let iterInfo = Global.getData('iter');
+        let allQuery = [];
+        for (let iter of iterInfo.picked) {
+          allQuery.push(DataManager.fetchKernel({ db, type, iter: iter[1], parser }, false));
+        }
+        $('#layer-data-loading').removeClass('invisible');
+        $q.all(allQuery).then((data: any) => {
+          // computer intersect
+          if (iterInfo.picked.length === 1) { data[0] = data[0].slice(0, 20); }
+          let map = new Map();
+          _.each(data, (d: any) => {
+            for (let i = 0; i < d.length; i += 1) {
+              let name = d[i].lid.toString() + '.' + d[i].idx.toString();
+              if (!map.has(name)) { map.set(name, { count: 0, d: [] }); }
+              let td = map.get(name);
+              td.count += 1;
+              td.d.push(d[i]);
+            }
+          });
+          let lmap = new Map();
+          map.forEach((v, k) => {
+            if (v.count === data.length) {
+              if (!lmap.has(v.d[0].name)) { lmap.set(v.d[0].name, { v: [], lid: v.d[0].lid }); };
+              let tmp = lmap.get(v.d[0].name);
+              tmp.v.push(v.d[0].idx);
+            }
+          });
+
+          let qArray = {};
+          lmap.forEach((v, k) => {
+            qArray[k] = DataManager.fetchKernel({
+              db, type, layer: [v.lid], seqidx: v.v, parser
+            }, false);
+          });
+          $scope.dataTopK = {};
+          $scope.optionsTopK = {};
+          if (!_.isEmpty(qArray)) {
+            $q.all(qArray).then(kernelData => {
+              $('#layer-data-loading').addClass('invisible');
+              _.each(kernelData, (v, k) => {
+                $scope.dataTopK[k] = _.map(v, (vd: any) => {
+                  return {
+                    heatmapData: vd.value,
+                    linechartData: null
+                  };
+                });
+                $scope.showTypes[k] = 'topk';
+                $scope.optionsTopK[k] = this_._setOptions('heatline');
+                $scope.optionsTopK[k].num = $scope.layers[k].kernelNum;
+                let cnode = layerTree[k];
+                let count = 0;
+                if (cnode.parent) {
+                  // console.log(cnode.parent);
+                  // console.log(cnode.parent.parent);
+                  $scope.opened[cnode.parent.parent.name] = true;
+                  $scope.opened[cnode.parent.name] = true;
+                  $('#' + cnode.parent.parent.name).show();
+                  $('#' + cnode.parent.parent.name + ' .level2').show();
+                  $('#' + cnode.parent.name + ' .level3').show();
+                  count += 1;
+                }
+                // console.log(count);
+                // console.log(k, v);
+              });
+            });
+          }
+
+        });
+      }));
 
       function mdsLayout(data) {
         let result = [];

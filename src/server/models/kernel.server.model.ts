@@ -69,11 +69,11 @@ export function respond(options: IOption, res: Response) {
   // basic config
   let colName = options.db + '_' + utils.tables.kernel.get(options.type);
   let col = getModel(colName);
-  console.log(chalk.green('normal fetching ' + colName));
-  console.time(colName);
+  // console.log(chalk.green('normal fetching ' + colName));
+  // console.time(colName);
 
   let [cond, project, sort] = getConfig(options);
-  console.log(cond, project, sort);
+  // console.log(cond, project, sort);
 
   let cached = false;
   // if (_.startsWith(options.type, 'i_') && !_.isEmpty(options.layer)) {
@@ -86,7 +86,7 @@ export function respond(options: IOption, res: Response) {
       .exec((err, data: any[]) => {
         if (err) { return console.log(chalk.bgRed(err)); }
         data = postProcess(data, options);
-        console.timeEnd(colName);
+        // console.timeEnd(colName);
         if (options.parser === 'json') {
           res.json(data);
         } else if (options.parser === 'bson') {
@@ -143,7 +143,7 @@ function postProcess(data: any[], options: IOption): any[] {
     }
     tmp = _.sortBy(tmp, ['value']);
     if (options.type !== 'i_cosine') { tmp = _.reverse(tmp); }
-    return tmp.slice(0, 500);
+    return tmp.slice(0, 30);
   } else if (_.startsWith(options.type, 'i_') && options.layer) {  // one layer
     if (!_.isEmpty(options.seqidx)) {
       _.each(data, (d: any) => {
