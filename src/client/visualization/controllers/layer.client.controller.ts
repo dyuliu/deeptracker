@@ -16,6 +16,7 @@ namespace application {
     showTypes: {};
     kData: {};
     dataTree: any[];
+    optionsTree: {};
     opened: {};
     open: any;    // func to open hl layer
     conf: any;
@@ -239,6 +240,17 @@ namespace application {
         $scope.size = {};
         $scope.conf = conf;
         $scope.dataTree = tree;
+        $scope.optionsTree = {
+          width: 200,
+          height: 2000,
+          layers: layers,
+          margin: {
+            top: 10,
+            right: 10,
+            bottom: 10,
+            left: 10
+          }
+        };
 
         if (conf.chartType === 'lineChart') {
 
