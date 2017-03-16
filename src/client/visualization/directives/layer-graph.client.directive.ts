@@ -54,8 +54,68 @@ namespace application {
       let this_ = this;
       this_.Pip = Pip;
       console.log('rendering', this_.data);
+      let data = this_.dataConstruction(this_.data);
+
+      // move g to the center
+      let rects = this_.svg.append('g')
+        .attr('transform', 'translate(' + (this_.options.width / 2) + ', 0)');
+
+      let fy = [0];
+      for (let i = 1; i < data.length; i += 1) {
+        if (data[i].type === 'conv-left') {
+          fy.push(fy[i - 1]);
+        } else {
+          fy.push(fy[i - 1] + this_.options.node.height + this_.options.space);
+        }
+      }
+      rects.selectAll('.layer')
+        .data(data)
+        .enter().append('rect')
+        .attr('class', d => 'layer ' + d.type)
+        .attr('x', d => {
+          if (d.type === 'conv-right') { return 15; }
+          if (d.type === 'conv-left') { return -15 - this_.options.node.width; }
+          return -this_.options.node.width / 2;
+        })
+        .attr('y', (d, i) => fy[i])
+        .attr('width', this_.options.node.width)
+        .attr('height', this_.options.node.height);
+
+      // console.log(data);
     }
 
+    private dataConstruction(data) {
+      let this_ = this;
+      let nodes = [];
+      nodes.push({ name: 'data', type: 'data' });
+      _.each(data, d => {
+        if (d.name === 'conv1') {
+          let info = this_.options.layers[d.name];
+          nodes.push({ name: d.name, type: 'conv', info });
+          nodes.push({ type: 'other' });
+        } else if (d.name === 'fc1000') {
+          let info = this_.options.layers[d.name];
+          nodes.push({ type: 'other' });
+          nodes.push({ name: d.name, type: 'fc', info });
+        }
+        else {
+          _.each(d.nodes, dd => {
+            let tmp = dd.nodes;
+            if (dd.nodes.length === 4) { tmp = dd.nodes.slice(1, 4); }
+            _.each(tmp, o => {
+              let info = this_.options.layers[o.name];
+              nodes.push({ name: o.name, type: 'conv-right', info });
+            });
+            if (dd.nodes.length === 4) {
+              let info = this_.options.layers[dd.nodes[0].name];
+              nodes.push({ name: dd.nodes[0].name, type: 'conv-left', info });
+            }
+            nodes.push({ type: 'other' });
+          });
+        }
+      });
+      return nodes;
+    }
 
   }
 

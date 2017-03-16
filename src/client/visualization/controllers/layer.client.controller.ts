@@ -241,13 +241,18 @@ namespace application {
         $scope.conf = conf;
         $scope.dataTree = tree;
         $scope.optionsTree = {
-          width: 200,
+          width: 250,
           height: 2000,
           layers: layers,
+          node: {
+            height: 15,
+            width: 35
+          },
+          space: 10,
           margin: {
-            top: 10,
+            top: 20,
             right: 10,
-            bottom: 10,
+            bottom: 20,
             left: 10
           }
         };

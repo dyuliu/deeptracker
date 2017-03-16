@@ -101,3 +101,21 @@
 .zoombtn {
   display: none;
 }
+.layer.data {
+  fill: #37A058;
+}
+.layer.conv {
+  fill: #CA5237;
+}
+.layer.conv-left {
+  fill: #CA5237;
+}
+.layer.conv-right {
+  fill: #CA5237;
+}
+.layer.fc {
+  fill: #bd0026;
+}
+.layer.other {
+  fill: #FFB84D;
+}
