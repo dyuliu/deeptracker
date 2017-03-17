@@ -15,6 +15,7 @@ namespace application {
     optionsTopK: {};
     showTypes: {};
     kData: {};
+    tree: any;
     dataTree: any[];
     optionsTree: {};
     opened: {};
@@ -241,14 +242,15 @@ namespace application {
         $scope.conf = conf;
         $scope.dataTree = tree;
         $scope.optionsTree = {
-          width: 250,
+          width: 300,
           height: 2000,
           layers: layers,
+          opened: $scope.opened,
           node: {
             height: 15,
-            width: 35
+            width: 30
           },
-          space: 10,
+          space: 8,
           margin: {
             top: 20,
             right: 10,
@@ -516,6 +518,9 @@ namespace application {
           });
         }
 
+        $scope.tree = this_._treeDataConstruction($scope.dataTree);
+        console.log($scope.tree);
+
         if (!previousOpen) { previousOpen = $scope.opened; }
         else { $scope.opened = previousOpen; }
 
@@ -526,6 +531,10 @@ namespace application {
           );
         }, 1000);
       }
+
+      Pip.onLayerOpen($scope, msg => {
+        $scope.$apply();
+      });
 
       $scope.open = function (d, level) {
         if (d.nodes) {
@@ -584,6 +593,22 @@ namespace application {
         this_.Pip.emitTimeMouseMove({ point: [msg, 0], x: 0, y: 0, k: 1 });
       });
 
+    }
+
+    private _treeDataConstruction(data) {
+      let r = [];
+      for (let d of data) {
+        r.push({ name: d.name, level: 'level1' });
+        if (d.nodes) {
+          for (let dd of d.nodes) {
+            r.push({ name: dd.name, level: 'level2', parent: d });
+            for (let ddd of dd.nodes) {
+              r.push({ name: ddd.name, level: 'level3', parent: dd});
+            }
+          }
+        }
+      }
+      return r;
     }
 
     private _processData(type, ...rest: any[]) {

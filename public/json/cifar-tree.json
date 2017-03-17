@@ -8,10 +8,10 @@
       {
         "name": "interstellar2a",
         "nodes": [
-          { "name": "interstellar2a_branch1" },
           { "name": "interstellar2a_branch2a" },
           { "name": "interstellar2a_branch2b" },
-          { "name": "interstellar2a_branch2c" }
+          { "name": "interstellar2a_branch2c" },
+          { "name": "interstellar2a_branch1" }
         ]
       },
       {
@@ -158,10 +158,10 @@
       {
         "name": "interstellar3a",
         "nodes": [
-          { "name": "interstellar3a_branch1" },
           { "name": "interstellar3a_branch2a" },
           { "name": "interstellar3a_branch2b" },
-          { "name": "interstellar3a_branch2c" }
+          { "name": "interstellar3a_branch2c" },
+          { "name": "interstellar3a_branch1" }
         ]
       },
       {
@@ -308,10 +308,10 @@
       {
         "name": "interstellar4a",
         "nodes": [
-          { "name": "interstellar4a_branch1" },
           { "name": "interstellar4a_branch2a" },
           { "name": "interstellar4a_branch2b" },
-          { "name": "interstellar4a_branch2c" }
+          { "name": "interstellar4a_branch2c" },
+          { "name": "interstellar4a_branch1" }
         ]
       },
       {

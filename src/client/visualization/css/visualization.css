@@ -101,6 +101,14 @@
 .zoombtn {
   display: none;
 }
+.layer-graph {
+  position: relative;
+  float: left;
+}
+.layer-chart {
+  position: relative;
+  float: left;
+}
 .layer.data {
   fill: #37A058;
 }
@@ -118,4 +126,13 @@
 }
 .layer.other {
   fill: #FFB84D;
+}
+.bar {
+  cursor: pointer;
+  -webkit-transition: opacity 1s;
+  transition: opacity 1s;
+}
+.bar-edge {
+  -webkit-transition: opacity 1s;
+  transition: opacity 1s;
 }

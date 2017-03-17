@@ -28,7 +28,7 @@ namespace application {
       let container = d4.select(ele[0])
         .style('width', options.width + 'px')
         .style('height', options.height + 'px')
-        .style('position', 'relative')
+        // .style('position', 'relative')
         .style('background', 'white');
 
       // initialize svg configuration
@@ -54,11 +54,12 @@ namespace application {
       let this_ = this;
       this_.Pip = Pip;
       console.log('rendering', this_.data);
-      let data = this_.dataConstruction(this_.data);
+      let data = this_.nodesDataConstruction(this_.data);
 
       // move g to the center
       let rects = this_.svg.append('g')
-        .attr('transform', 'translate(' + (this_.options.width / 2) + ', 0)');
+        .attr('class', 'node-group')
+        .attr('transform', 'translate(' + (this_.options.width / 3) + ', 0)');
 
       let fy = [0];
       for (let i = 1; i < data.length; i += 1) {
@@ -68,6 +69,7 @@ namespace application {
           fy.push(fy[i - 1] + this_.options.node.height + this_.options.space);
         }
       }
+
       rects.selectAll('.layer')
         .data(data)
         .enter().append('rect')
@@ -81,39 +83,342 @@ namespace application {
         .attr('width', this_.options.node.width)
         .attr('height', this_.options.node.height);
 
+      let links = this_.svg.append('g')
+        .attr('class', 'link-group')
+        .attr('transform', 'translate(' + (this_.options.width / 3) + ', 0)');
+
+      let line = d4.line()
+        .x(d => d[0])
+        .y(d => d[1]);
+
+      links.selectAll('.layer')
+        .data(data)
+        .enter().append('path')
+        .attr('d', (d, i) => {
+          let pd = [];
+          if (d.type === 'other' && d.edgeType) {
+            // do nothing
+            let st;
+            let ti = +i + 1;
+            st = [15 + this_.options.node.width / 2, fy[ti]];
+            pd.push(st);
+
+            pd.push([0, fy[i] + this_.options.node.height]);
+
+            if (d.edgeType === 1) {
+              pd.push([-15 - this_.options.node.width / 2, fy[ti]]);
+            } else {
+              pd.push([-15, fy[ti]]);
+              pd.push([-15, fy[i + 3] + this_.options.node.height]);
+            }
+
+            let ed;
+            ti = +i + 4;
+            if (d.edgeType === 1) {
+              ed = [-15 - this_.options.node.width / 2, fy[ti]];
+            } else {
+              ed = [0, fy[ti]];
+            }
+            pd.push(ed);
+          } else {
+            let st;
+            if (d.type === 'conv-right') {
+              st = [15 + this_.options.node.width / 2, fy[i] + this_.options.node.height];
+            } else if (d.type === 'conv-left') {
+              st = [-15 - this_.options.node.width / 2, fy[i] + this_.options.node.height];
+            } else {
+              st = [0, fy[i] + this_.options.node.height];
+            }
+            pd.push(st);
+
+            let ed;
+            let ti = +i + 1;
+            if (ti < data.length && data[ti].type === 'conv-left') { ti += 1; }
+            if (ti < data.length) {
+              if (data[ti].type === 'conv-right') {
+                ed = [15 + this_.options.node.width / 2, fy[ti]];
+              } else if (data[ti].type === 'conv-left') {
+                ed = [-15 - this_.options.node.width / 2, fy[ti]];
+              } else {
+                ed = [0, fy[ti]];
+              }
+            } else {
+              return '';
+            }
+            pd.push(ed);
+          }
+
+          return line(pd);
+        })
+        .attr('fill', 'none')
+        .style('stroke', '#85b5e3')
+        .style('stroke-width', 2);
+
+
+      // get bar data
+      let location = {};
+      for (let i = 0; i < data.length; i += 1) {
+        if (data[i].type !== 'other' && data[i].type !== 'data') {
+          location[data[i].name] = fy[i];
+        }
+      }
+      let barData = this_.barDataConstruction(this_.data, location);
+      let stretchData = this_.stretchData(this_.data);
+      console.log(barData);
+      let bars = this_.svg.append('g')
+        .attr('transform', 'translate(' + (this_.options.width / 3) + ', 0)');
+
+      bars.selectAll('.bar')
+        .data(barData)
+        .enter().append('rect')
+        .attr('class', d => 'bar ' + d.level + ' bar-' + d.name)
+        .attr('x', d => {
+          let t;
+          if (d.level === 'level1') { t = 15 + this_.options.node.width + 20; }
+          if (d.level === 'level2') { t = 15 + this_.options.node.width + 12; }
+          if (d.level === 'level3' && !d.left) {
+            t = 15 + this_.options.node.width + 4;
+          } else if (d.level === 'level3' && d.left) {
+            t = -11;
+          }
+          return t;
+        })
+        .attr('y', d => d.st)
+        .attr('width', 5)
+        .attr('height', d => d.ed - d.st)
+        .attr('fill', '#3093f2')
+        .style('opacity', d => {
+          if (stretchData[d.name].parent && !this_.options.opened[stretchData[d.name].parent.name]) {
+            return 0.2;
+          }
+          if (!this_.options.opened[d.name]) { return 1; }
+          return 0.2;
+        })
+        .on('click', clickHandler);
+
+      let barEdges = this_.svg.append('g')
+        .attr('transform', 'translate(' + (this_.options.width / 3) + ', 0)');
+
+      let lineCurve = d4.line()
+        .x(d => d[0])
+        .y(d => d[1])
+        .curve(d4.curveBasis);
+      setTimeout(function () {
+        barEdges.selectAll('.bar-edge')
+          .data(barData)
+          .enter().append('path')
+          .attr('class', d => 'bar-edge ' + d.level + ' bar-edge-' + d.name)
+          .attr('d', d => {
+            let pd = [];
+
+            let t;
+            if (d.level === 'level1') { t = 15 + this_.options.node.width + 20; }
+            if (d.level === 'level2') { t = 15 + this_.options.node.width + 12; }
+            if (d.level === 'level3' && !d.left) {
+              t = 15 + this_.options.node.width + 4;
+            } else if (d.level === 'level3' && d.left) {
+              t = -11;
+            }
+
+            let st = [t + 5, d.st + (d.ed - d.st) / 2];
+            let ed;
+            let e = $('#' + d.name);
+            if (e.position()) {
+              ed = [2 * this_.options.width / 3, $('#' + d.name).position().top];
+            } else {
+              ed = st;
+            }
+            let ml = [st[0] + 1 / 3 * (ed[0] - st[0]), st[1]],
+              mr = [st[0] + 2 / 3 * (ed[0] - st[0]), ed[1]];
+            pd.push(st, ml, mr, ed);
+            return lineCurve(pd);
+          })
+          .style('fill', 'none')
+          .style('stroke', '#3093f2')
+          .style('stroke-width', 1)
+          .style('opacity', d => {
+            if (stretchData[d.name].parent && !this_.options.opened[stretchData[d.name].parent.name]) {
+              return 0;
+            }
+            if (!this_.options.opened[d.name]) { return 1; }
+            return 0;
+          });
+      }, 1000);
+
+      function clickHandler(d) {
+        let open = !this_.options.opened[d.name];
+        if (open && stretchData[d.name].nodes) {
+          let p = stretchData[d.name].parent;
+          if (!(p && !this_.options.opened[p.name])) {
+            $(this).css('opacity', 0.1);
+            this_.options.opened[d.name] = true;
+            for (let o of stretchData[d.name].nodes) {
+              $('.bar-' + o.name).css('opacity', 1);
+            }
+          }
+        } else if (!open && stretchData[d.name].nodes) {
+          $(this).css('opacity', 1);
+          this_.options.opened[d.name] = false;
+          for (let o of stretchData[d.name].nodes) {
+            $('.bar-' + o.name).css('opacity', 0.1);
+            this_.options.opened[o.name] = false;
+            if (o.nodes) {
+              for (let oo of o.nodes) {
+                $('.bar-' + oo.name).css('opacity', 0.1);
+                this_.options.opened[oo.name] = false;
+              }
+            }
+          }
+        }
+        Pip.emitLayerOpen(null);
+
+        setTimeout(function () {
+          barEdges.selectAll('.bar-edge')
+            .attr('d', (o: any) => {
+              let pd = [];
+
+              let t;
+              if (o.level === 'level1') { t = 15 + this_.options.node.width + 20; }
+              if (o.level === 'level2') { t = 15 + this_.options.node.width + 12; }
+              if (o.level === 'level3' && !o.left) {
+                t = 15 + this_.options.node.width + 4;
+              } else if (o.level === 'level3' && o.left) {
+                t = -11;
+              }
+
+              let st = [t + 5, o.st + (o.ed - o.st) / 2];
+              let ed;
+              let e = $('#' + o.name);
+              if (e.position()) {
+                ed = [2 * this_.options.width / 3, $('#' + o.name).position().top];
+              } else {
+                ed = st;
+              }
+
+              if (o.level === 'level3' && o.left) {
+                let tm = 15 + this_.options.node.width + 16;
+                let tmpArray = [];
+                st[1] += 3;
+                tmpArray.push(st);
+                tmpArray.push([tm, st[1]]);
+                let pathStr = line(tmpArray);
+
+                st[0] = tm;
+                let ml = [st[0] + 1 / 3 * (ed[0] - st[0]), st[1]],
+                  mr = [st[0] + 2 / 3 * (ed[0] - st[0]), ed[1]];
+                pd.push(st, ml, mr, ed);
+                console.log(pathStr + ' ' + lineCurve(pd));
+                return pathStr + ' ' + lineCurve(pd);
+              } else {
+                let ml = [st[0] + 1 / 3 * (ed[0] - st[0]), st[1]],
+                  mr = [st[0] + 2 / 3 * (ed[0] - st[0]), ed[1]];
+                pd.push(st, ml, mr, ed);
+                return lineCurve(pd);
+              }
+
+            })
+            .style('fill', 'none')
+            .style('stroke', '#3093f2')
+            .style('stroke-width', 1)
+            .style('opacity', (o: any) => {
+              if (stretchData[o.name].parent && !this_.options.opened[stretchData[o.name].parent.name]) {
+                return 0;
+              }
+              if (!this_.options.opened[o.name]) { return 1; }
+              return 0;
+            });
+        }, 500);
+
+      }
       // console.log(data);
     }
 
-    private dataConstruction(data) {
+    private barDataConstruction(data, location) {
+      let this_ = this;
+      let r = [];
+      for (let d of data) {
+        let dst, ded;
+        if (!d.nodes) {
+          dst = location[d.name]; ded = dst + this_.options.node.height;
+          r.push({ name: d.name, level: 'level1', st: dst, ed: ded });
+        } else if (d.nodes) {
+          dst = location[d.nodes[0].nodes[0].name];
+          let tmp: any = _.last(d.nodes);
+          tmp = _.last(tmp.nodes);
+          ded = location[tmp.name] + this_.options.node.height;
+          r.push({ name: d.name, level: 'level1', st: dst, ed: ded });
+          for (let dd of d.nodes) {
+            let ddst, dded;
+            ddst = location[dd.nodes[0].name];
+            let tmp2: any = _.last(dd.nodes);
+            dded = location[tmp2.name] + this_.options.node.height;
+            r.push({ name: dd.name, level: 'level2', st: ddst, ed: dded });
+            for (let ddd of dd.nodes) {
+              let dddst, ddded;
+              dddst = location[ddd.name];
+              ddded = dddst + this_.options.node.height;
+              r.push({ name: ddd.name, level: 'level3', st: dddst, ed: ddded });
+            }
+            let lr: any = _.last(r);
+            if (dd.nodes.length === 4) { lr.left = true; }
+          }
+        }
+      }
+      return r;
+    }
+
+    private stretchData(data) {
+      let this_ = this;
+      let r = {};
+      for (let d of data) {
+        r[d.name] = d;
+        if (d.nodes) {
+          for (let dd of d.nodes) {
+            r[dd.name] = dd;
+            for (let ddd of dd.nodes) {
+              r[ddd.name] = ddd;
+            }
+          }
+        }
+      }
+      return r;
+    }
+
+    private nodesDataConstruction(data) {
       let this_ = this;
       let nodes = [];
       nodes.push({ name: 'data', type: 'data' });
-      _.each(data, d => {
+      _.each(data, (d, di) => {
         if (d.name === 'conv1') {
           let info = this_.options.layers[d.name];
           nodes.push({ name: d.name, type: 'conv', info });
-          nodes.push({ type: 'other' });
+          nodes.push({ type: 'other', edgeType: 1 });
         } else if (d.name === 'fc1000') {
           let info = this_.options.layers[d.name];
           nodes.push({ type: 'other' });
           nodes.push({ name: d.name, type: 'fc', info });
         }
         else {
-          _.each(d.nodes, dd => {
+          _.each(d.nodes, (dd, ddi) => {
             let tmp = dd.nodes;
-            if (dd.nodes.length === 4) { tmp = dd.nodes.slice(1, 4); }
+            if (dd.nodes.length === 4) { tmp = dd.nodes.slice(0, 3); }
             _.each(tmp, o => {
               let info = this_.options.layers[o.name];
               nodes.push({ name: o.name, type: 'conv-right', info });
             });
             if (dd.nodes.length === 4) {
-              let info = this_.options.layers[dd.nodes[0].name];
-              nodes.push({ name: dd.nodes[0].name, type: 'conv-left', info });
+              let info = this_.options.layers[dd.nodes[3].name];
+              nodes.push({ name: dd.nodes[3].name, type: 'conv-left', info });
             }
-            nodes.push({ type: 'other' });
+            if (+ddi === d.nodes.length - 1) {
+              nodes.push({ type: 'other', edgeType: 1 });
+            } else {
+              nodes.push({ type: 'other', edgeType: 2 });
+            }
           });
         }
       });
+      delete nodes[nodes.length - 3].edgeType;
       return nodes;
     }
 
