@@ -186,8 +186,8 @@ namespace application {
           rec.push(new Set());
           let d = $scope.dataCls[$scope.selectedCls[i].name].linechartData;
           for (let j = 0; j < d.length; j += 1) {
-            if (d[j].value >= 3) { iterSet.add(iterInfo.array[j]); rec[i].add(iterInfo.array[j]); }
-            if (d[j].valueR >= 3) { iterSet.add(iterInfo.array[j]); rec[i].add(iterInfo.array[j]); }
+            if (d[j].value >= conf.threshold) { iterSet.add(iterInfo.array[j]); rec[i].add(iterInfo.array[j]); }
+            if (d[j].valueR >= conf.threshold) { iterSet.add(iterInfo.array[j]); rec[i].add(iterInfo.array[j]); }
           }
         }
 
@@ -203,7 +203,6 @@ namespace application {
         console.log($scope.selectedCls);
         let lidtoName = {};
         $q.all(allQuery).then((data: any) => {
-          // console.log(data);
           console.timeEnd('startA');
           for (let i = 0; i < $scope.selectedCls.length; i += 1) {
             rec[i].forEach((v) => {
@@ -212,8 +211,9 @@ namespace application {
                 if (!lidtoName[d[j].lid]) { lidtoName[d[j].lid] = d[j].name; }
                 if (!resMap.has(d[j].lid)) { resMap.set(d[j].lid, {}); }
                 let o = resMap.get(d[j].lid);
-                if (!o[i]) { o[i] = []; };
-                o[i].push(d[j].idx);
+                if (!o[i]) { o[i] = {}; };
+                if (!o[i][v]) { o[i][v] = [rec[i]]; }
+                o[i][v].push(d[j].idx);
               }
             });
           }
@@ -222,13 +222,13 @@ namespace application {
             class: $scope.selectedCls,
             classNum: $scope.selectedCls.length,
             lidtoName,
-            width: 800,
-            height: 600,
+            width: 1800,
+            height: 800,
             margin: {
-              top: 80,
+              top: 0,
               right: 0,
-              bottom: 10,
-              left: 80
+              bottom: 0,
+              left: 0
             }
           };
         });

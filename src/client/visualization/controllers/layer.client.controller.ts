@@ -151,10 +151,10 @@ namespace application {
         if (conf.show === true) { act(conf); }
       });
 
-      function openPixelChart(d) {
+      function openPixelChart(name) {
         // open it
         let layerArray = Global.getData('info').layer;
-        let lid = _.find(layerArray, (o: any) => o.name === d.name).lid;
+        let lid = _.find(layerArray, (o: any) => o.name === name).lid;
         let [db, parser] = [Global.getSelectedDB(), 'json'];
         let type = 'i_cosine';
         $('#layer-data-loading').removeClass('invisible');
@@ -162,9 +162,9 @@ namespace application {
           // DataManager.fetchKernel({ db, type: 'i_norm1', layer: [lid], parser }, false)
           .then(data => {
             $('#layer-data-loading').addClass('invisible');
-            $scope.optionsDetail[d.name] = this_._setOptions('pixelChartWithLine');
-            $scope.optionsDetail[d.name].height = data.length + 4;
-            $scope.optionsDetail[d.name].name = d.name;
+            $scope.optionsDetail[name] = this_._setOptions('pixelChartWithLine');
+            $scope.optionsDetail[name].height = data.length + 4;
+            $scope.optionsDetail[name].name = name;
 
             let scaleType = Global.getConfig('layer').kernelScale;
 
@@ -213,7 +213,7 @@ namespace application {
                 });
               }
             }
-            $scope.dataDetail[d.name] = {
+            $scope.dataDetail[name] = {
               pixelChart: data,
               lineChart: null
             };
@@ -247,10 +247,10 @@ namespace application {
           layers: layers,
           opened: $scope.opened,
           node: {
-            height: 15,
-            width: 30
+            height: 7,
+            width: 15
           },
-          space: 8,
+          space: 4,
           margin: {
             top: 20,
             right: 10,
@@ -559,6 +559,17 @@ namespace application {
         }
       };
 
+      Pip.onFlip($scope, name => {
+        if ($scope.showTypes[name] !== 'pchart') {
+          oldShowType[name] = $scope.showTypes[name];
+          $scope.showTypes[name] = 'pchart';
+          openPixelChart(name);
+        } else {
+          $scope.showTypes[name] = oldShowType[name];
+          $scope.$apply();
+        }
+      });
+
     }
 
     private _init() {
@@ -603,7 +614,7 @@ namespace application {
           for (let dd of d.nodes) {
             r.push({ name: dd.name, level: 'level2', parent: d });
             for (let ddd of dd.nodes) {
-              r.push({ name: ddd.name, level: 'level3', parent: dd});
+              r.push({ name: ddd.name, level: 'level3', parent: dd });
             }
           }
         }

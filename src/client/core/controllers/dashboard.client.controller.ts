@@ -162,14 +162,14 @@ namespace application {
         if (!n) { return; }
         this_.Global.setSelectedDB(n);
         let [db, parser] = [n, 'json'];
-        // $('#label-data-loading').removeClass('invisible');
-        // // cached label cls stat
-        // this_.DataManager.fetchImg({ db, type: 'cls_stat', seqidx: [this_.Global.getConfig('label').abnormal], cls: [], parser }, false)
-        //   .then(data => {
-        //     $('#label-data-loading').addClass('invisible');
-        //     let labelData = this_.Global.getData('label');
-        //     labelData.clsStat = data;
-        //   });
+        $('#label-data-loading').removeClass('invisible');
+        // cached label cls stat
+        this_.DataManager.fetchImg({ db, type: 'cls_stat', seqidx: [this_.Global.getConfig('label').abnormal], cls: [], parser }, false)
+          .then(data => {
+            $('#label-data-loading').addClass('invisible');
+            let labelData = this_.Global.getData('label');
+            labelData.clsStat = data;
+          });
 
         // // cached change ratio data
         // $('#layer-data-loading').removeClass('invisible');

@@ -81,7 +81,18 @@ namespace application {
         })
         .attr('y', (d, i) => fy[i])
         .attr('width', this_.options.node.width)
-        .attr('height', this_.options.node.height);
+        .attr('height', this_.options.node.height)
+        .on('click', function (d) {
+          Pip.emitFlip(d.name);
+          updateEdge();
+        })
+        .append('title')
+        .text(d => {
+          if (d.type !== 'data' && d.type !== 'other') {
+            return d.name + ':\n ' + d.info.kernelWidth + ' x ' + d.info.kernelHeight;
+          }
+          return '';
+        });
 
       let links = this_.svg.append('g')
         .attr('class', 'link-group')
@@ -152,7 +163,7 @@ namespace application {
         })
         .attr('fill', 'none')
         .style('stroke', '#85b5e3')
-        .style('stroke-width', 2);
+        .style('stroke-width', 1);
 
 
       // get bar data
@@ -272,6 +283,10 @@ namespace application {
         }
         Pip.emitLayerOpen(null);
 
+        updateEdge();
+      }
+
+      function updateEdge() {
         setTimeout(function () {
           barEdges.selectAll('.bar-edge')
             .attr('d', (o: any) => {
@@ -328,7 +343,6 @@ namespace application {
               return 0;
             });
         }, 500);
-
       }
       // console.log(data);
     }
