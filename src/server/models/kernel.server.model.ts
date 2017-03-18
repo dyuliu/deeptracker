@@ -143,7 +143,7 @@ function postProcess(data: any[], options: IOption): any[] {
     }
     tmp = _.sortBy(tmp, ['value']);
     if (options.type !== 'i_cosine') { tmp = _.reverse(tmp); }
-    return tmp.slice(0, 20);
+    return tmp.slice(0, 10);
   } else if (_.startsWith(options.type, 'i_') && options.layer) {  // one layer
     if (!_.isEmpty(options.seqidx)) {
       _.each(data, (d: any) => {

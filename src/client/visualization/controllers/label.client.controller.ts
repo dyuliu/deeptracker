@@ -222,10 +222,10 @@ namespace application {
             class: $scope.selectedCls,
             classNum: $scope.selectedCls.length,
             lidtoName,
-            width: 1800,
-            height: 800,
+            width: $scope.selectedCls.length * 45,
+            height: resMap.size * 100,
             margin: {
-              top: 0,
+              top: 12,
               right: 0,
               bottom: 0,
               left: 0
