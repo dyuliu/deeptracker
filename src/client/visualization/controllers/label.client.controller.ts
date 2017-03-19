@@ -184,11 +184,19 @@ namespace application {
         let resMap = new Map();
         for (let i = 0; i < $scope.selectedCls.length; i += 1) {
           rec.push(new Set());
+          let cc = 0;
           let d = $scope.dataCls[$scope.selectedCls[i].name].linechartData;
           for (let j = 0; j < d.length; j += 1) {
-            if (d[j].value >= conf.threshold) { iterSet.add(iterInfo.array[j]); rec[i].add(iterInfo.array[j]); }
-            if (d[j].valueR >= conf.threshold) { iterSet.add(iterInfo.array[j]); rec[i].add(iterInfo.array[j]); }
+            if (d[j].value >= conf.threshold) { cc += 1; iterSet.add(iterInfo.array[j]); rec[i].add(iterInfo.array[j]); }
+            if (d[j].valueR >= conf.threshold) {
+              if (j + 1 < iterInfo.array.length) {
+                cc += 1;
+                iterSet.add(iterInfo.array[j + 1]); rec[i].add(iterInfo.array[j + 1]);
+              }
+            }
           }
+          if (cc < 2) { $scope.selectedCls.splice(i, 1); i -= 1; }
+          // !!!! delete cls with outlier iter only once
         }
 
         let allQuery = {};
@@ -198,9 +206,7 @@ namespace application {
           // allQuery.push(DataManager.fetchKernel({ db, type, iter: v, parser }, false));
         });
         // console.log($scope.dataCls, $scope.selectedCls, iterSet);
-        console.log('fetch ing!!!!');
         console.time('startA');
-        console.log($scope.selectedCls);
         let lidtoName = {};
         $q.all(allQuery).then((data: any) => {
           console.timeEnd('startA');
@@ -222,8 +228,14 @@ namespace application {
             class: $scope.selectedCls,
             classNum: $scope.selectedCls.length,
             lidtoName,
-            width: $scope.selectedCls.length * 45,
-            height: resMap.size * 100,
+            rec,
+            width: 2000,
+            height: 1600,
+            minHeight: 8,
+            minWidth: 10,
+            threshold: 4,
+            h: 4,
+            w: 6,
             margin: {
               top: 12,
               right: 0,
