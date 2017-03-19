@@ -188,14 +188,14 @@ namespace application {
       for (let j = 0; j < this_.options.classNum; j += 1) {
         wPosition.push(countW);
         let d = this_.options.rec[j].size;
-        colVlLines.append('line')
-          .attr('x1', countW)
-          .attr('y1', 0)
-          .attr('x2', countW)
-          .attr('y2', this_.options.height)
-          .style('stroke', '#f7a659')
-          .style('stroke-width', 1)
-          .style('opacity', 0.8);
+        // colVlLines.append('line')
+        //   .attr('x1', countW)
+        //   .attr('y1', 0)
+        //   .attr('x2', countW)
+        //   .attr('y2', this_.options.height)
+        //   .style('stroke', '#f7a659')
+        //   .style('stroke-width', 1)
+        //   .style('opacity', 0.4);
         colClsName.append('text')
           .attr('x', countW)
           .attr('y', 0)
@@ -212,20 +212,21 @@ namespace application {
         r2[i].y = countH;
         hPosition.push(countH);
         r2[i].x = wPosition;
-        rowHrLines.append('line')
-          .attr('x1', 0)
-          .attr('y1', countH)
-          .attr('x2', this_.options.width)
-          .attr('y2', countH)
-          .style('stroke', '#f7a659')
-          .style('stroke-width', 1)
-          .style('opacity', 0.8);
+        // rowHrLines.append('line')
+        //   .attr('x1', 0)
+        //   .attr('y1', countH)
+        //   .attr('x2', this_.options.width)
+        //   .attr('y2', countH)
+        //   .style('stroke', '#f7a659')
+        //   .style('stroke-width', 1)
+        //   .style('opacity', 0.8);
         countH += fh(d.filterNum);
       }
 
       let rowInsideHrLines = this_.svg.append('g').attr('class', 'row-hr-inside-line');
       let colInsideVlLines = this_.svg.append('g').attr('class', 'col-vl-inside-line');
       let fWeight = d4.scaleLinear<any>().domain([threshold, maxWeight]).range([0.1, 1]);
+      let fWeightStroke = d4.scaleLinear<any>().domain([threshold, maxWeight]).range([0.5, this_.options.h - 1]);
       let fCls = [];
       for (let i = 0; i < this_.options.rec.length; i += 1) {
         let arr: any = Array.from(this_.options.rec[i]);
@@ -259,8 +260,9 @@ namespace application {
             .attr('x2', wPosition[ed[0]] + fCls[ed[0]](ed[1]))
             .attr('y2', hPosition[i] + miniPosition[j])
             .style('stroke', '#363535')
-            .style('stroke-width', 1)
-            .style('opacity', fWeight(weight));
+            .style('stroke-width', fWeightStroke(weight))
+            // .style('opacity', fWeight(weight));
+            .style('opacity', 0.6);
         }
       }
 
@@ -273,7 +275,7 @@ namespace application {
             .attr('y2', hPosition[d[2]] + miniPositions[d[2]][d[3]])
             .style('stroke', '#464646')
             .style('stroke-width', 0.5)
-            .style('opacity', 0.4);
+            .style('opacity', 0.6);
         });
       }
 
@@ -282,7 +284,7 @@ namespace application {
         .enter().append('g')
         .attr('class', 'matrix-row')
         .attr('transform', d => 'translate(0,' + d.y + ')')
-        .each( function(d, i) { row(d, i, this); });
+        .each(function (d, i) { row(d, i, this); });
 
       function row(rowData, ri, selection) {
 
@@ -328,20 +330,39 @@ namespace application {
           .enter().append('rect')
           .attr('class', 'cell-rect-s')
           .attr('x', -this_.options.w / 2)
-          .attr('y', (d: any) => d[0] - this_.options.h * d[1] / 2)
+          .attr('y', (d: any) => d[0] - this_.options.h * d[1] / 2 + 0.5)
           .attr('width', this_.options.w)
-          .attr('height', (d: any) => this_.options.h * d[1])
+          .attr('height', (d: any) => this_.options.h * d[1] - 1)
           .attr('fill', (d: any) => {
-            if (d[1] > 1) {
-              return '#ff0a0a';
-            } else {
-              return '#3068a0';
-            }
+            // if (d[1] > 1) {
+            //   return '#ff0a0a';
+            // } else {
+            return '#3068a0';
+            // }
           })
           // .attr('stroke', '#525252')
           // .attr('stroke-width', 0.5)
           .append('title')
           .text(d => d[1]);
+
+        // d4.select(selection).selectAll('line')
+        //   .data(newData)
+        //   .enter().append('line')
+        //   .attr('x1', -this_.options.w / 2)
+        //   .attr('y1', (d: any) => d[0] + this_.options.h * d[1] / 2)
+        //   .attr('x2', this_.options.w / 2)
+        //   .attr('y2', (d: any) => this_.options.h * d[1])
+        //   .attr('fill', (d: any) => {
+        //     // if (d[1] > 1) {
+        //     //   return '#ff0a0a';
+        //     // } else {
+        //       return '#3068a0';
+        //     // }
+        //   })
+        //   // .attr('stroke', '#525252')
+        //   // .attr('stroke-width', 0.5)
+        //   .append('title')
+        //   .text(d => d[1]);
       }
 
       function computeSetEle(tdata) {

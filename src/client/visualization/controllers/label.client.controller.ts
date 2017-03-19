@@ -223,26 +223,28 @@ namespace application {
               }
             });
           }
-          $scope.dataMatrix = resMap;
-          $scope.optionsMatrix = {
-            class: $scope.selectedCls,
-            classNum: $scope.selectedCls.length,
-            lidtoName,
-            rec,
-            width: 2000,
-            height: 1600,
-            minHeight: 8,
-            minWidth: 10,
-            threshold: 4,
-            h: 4,
-            w: 6,
-            margin: {
-              top: 12,
-              right: 0,
-              bottom: 0,
-              left: 0
+          Pip.emitCorrelationReady({
+            data: resMap,
+            options: {
+              class: $scope.selectedCls,
+              classNum: $scope.selectedCls.length,
+              lidtoName,
+              rec,
+              width: 2000,
+              height: 1600,
+              minHeight: 6,
+              minWidth: 6,
+              threshold: 4,
+              h: 3,
+              w: 6,
+              margin: {
+                top: 12,
+                right: 0,
+                bottom: 0,
+                left: 0
+              }
             }
-          };
+          });
         });
 
       }
