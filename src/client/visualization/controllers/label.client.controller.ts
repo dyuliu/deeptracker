@@ -48,6 +48,17 @@ namespace application {
         keyboard: true
       });
 
+      function updateContainerHeight() {
+        setTimeout(function () {
+          // console.log($('.label-chart').height());
+          // console.log($('div[heatline]').height());
+          $('#widget-container-labelinfo').height($('.label-chart').height());
+          updateContainerHeight();
+        }, 3000);
+      }
+      updateContainerHeight();
+
+
       $scope.showModal = function (name, type) {
         modal.$scope.cls = name;
         modal.$scope.type = 'class';

@@ -46,7 +46,7 @@ namespace application {
 
         // set up svg
         svg = d4.select('#timebox')
-          .attr('width', iterInfo.num + 10)
+          .attr('width', iterInfo.num + 150)
           .attr('height', 34);
 
         rect = svg.append('rect')

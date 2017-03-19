@@ -1,155 +1,17 @@
-<div class="widget-box transparent" ng-controller="LayerController">
-  <!--<div class="widget-header widget-header-small invisible">
-    <h6 class="widget-title lighter">Layer Info</h6>
-    <div class="widget-toolbar">
-      <a href="#" data-action="close">
-        <i class="ace-icon fa fa-times"></i>
-      </a>
-    </div>
-  </div>-->
+<div ng-if="open" class="col-xs-12 col-sm-12">
+  <div class="layer-graph" layer-graph options="optionsTree" data="dataTree"></div>
 
-  <div class="widget-body">
-
-    <div class="space-2"></div>
-
-    <!--<div class="row scrollable" data-size="500">-->
-    <div class="row">
-      <div class="col-xs-12 col-sm-12">
-        <!--<div id="3D container"></div>-->
-        <div ng-if="open" class="row">
-          <div class="col-xs-12 col-sm-12">
-            <div class="layer-graph" layer-graph options="optionsTree" data="dataTree"></div>
-            <div class="layer-chart">
-              <div ng-repeat-start="la in tree" ng-if="(!la.parent && !opened[la.name]) || (la.parent && opened[la.parent.name] && !opened[la.name])" id="{{la.name}}" ng-repeat-end>
-                <nvd3 ng-if="showTypes[la.name] === 'nvd3' " options="options[la.name]" data="data[la.name]"></nvd3>
-                <div ng-if="showTypes[la.name] === 'cr' " crchart options="optionsCR[la.name]" data="dataCR[la.name]" style="z-index: 100"></div>
-                <div ng-if="showTypes[la.name] === 'pchart' " kernel-pixel options="optionsDetail[la.name]" data="dataDetail[la.name]" style="z-index: 100"></div>
-                <div ng-if="showTypes[la.name] === 'hgraph' " horizon-graph options="optionsHGraph[la.name]" data="dataHGraph[la.name]"></div>
-                <div ng-if="showTypes[la.name] === 'topk' ">
-                  <div class="space-2"></div>
-                  <div ng-repeat-start="dTopK in dataTopK[la.name]" heatline data="dTopK" options="optionsTopK[la.name]" style="z-index: 100" ng-repeat-end> </div>
-                  <div class="space-2"></div>
-                </div>
-              </div>
-              <!--<div ng-repeat-start="la in tree" ng-if="(!la.parent && !opened[la.name]) || (la.parent && opened[la.parent.name] && !opened[la.name])" id="{{la.name}}" ng-repeat-end>
-
-                <div class="col-xs-10 col-sm-10">
-                  <nvd3 ng-if="showTypes[la.name] === 'nvd3' " options="options[la.name]" data="data[la.name]"></nvd3>
-                  <div ng-if="showTypes[la.name] === 'cr' " crchart options="optionsCR[la.name]" data="dataCR[la.name]" style="z-index: 100"></div>
-                  <div ng-if="showTypes[la.name] === 'pchart' " kernel-pixel options="optionsDetail[la.name]" data="dataDetail[la.name]" style="z-index: 100"></div>
-                  <div ng-if="showTypes[la.name] === 'hgraph' " horizon-graph options="optionsHGraph[la.name]" data="dataHGraph[la.name]"></div>
-                  <div ng-if="showTypes[la.name] === 'topk' ">
-                    <div class="space-2"></div>
-                    <div ng-repeat-start="dTopK in dataTopK[la.name]" heatline data="dTopK" options="optionsTopK[la.name]" style="z-index: 100" ng-repeat-end> </div>
-                    <div class="space-2"></div>
-                  </div>
-                </div>
-
-              </div>-->
-
-            </div>
-
-          </div>
-          <!--<div class="col-xs-1 col-sm-1"></div>
-          <div class="col-xs-11 col-sm-11">
-
-            <div ng-if="open" class="row">
-              <div class="col-xs-12 col-sm-12">
-
-                <div ng-repeat-start="la in dataTree" id="{{la.name}}" class="tree level1 no-padding" ng-class="{'layerbox': (!opened[la.name] || !la.nodes)}" ng-repeat-end>
-                  <div class="row tree-btn">
-                    <div class="col-xs-2 col-sm-2">
-                      <span class="tree-branch-name" ng-click="open(la, 2)">
-                        <i class="icon-folder ace-icon" ng-class="{'invisible': !la.nodes, 'tree-minus': opened[la.name], 'tree-plus': !opened[la.name]}"></i>
-                        <span class="tree-label"><small>{{la.name}}</small></span>
-                      </span>
-                      <div ng-if="!opened[la.name] || !la.nodes" class="float-right zoombtn">
-                        <button class="btn btn-success btn-minier float-right">
-                          <i class="ace-icon fa fa-search-plus" ng-click="click('zoomin', la.name)"></i>
-                        </button>
-                        <span> &nbsp; </span>
-                        <button class="btn btn-success btn-minier float-right">
-                          <i class="ace-icon fa fa-search-minus" ng-click="click('zoomout', la.name)"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div ng-if="!opened[la.name] || !la.nodes" class="col-xs-10 col-sm-10">
-                      <nvd3 ng-if="showTypes[la.name] === 'nvd3' " options="options[la.name]" data="data[la.name]"></nvd3>
-                      <div ng-if="showTypes[la.name] === 'cr' " crchart options="optionsCR[la.name]" data="dataCR[la.name]" style="z-index: 100"></div>
-                      <div ng-if="showTypes[la.name] === 'pchart' " kernel-pixel options="optionsDetail[la.name]" data="dataDetail[la.name]" style="z-index: 100"></div>
-                      <div ng-if="showTypes[la.name] === 'hgraph' " horizon-graph options="optionsHGraph[la.name]" data="dataHGraph[la.name]"></div>
-                      <div ng-if="showTypes[la.name] === 'topk' ">
-                        <div class="space-2"></div>
-                        <div ng-repeat-start="dTopK in dataTopK[la.name]" heatline data="dTopK" options="optionsTopK[la.name]" style="z-index: 100" ng-repeat-end> </div>
-                        <div class="space-2"></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div ng-repeat-start="lan in la.nodes" id="{{lan.name}}" class="level2 no-padding" style="display: none" ng-class="{'layerbox': (!opened[lan.name] || !lan.nodes)}" ng-repeat-end>
-                    <div class="row tree-btn">
-                      <div class="col-xs-2 col-sm-2">
-                        <span class="tree-branch-name level2-off" ng-click="open(lan, 3)">
-                  <i class="icon-folder ace-icon" ng-class="{'invisible': !lan.nodes, 'tree-minus': opened[lan.name], 'tree-plus': !opened[lan.name]}"></i>
-                  <span class="tree-label"><small>{{lan.name}}</small></span>
-                        </span>
-                        <div ng-if="opened[la.name] && !opened[lan.name]" class="float-right zoombtn">
-                          <button class="btn btn-success btn-minier float-right">
-                          <i class="ace-icon fa fa-search-plus" ng-click="click('zoomin', lan.name)"></i>
-                        </button>
-                          <span> &nbsp; </span>
-                          <button class="btn btn-success btn-minier float-right">
-                          <i class="ace-icon fa fa-search-minus" ng-click="click('zoomout', lan.name)"></i>
-                        </button>
-                        </div>
-                      </div>
-                      <div ng-if="opened[la.name] && !opened[lan.name]" class="col-xs-10 col-sm-10">
-                        <nvd3 ng-if="showTypes[lan.name] === 'nvd3' " options="options[lan.name]" data="data[lan.name]"></nvd3>
-                        <div ng-if="showTypes[lan.name] === 'cr' " crchart options="optionsCR[lan.name]" data="dataCR[lan.name]" style="z-index: 100"></div>
-                        <div ng-if="showTypes[lan.name] === 'hgraph' " horizon-graph options="optionsHGraph[lan.name]" data="dataHGraph[lan.name]"></div>
-                      </div>
-                    </div>
-                    <div ng-repeat-start="lann in lan.nodes" id="{{lann.name}}" class="level3 layerbox no-padding" style="display: none" ng-repeat-end>
-                      <div class="row tree-btn">
-                        <div class="col-xs-2 col-sm-2">
-                          <span class="tree-branch-name level3-off" ng-click="open(lann, 4)">
-                    <span class="tree-label"><small>{{lann.name}}</small></span>
-                          </span>
-                          <div ng-if="opened[lan.name]" class="float-right zoombtn">
-                            <button class="btn btn-success btn-minier float-right">
-                          <i class="ace-icon fa fa-search-plus" ng-click="click('zoomin', lann.name)"></i>
-                        </button>
-                            <span> &nbsp; </span>
-                            <button class="btn btn-success btn-minier float-right">
-                          <i class="ace-icon fa fa-search-minus" ng-click="click('zoomout', lann.name)"></i>
-                        </button>
-                          </div>
-                        </div>
-                        <div ng-if="opened[lan.name]" class="col-xs-10 col-sm-10">
-                          <nvd3 ng-if="showTypes[lann.name] === 'nvd3' " options="options[lann.name]" data="data[lann.name]"></nvd3>
-                          <div ng-if="showTypes[lann.name] === 'cr' " crchart options="optionsCR[lann.name]" data="dataCR[lann.name]" style="z-index: 100"></div>
-                          <div ng-if="showTypes[lann.name] === 'hgraph' " horizon-graph options="optionsHGraph[lann.name]" data="dataHGraph[lann.name]"></div>
-                          <div ng-if="showTypes[lann.name] === 'pchart' " kernel-pixel options="optionsDetail[lann.name]" data="dataDetail[lann.name]" style="z-index: 100"></div>
-                          <div ng-if="showTypes[lann.name] === 'topk' ">
-                            <small>{{dataTopK[lann.name].length + '/' + optionsTopK[lann.name].num}}</small>
-                            <div ng-repeat-start="dTopK in dataTopK[lann.name]" heatline data="dTopK" options="optionsTopK[lann.name]" style="z-index: 100" ng-repeat-end> </div>
-                            <div class="space-2"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-          </div>-->
-        </div>
+  <div class="layer-chart">
+    <div ng-repeat-start="la in tree" ng-if="(!la.parent && !opened[la.name]) || (la.parent && opened[la.parent.name] && !opened[la.name])" id="{{la.name}}" ng-repeat-end>
+      <nvd3 ng-if="showTypes[la.name] === 'nvd3' " options="options[la.name]" data="data[la.name]"></nvd3>
+      <div ng-if="showTypes[la.name] === 'cr' " crchart options="optionsCR[la.name]" data="dataCR[la.name]" style="z-index: 100"></div>
+      <div ng-if="showTypes[la.name] === 'pchart' " kernel-pixel options="optionsDetail[la.name]" data="dataDetail[la.name]" style="z-index: 100"></div>
+      <div ng-if="showTypes[la.name] === 'hgraph' " horizon-graph options="optionsHGraph[la.name]" data="dataHGraph[la.name]"></div>
+      <div ng-if="showTypes[la.name] === 'topk' ">
+        <div class="space-2"></div>
+        <div ng-repeat-start="dTopK in dataTopK[la.name]" heatline data="dTopK" options="optionsTopK[la.name]" style="z-index: 100" ng-repeat-end> </div>
+        <div class="space-2"></div>
       </div>
     </div>
-
-
   </div>
-
-
 </div>

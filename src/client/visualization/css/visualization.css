@@ -1,8 +1,47 @@
+body {
+  background: white;
+}
 .no-disp {
   display: none;
 }
 .no-padding {
   padding: 0 0 0 0;
+}
+.clickable {
+  cursor: pointer;
+}
+.layer-graph {
+  position: absolute;
+  left: 100px;
+  top: 0;
+  width: 300px;
+}
+.layer-chart {
+  position: absolute;
+  left: 400px;
+  top: 0;
+}
+.label-text {
+  position: absolute;
+  left: 100px;
+  top: 0;
+  width: 300px;
+  text-align: center;
+}
+.label-chart {
+  position: absolute;
+  left: 400px;
+  top: 0;
+}
+.timebox-chart {
+  position: absolute;
+  left: 400px;
+  top: 0;
+}
+.record-chart {
+  position: absolute;
+  left: 400px;
+  top: 0;
 }
 .collapse-animation {
   -webkit-transition-property: height;
@@ -87,9 +126,6 @@
 .float-right {
   float: right;
 }
-.clickable {
-  cursor: pointer;
-}
 .nv-boxplot-whisker,
 .nv-boxplot-tick {
   stroke-width: 2px;
@@ -100,14 +136,6 @@
 }
 .zoombtn {
   display: none;
-}
-.layer-graph {
-  position: relative;
-  float: left;
-}
-.layer-chart {
-  position: relative;
-  float: left;
 }
 .layer.data {
   fill: #37A058;

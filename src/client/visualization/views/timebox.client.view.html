@@ -1,44 +1,17 @@
-<div class="widget-box transparent" ng-controller="TimeBoxController">
-  <!--<div class="widget-header widget-header-small invisible">
-    <h6 class="widget-title lighter">Time Picker</h6>
-    <div class="widget-toolbar">
-      <a href="#" data-action="close">
-        <i class="ace-icon fa fa-times"></i>
-      </a>
+<div class="col-xs-12 col-sm-12">
+  <div class="timebox-chart">
+
+    <div style="position: absolute; left: -150px; top: 2px">
+      <span style="margin-right: 5px">Time Axis</span>
+      <button class="btn btn-success btn-minier float-right">
+        <i class="ace-icon fa fa-trash-o" ng-click="reset()"></i>
+      </button>
+      <button class="btn btn-success btn-minier float-right">
+        <i class="ace-icon fa fa-eye-slash" ng-click="clean()"></i>
+      </button>
     </div>
-  </div>-->
-
-  <div class="widget-body">
-    <div class="space-4"></div>
-
-    <div class="row">
-
-      <div ng-show="show" class="col-xs-12 col-sm-12">
-        <div class="row">
-          <div class="col-xs-1 col-sm-1"></div>
-          <div class="col-xs-11 col-sm-11">
-            <div class="row">
-              <div id="timebox-title" class="col-xs-2 col-sm-2">
-                <div class="space-4"></div>
-                <div class="float-right">
-                  <span style="margin-right: 5px">Time Axis</span>
-                  <button ng-show="btnShow" class="btn btn-success btn-minier float-right">
-                    <i class="ace-icon fa fa-trash-o" ng-click="reset()"></i>
-                  </button>
-                  <button ng-show="btnShow" class="btn btn-success btn-minier float-right">
-                    <i class="ace-icon fa fa-eye-slash" ng-click="clean()"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="col-xs-10 col-sm-10">
-                <svg id="timebox"></svg>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
+    <svg id="timebox"></svg>
 
   </div>
+
 </div>

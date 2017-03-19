@@ -24,6 +24,14 @@ namespace application {
       let this_ = this;
       this_._init();
 
+      function updateContainerHeight() {
+        setTimeout(function () {
+          $('#widget-container-recordinfo').height($('.record-chart').height());
+          updateContainerHeight();
+        }, 3000);
+      }
+      updateContainerHeight();
+
       $scope.click = function (type, ctype) {
         if (type === 'zoomin') {
           let tmp = $scope.options[ctype].chart.height + 100;
@@ -161,29 +169,6 @@ namespace application {
 
     private _init() {
       let this_ = this;
-      this_.$timeout(function () {
-        $('#widget-container-recordinfo .scrollable').each(function () {
-          let $this = $(this);
-          $(this).ace_scroll({
-            size: $this.attr('data-size') || 100,
-          });
-        });
-      }, 100);
-
-      $('#widget-container-recordinfo')
-        .mouseenter(function () {
-          $('#widget-container-recordinfo .widget-header').removeClass('invisible');
-          this_.$scope.$apply(function () {
-            this_.$scope.btnShow = true;
-          });
-        })
-        .mouseleave(function () {
-          $('#widget-container-recordinfo .widget-header').addClass('invisible');
-          this_.$scope.$apply(function () {
-            this_.$scope.btnShow = false;
-          });
-        });
-
     }
 
     private _process(type, ...rest: any[]) {

@@ -1,91 +1,39 @@
-<div class="widget-box transparent" ng-controller="RecordController">
+<div class="col-xs-12 col-sm-12">
 
-  <!--<div class="widget-header widget-header-small invisible">
-    <h6 class="widget-title lighter">Record Info</h6>
-    <div class="widget-toolbar">
-      <a href="#" data-action="close">
-        <i class="ace-icon fa fa-times"></i>
-      </a>
+  <div class="record-chart">
+    <div ng-show="show.lr" style="margin-top: 5px; margin-bottom: 10px">
+      <svg id="lr-svg"></svg>
     </div>
-  </div>-->
 
-  <div class="widget-body" data-size="600">
-    <!--<div class="widget-main padding-0 scrollable">-->
-    <div class="space-2"></div>
-
-    <!--<div class="row scrollable" data-size="200">-->
-    <div class="row">
-      <div class="col-xs-12 col-sm-12">
-
-        <div ng-show="show.lr" class="row" style="margin-top: -12px; margin-bottom: 20px">
-          <div class="col-xs-1 col-sm-1"></div>
-          <div class="col-xs-11 col-sm-11">
-            <div class="row">
-              <div class="col-xs-2 col-sm-2">
-                <!--<div class="float-right"> Learning Rate </div>-->
-                <div class="float-right"> </div>
-              </div>
-              <div class="col-xs-10 col-sm-10">
-                <svg id="lr-svg"></svg>
-                <!--<nvd3 options="options.lr" data="data.lr"></nvd3>-->
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div ng-show="show.error" class="row">
-          <div class="col-xs-1 col-sm-1"></div>
-          <div class="col-xs-11 col-sm-11">
-            <div class="row">
-              <div class="col-xs-2 col-sm-2">
-                <div class="float-right"> Error </div>
-                <div class="space-2" style="clear: both"></div>
-
-                <div ng-show="btnShow">
-                  <button class="btn btn-success btn-minier float-right">
-                  <i class="ace-icon fa fa-search-plus" ng-click="click('zoomin', 'error')"></i>
-                  </button>
-                  <span> &nbsp; </span>
-                  <button class="btn btn-success btn-minier float-right">
-                    <i class="ace-icon fa fa-search-minus" ng-click="click('zoomout', 'error')"></i>
-                  </button>
-                </div>
-
-              </div>
-              <div class="col-xs-10 col-sm-10">
-                <nvd3 options="options.error" data="data.error"></nvd3>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div ng-show="show.loss" class="row">
-          <div class="col-xs-1 col-sm-1"></div>
-          <div class="col-xs-11 col-sm-11">
-            <div class="row">
-              <div class="col-xs-2 col-sm-2">
-                <div class="float-right"> Loss </div>
-                <div class="space-2" style="clear: both"></div>
-
-                <div ng-show="btnShow">
-                  <button class="btn btn-success btn-minier float-right">
-                  <i class="ace-icon fa fa-search-plus" ng-click="click('zoomin', 'loss')"></i>
-                  </button>
-                  <span> &nbsp; </span>
-                  <button class="btn btn-success btn-minier float-right">
-                    <i class="ace-icon fa fa-search-minus" ng-click="click('zoomout', 'loss')"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="col-xs-10 col-sm-10">
-                <nvd3 options="options.loss" data="data.loss"></nvd3>
-              </div>
-            </div>
-          </div>
-        </div>
-
+    <div ng-show="show.error">
+      <span style="position: absolute; left: -135px">Error </span>
+      <div style="position: absolute; left: -90px">
+        <button class="btn btn-success btn-minier float-right">
+          <i class="ace-icon fa fa-search-plus" ng-click="click('zoomin', 'error')"></i>
+        </button>
+        <span> &nbsp; </span>
+        <button class="btn btn-success btn-minier float-right">
+          <i class="ace-icon fa fa-search-minus" ng-click="click('zoomout', 'error')"></i>
+        </button>
       </div>
+
+      <nvd3 options="options.error" data="data.error"></nvd3>
+    </div>
+
+    <div ng-show="show.loss">
+      <span style="position: absolute; left: -135px">Loss </span>
+      <div style="position: absolute; left: -90px">
+        <button class="btn btn-success btn-minier float-right">
+          <i class="ace-icon fa fa-search-plus" ng-click="click('zoomin', 'loss')"></i>
+        </button>
+        <span> &nbsp; </span>
+        <button class="btn btn-success btn-minier float-right">
+          <i class="ace-icon fa fa-search-minus" ng-click="click('zoomout', 'loss')"></i>
+        </button>
+      </div>
+      <nvd3 options="options.loss" data="data.loss"></nvd3>
     </div>
 
   </div>
+
 </div>

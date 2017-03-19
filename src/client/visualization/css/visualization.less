@@ -1,3 +1,8 @@
+// ---------- begin of basic utils  --------- //
+body {
+  background: white;
+}
+
 .no-disp {
   display: none;
 }
@@ -5,6 +10,66 @@
 .no-padding {
   padding: 0 0 0 0
 }
+
+.clickable {
+  cursor: pointer;
+}
+// ---------- end of basic utils --------- //
+
+// global variable
+@left-offset: 100px;
+@left-width: 300px;
+
+// ---------- begin of layer.client.view.html  --------- //
+.layer-graph {
+  position: absolute;
+  left: @left-offset;
+  top: 0;
+  width: @left-width;
+}
+
+.layer-chart {
+  position: absolute;
+  left: @left-offset + @left-width;
+  top: 0;
+}
+// ---------- end of layer.client.view.html  --------- //
+
+// ---------- begin of label.client.view.html  --------- //
+.label-text {
+  position: absolute;
+  left: @left-offset;
+  top: 0;
+  width: @left-width;
+  text-align: center;
+}
+
+.label-chart {
+  position: absolute;
+  left: @left-offset + @left-width;
+  top: 0;
+}
+// ---------- end of label.client.view.html  --------- //
+
+// ---------- begin of timebox.client.view.html  --------- //
+.timebox-chart {
+  position: absolute;
+  left: @left-offset + @left-width;
+  top: 0;
+}
+// ---------- end of timebox.client.view.html  --------- //
+
+// ---------- begin of record.client.view.html  --------- //
+.record-chart {
+  position: absolute;
+  left: @left-offset + @left-width;
+  top: 0;
+}
+// ---------- end of record.client.view.html  --------- //
+
+
+
+
 
 .collapse-animation {
   transition-property: height;
@@ -108,9 +173,7 @@
   float: right;
 }
 
-.clickable {
-  cursor: pointer;
-}
+
 
 
 .nv-boxplot-whisker, .nv-boxplot-tick {
@@ -127,17 +190,7 @@
 }
 
 
-.layer-graph {
-  position: relative;
-  float: left;
-  // display: inline-block;
-}
 
-.layer-chart {
-  position: relative;
-  float: left;
-  // display: inline-block;
-}
 
 
 // layer graph
