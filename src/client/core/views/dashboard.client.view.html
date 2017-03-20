@@ -32,7 +32,7 @@
   <option ng-repeat-start="d in imgDataset" value="{{d}}" ng-repeat-end>
     {{d}}
   </option>
-</select> Model:
+</select> CNN Model:
   <select class="form-control" ng-model="selected.model">
   <option ng-repeat-start="d in models" value="{{d.value}}" ng-repeat-end>
     {{d.label}}
@@ -45,21 +45,6 @@
 <div class="space-6"></div>
 
 <ul class="nav nav-list">
-  <!--<li ng-class="{'active': actives.info}">
-    <a ui-sref="home.info">
-      <i class="menu-icon fa fa-info"></i>
-      <span class="menu-text"> Info </span>
-    </a>
-    <b class="arrow"></b>
-  </li>-->
-
-  <li ng-class="{'active': actives.gallery}">
-    <a ui-sref="home.gallery">
-      <i class="menu-icon fa fa-picture-o"></i>
-      <span class="menu-text"> Gallery </span>
-    </a>
-    <b class="arrow"></b>
-  </li>
 
   <li ng-class="{'active': actives.visualization}">
     <a ui-sref="home.visualization" class="dropdown-toggle">
@@ -74,7 +59,7 @@
 
       <div class="space-6"></div>
 
-      <div style="margin-left: 5px">
+      <!--<div style="margin-left: 5px">
         <div class="row">
           <div class="col-xs-6">
             <label class="control-label bolder blue">Time Slider</label>
@@ -86,45 +71,44 @@
             </label>
           </div>
         </div>
-      </div>
+      </div>-->
 
       <div style="margin-left: 5px">
         <div class="row">
-          <div class="col-xs-6">
-            <label class="control-label bolder blue">Record Info</label>
+          <div class="col-xs-8">
+            <label class="control-label bolder blue">Model Info</label>
           </div>
-          <div class="col-xs-6">
+          <div class="col-xs-4" style="margin-left: -15px">
             <label>
               <input ng-model="config.record.show" name="switch-field-1" class="ace ace-switch" type="checkbox" />
               <span class="lbl">&nbsp;</span>
             </label>
           </div>
         </div>
-        <div ng-repeat-start="type in recordTypeList" class="checkbox" ng-repeat-end="">
+        <!--<div ng-repeat-start="type in recordTypeList" class="checkbox" ng-repeat-end="">
           <label>
             <input ng-model="config.record[type.value]" name="form-field-checkbox" type="checkbox" class="ace" />
             <span class="lbl"> {{type.label}}</span>
           </label>
-        </div>
+        </div>-->
       </div>
       <!-- end of record panel -->
       <!--<hr/>-->
 
       <div style="margin-left: 5px">
         <div class="row">
-          <div class="col-xs-6">
-            <label class="control-label bolder blue">Label Info
+          <div class="col-xs-8">
+            <label class="control-label bolder blue">Validation View
               <i id="label-data-loading" class="ace-icon fa fa-spinner fa-spin orange bigger-125 invisible"></i>
             </label>
           </div>
-          <div class="col-xs-6">
+          <div class="col-xs-4" style="margin-left: -15px">
             <label>
               <input ng-model="config.label.show" name="switch-field-1" class="ace ace-switch" type="checkbox" />
               <span class="lbl">&nbsp;</span>
             </label>
           </div>
         </div>
-        <div class="space-4"></div>
         <!--<div class="ace-spinner middle" style="width: 100%">
           <div class="col-xs-4">
             <label style="margin-top: 10px">abnormal:</label>
@@ -144,7 +128,6 @@
           </div>
         </div>-->
 
-        <div class="space-4"></div>
 
         <div style="margin-left: 15px">
           <label>
@@ -194,12 +177,12 @@
 
       <div style="margin-left: 5px">
         <div class="row">
-          <div class="col-xs-6">
-            <label class="control-label bolder blue">Layer Info
+          <div class="col-xs-8">
+            <label class="control-label bolder blue">Layer View
               <i id="layer-data-loading" class="ace-icon fa fa-spinner fa-spin orange bigger-125 invisible"></i>
             </label>
           </div>
-          <div class="col-xs-6">
+          <div class="col-xs-4" style="margin-left: -15px">
             <label>
               <input ng-model="config.layer.show" name="switch-field-1" class="ace ace-switch" type="checkbox" />
               <span class="lbl">&nbsp;</span>
@@ -207,10 +190,9 @@
           </div>
         </div>
 
-        <div class="space-4"></div>
 
-        <div class="control-group">
-          Chart Type:
+        <div class="control-group" style="margin-left: 15px">
+          <label>Chart Type:</label>
           <div ng-repeat-start="type in layerChartType" class="radio" ng-repeat-end>
             <label>
               <input ng-model="config.layer.chartType" name="form-field-radio0" type="radio" class="ace" value="{{type.value}}"/>
@@ -309,12 +291,27 @@
       <div class="space-4"></div>
 
       <div class="control-group" style="margin-left: 5px">
-        Kernel Scale:
+        Filter Scale:
         <div ng-repeat-start="type in layerKernelScale" class="radio" ng-repeat-end>
           <label>
             <input ng-model="config.layer.kernelScale" name="form-field-radio5" type="radio" class="ace" value="{{type.value}}"/>
             <span class="lbl"> {{type.label}}</span>
           </label>
+        </div>
+      </div>
+
+      <div style="margin-left: 5px">
+        <div class="row">
+          <div class="col-xs-8">
+            <label class="control-label bolder blue">Correlation View</label>
+            <i id="correlation-data-loading" class="ace-icon fa fa-spinner fa-spin orange bigger-125 invisible"></i>
+          </div>
+          <div class="col-xs-4" style="margin-left: -15px">
+            <label>
+            <input ng-model="config.correlation.show" name="switch-field-1" class="ace ace-switch" type="checkbox" />
+            <span class="lbl">&nbsp;</span>
+          </label>
+          </div>
         </div>
       </div>
 

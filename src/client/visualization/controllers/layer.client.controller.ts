@@ -50,6 +50,15 @@ namespace application {
 
       this_._init();
 
+      function updateContainerHeight() {
+        setTimeout(function () {
+          let ht = Math.max($('.layer-chart').height(), $('.layer-graph').height());
+          $('#widget-container-layerinfo').height(ht);
+          updateContainerHeight();
+        }, 3000);
+      }
+      updateContainerHeight();
+
       $scope.click = function (type, name) {
         if ($scope.showTypes[name] === 'nvd3') {
           if (type === 'zoomin') {

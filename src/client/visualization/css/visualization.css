@@ -43,6 +43,11 @@ body {
   left: 400px;
   top: 0;
 }
+.correlation-chart {
+  position: absolute;
+  left: 400px;
+  top: 0;
+}
 .collapse-animation {
   -webkit-transition-property: height;
   transition-property: height;

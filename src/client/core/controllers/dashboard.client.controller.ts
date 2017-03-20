@@ -50,6 +50,10 @@ namespace application {
       this._setDBPanel();
       this._setVisPanel();
 
+      $scope.$watch('config.correlation.show', (n: any, o) => {
+        Pip.emitCorrelationConfigChanged($scope.config.correlation);
+      });
+
       $scope.$watch('config.record', (n: any, o) => {
         Pip.emitRecordConfigChanged(n);
       }, true);

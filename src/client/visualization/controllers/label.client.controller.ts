@@ -219,6 +219,7 @@ namespace application {
         // console.log($scope.dataCls, $scope.selectedCls, iterSet);
         console.time('startA');
         let lidtoName = {};
+        $('#correlation-data-loading').removeClass('invisible');
         $q.all(allQuery).then((data: any) => {
           console.timeEnd('startA');
           for (let i = 0; i < $scope.selectedCls.length; i += 1) {
@@ -256,6 +257,7 @@ namespace application {
               }
             }
           });
+          $('#correlation-data-loading').addClass('invisible');
         });
 
       }

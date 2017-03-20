@@ -42,6 +42,10 @@ namespace application {
         $scope.config.timebox = conf;
       });
 
+      Pip.onCorrelationConfigChanged($scope, (conf: any) => {
+        $scope.config.correlation = conf;
+      });
+
       $(document).on('shown.ace.widget hidden.ace.widget closed.ace.widget', '.widget-box', function (event) {
         let widgets = ace.data.get('demo', 'widget-state', true);
         if (widgets == null) { widgets = {}; };

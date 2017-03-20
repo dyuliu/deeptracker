@@ -22,6 +22,10 @@ namespace application {
         $scope.dataMatrix = msg.data;
         $scope.optionsMatrix = msg.options;
       });
+
+      // Pip.onCorrelationConfigChanged($scope, msg => {
+      //   $
+      // });
     }
 
   }

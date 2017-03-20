@@ -22,11 +22,10 @@
       <div id="widget-container-layerinfo" ng-controller="LayerController" ng-include="'src/client/visualization/views/layer.client.view.html'"></div>
     </div>
 
-    <!--<div class="row">
-      <div id="widget-container-correlation" class="col-xs-12 col-sm-12 widget-container-col"
-        ng-include="'src/client/visualization/views/correlation.client.view.html'">
+    <div ng-show="config.correlation.show" class="row" style="margin-top: 10px">
+      <div id="widget-container-correlation" ng-controller="CorrelationController" ng-include="'src/client/visualization/views/correlation.client.view.html'">
       </div>
-    </div>-->
+    </div>
 
 
 

@@ -250,6 +250,9 @@ namespace application {
           sameScale: false,
           level: 0,
           selectedRatio: [9, 18, 27, 36]
+        },
+        correlation: {
+          show: false
         }
       };
 

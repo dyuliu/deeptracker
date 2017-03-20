@@ -10,6 +10,7 @@ namespace application {
     emitLabelConfigChanged(msg: any): void;
     emitLayerConfigChanged(msg: any): void;
     emitTimeboxConfigChanged(msg: any): void;
+    emitCorrelationConfigChanged(msg: any): void;
     emitShowModal(msg: any): void;
     emitSyncHorizonScale(msg: any): void;
     emitTimeMouseOver(msg: any): void;
@@ -28,6 +29,7 @@ namespace application {
     onLabelConfigChanged(scope: ng.IScope, cb: (msg: any) => void): void;
     onLayerConfigChanged(scope: ng.IScope, cb: (msg: any) => void): void;
     onTimeboxConfigChanged(scope: ng.IScope, cb: (msg: any) => void): void;
+    onCorrelationConfigChanged(scope: ng.IScope, cb: (msg: any) => void): void;
     onShowModal(scope: ng.IScope, cb: (msg: any) => void): void;
     onSyncHorizonScale(scope: ng.IScope, cb: (msg: any) => void): void;
     onTimeMouseOver(scope: ng.IScope, cb: (msg: any) => void): void;
@@ -85,6 +87,7 @@ namespace application {
       this.addEvent('labelConfigChanged');
       this.addEvent('layerConfigChanged');
       this.addEvent('timeboxConfigChanged');
+      this.addEvent('correlationConfigChanged');
       this.addEvent('showModal');
       this.addEvent('syncHorizonScale');
       this.addEvent('timeMouseOver');
