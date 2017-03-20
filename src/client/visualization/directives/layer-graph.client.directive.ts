@@ -175,7 +175,7 @@ namespace application {
       }
       let barData = this_.barDataConstruction(this_.data, location);
       let stretchData = this_.stretchData(this_.data);
-      console.log(barData);
+      let levelLinkData = this_.levelLinkDataConstruction(this_.data);
       let bars = this_.svg.append('g')
         .attr('transform', 'translate(' + (this_.options.width / 3) + ', 0)');
 
@@ -208,6 +208,12 @@ namespace application {
         .on('click', clickHandler);
 
       let barEdges = this_.svg.append('g')
+        .attr('transform', 'translate(' + (this_.options.width / 3) + ', 0)');
+
+      let barEdgeNodes = this_.svg.append('g')
+        .attr('transform', 'translate(' + (this_.options.width / 3) + ', 0)');
+
+      let levelNodeEdges = this_.svg.append('g')
         .attr('transform', 'translate(' + (this_.options.width / 3) + ', 0)');
 
       let lineCurve = d4.line()
@@ -254,7 +260,45 @@ namespace application {
             if (!this_.options.opened[d.name]) { return 1; }
             return 0;
           });
-      }, 1000);
+
+        barEdgeNodes.selectAll('.bar-edge-node')
+          .data(barData)
+          .enter().append('circle')
+          .attr('class', d => 'bar-edge-node ' + d.level + ' bar-edge-node-' + d.name)
+          .attr('cx', 2 * this_.options.width / 3 - 12)
+          .attr('cy', (d: any) => {
+            let ed;
+            let e = $('#' + d.name);
+            if (e.position()) {
+              return $('#' + d.name).position().top;
+            }
+          })
+          .attr('r', 2)
+          .style('fill', '#2089ed')
+          .style('opacity', d => {
+            let e = $('#' + d.name);
+            if (e.position()) {
+              return 1;
+            }
+            return 0;
+          });
+
+        levelNodeEdges.selectAll('.level-node-edge')
+          .data(levelLinkData)
+          .enter().append('line')
+          .attr('class', 'level-node-edge')
+          .attr('x1', 2 * this_.options.width / 3 - 12)
+          .attr('y1', (d: any) => {
+            return $('.bar-edge-node-' + d[0].name).attr('cy');
+          })
+          .attr('x2', 2 * this_.options.width / 3 - 12)
+          .attr('y2', (d: any) => {
+            return $('.bar-edge-node-' + d[1].name).attr('cy');
+          })
+          .style('stroke', '#2089ed')
+          .style('stroke-width', 1)
+          .style('opacity', 0.6);
+      }, 2000);
 
       function clickHandler(d) {
         let open = !this_.options.opened[d.name];
@@ -322,7 +366,6 @@ namespace application {
                 let ml = [st[0] + 1 / 3 * (ed[0] - st[0]), st[1]],
                   mr = [st[0] + 2 / 3 * (ed[0] - st[0]), ed[1]];
                 pd.push(st, ml, mr, ed);
-                console.log(pathStr + ' ' + lineCurve(pd));
                 return pathStr + ' ' + lineCurve(pd);
               } else {
                 let ml = [st[0] + 1 / 3 * (ed[0] - st[0]), st[1]],
@@ -341,6 +384,61 @@ namespace application {
               }
               if (!this_.options.opened[o.name]) { return 1; }
               return 0;
+            });
+
+          barEdgeNodes.selectAll('.bar-edge-node')
+            .attr('cx', 2 * this_.options.width / 3 - 12)
+            .attr('cy', (d: any) => {
+              let ed;
+              let e = $('#' + d.name);
+              if (e.position()) {
+                return $('#' + d.name).position().top;
+              }
+            })
+            .attr('r', 2)
+            .style('fill', '#2089ed')
+            .style('opacity', (d: any) => {
+              let e = $('#' + d.name);
+              if (e.position()) {
+                return 1;
+              }
+              return 0;
+            });
+
+          console.log('--------------*************-----------------');
+          levelNodeEdges.selectAll('.level-node-edge')
+            .attr('x1', (d: any) => {
+              let k = 2 * this_.options.width / 3;
+              if (d[2] === -1) {
+                k -= 12;
+              } else {
+                k -= 20;
+              }
+              return k;
+            })
+            .attr('y1', (d: any) => {
+              return $('.bar-edge-node-' + d[0].name).attr('cy');
+            })
+            .attr('x2', (d: any) => {
+              let k = 2 * this_.options.width / 3;
+              if (d[2] === -1) {
+                k -= 12;
+              } else {
+                k -= 20;
+              }
+              return k;
+            })
+            .attr('y2', (d: any) => {
+              return $('.bar-edge-node-' + d[1].name).attr('cy');
+            })
+            .style('stroke', '#2089ed')
+            .style('stroke-width', 1)
+            .style('opacity', d => {
+              console.log(d[0].name, d[1].name, +$('.bar-edge-node-' + d[0].name).css('opacity'),
+                +$('.bar-edge-node-' + d[1].name).css('opacity'));
+              let m = Math.min(+$('.bar-edge-node-' + d[0].name).css('opacity'),
+                +$('.bar-edge-node-' + d[1].name).css('opacity'));
+              return m;
             });
         }, 500);
       }
@@ -375,6 +473,25 @@ namespace application {
             }
             let lr: any = _.last(r);
             if (dd.nodes.length === 4) { lr.left = true; }
+          }
+        }
+      }
+      return r;
+    }
+
+    private levelLinkDataConstruction(data) {
+      let this_ = this;
+      let r = [];
+      for (let d of data) {
+        if (d.nodes) {
+          let la: any = _.last(d.nodes);
+          let laa: any = _.last(la.nodes);
+          r.push([d.nodes[0], la, -1]);
+          r.push([d.nodes[0], laa, -1]);
+          r.push([d.nodes[0].nodes[0], la, -1]);
+          r.push([d.nodes[0].nodes[0], laa, -1]);
+          for (let dd of d.nodes) {
+            r.push([dd.nodes[0], _.last(dd.nodes), -2]);
           }
         }
       }
