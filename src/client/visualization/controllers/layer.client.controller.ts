@@ -251,19 +251,19 @@ namespace application {
         $scope.conf = conf;
         $scope.dataTree = tree;
         $scope.optionsTree = {
-          width: 300,
-          height: 2000,
+          width: 200,
+          height: 690,
           layers: layers,
           opened: $scope.opened,
           node: {
-            height: 7,
-            width: 15
+            height: 5,
+            width: 12
           },
           space: 4,
           margin: {
             top: 20,
-            right: 10,
-            bottom: 20,
+            right: 2,
+            bottom: 8,
             left: 10
           }
         };
@@ -540,6 +540,10 @@ namespace application {
           );
         }, 1000);
       }
+
+      Pip.onLayerHeight($scope, msg => {
+        console.log('layer', msg);
+      });
 
       Pip.onLayerOpen($scope, msg => {
         $scope.$apply();

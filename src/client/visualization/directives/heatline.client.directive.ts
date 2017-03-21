@@ -225,6 +225,7 @@ namespace application {
         };
         if (!_.isUndefined(scope.data)) { start(); };
         scope.$watch('data', (n, o) => { if (n !== o && n) { start(); } }, false);
+        scope.$watch('options.height', (n, o) => { if (n !== o && n) { start(); } }, false);
 
       };
     }

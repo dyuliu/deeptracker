@@ -21,6 +21,8 @@ namespace application {
     emitLayerOpen(msg: any): void;
     emitFlip(msg: any): void;
     emitCorrelationReady(msg: any): void;
+    emitClsWidth(msg: any): void;
+    emitLayerHeight(msg: any): void;
     onUrlChanged(scope: ng.IScope, cb: (msg: any) => void): void;
     onVlDiv(scope: ng.IScope, cb: (msg: any) => void): void;
     onModelChanged(scope: ng.IScope, cb: (msg: any) => void): void;
@@ -40,6 +42,8 @@ namespace application {
     onLayerOpen(scope: ng.IScope, cb: (msg: any) => void): void;
     onFlip(scope: ng.IScope, cb: (msg: any) => void): void;
     onCorrelationReady(scope: ng.IScope, cb: (msg: any) => void): void;
+    onClsWidth(scope: ng.IScope, cb: (msg: any) => void): void;
+    onLayerHeight(scope: ng.IScope, cb: (msg: any) => void): void;
   }
 
   export class Pip {
@@ -98,6 +102,8 @@ namespace application {
       this.addEvent('layerOpen');
       this.addEvent('flip');
       this.addEvent('correlationReady');
+      this.addEvent('clsWidth');
+      this.addEvent('layerHeight');
     }
   }
 

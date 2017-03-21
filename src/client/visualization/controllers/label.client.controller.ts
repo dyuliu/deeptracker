@@ -250,7 +250,7 @@ namespace application {
               h: 3,
               w: 6,
               margin: {
-                top: 12,
+                top: 1,
                 right: 0,
                 bottom: 0,
                 left: 0
@@ -261,6 +261,14 @@ namespace application {
         });
 
       }
+
+      Pip.onClsWidth($scope, msg => {
+        for (let i = 0; i < $scope.selectedCls.length; i += 1) {
+          $scope.optionsCls[$scope.selectedCls[i].name].height = msg[i] / 2;
+          $('#label-edgebar-' + $scope.selectedCls[i].name).css('height', msg[i] / 2 - 1);
+        }
+        // console.log($scope.selectedCls, msg);
+      });
 
       Pip.onShowTopKernel($scope, (msg => {
         let parser = 'json', type = 'i_cosine', db = Global.getSelectedDB();
@@ -459,7 +467,8 @@ namespace application {
         case 'heatline':
           options = {
             width: this_.Global.getData('iter').num + 30,
-            height: height ? height : 16,
+            // height: height ? height : 16,
+            height: 8,
             cellWidth: 1,
             color: d4.scaleSequential(d4.interpolateRdYlGn),
             margin: {

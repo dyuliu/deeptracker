@@ -2,7 +2,7 @@
   <div class="layer-graph" layer-graph options="optionsTree" data="dataTree"></div>
 
   <div class="layer-chart">
-    <div ng-repeat-start="la in tree" ng-if="(!la.parent && !opened[la.name]) || (la.parent && opened[la.parent.name] && !opened[la.name])" id="{{la.name}}" ng-repeat-end>
+    <div ng-repeat-start="la in tree" ng-if="(!la.parent && !opened[la.name]) || (la.parent && opened[la.parent.name] && !opened[la.name])" id="{{la.name}}" style="position: relative" ng-repeat-end>
       <nvd3 ng-if="showTypes[la.name] === 'nvd3' " options="options[la.name]" data="data[la.name]"></nvd3>
       <div ng-if="showTypes[la.name] === 'cr' " crchart options="optionsCR[la.name]" data="dataCR[la.name]" style="z-index: 100"></div>
       <div ng-if="showTypes[la.name] === 'pchart' " kernel-pixel options="optionsDetail[la.name]" data="dataDetail[la.name]" style="z-index: 100"></div>
@@ -12,6 +12,8 @@
         <div ng-repeat-start="dTopK in dataTopK[la.name]" heatline data="dTopK" options="optionsTopK[la.name]" style="z-index: 100" ng-repeat-end> </div>
         <div class="space-2"></div>
       </div>
+      <!--<div style="z-index: 200; position: absolute; right: 3px; height: 2px; width: 12px; background: #2089ed"></div>-->
+      <div style="z-index: 200; position: absolute; top: 1px; right: 5px; height: 35px; width: 8px; background: #2089ed; box-shadow: 4px 0px 1px #888888;"></div>
     </div>
   </div>
 </div>

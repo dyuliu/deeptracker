@@ -77,8 +77,8 @@ namespace application {
 
         focus.append('text')
           .attr('x', 9)
-          .attr('dy', '1em')
-          .attr('font-size', 12);
+          .attr('dy', 0)
+          .attr('font-size', 10);
 
         rect
           .on('mouseover', mouseOverHandler)

@@ -17,20 +17,20 @@ body {
 // ---------- end of basic utils --------- //
 
 // global variable
-@left-offset: 100px;
-@left-width: 300px;
+@left-offset: -6px;
+@left-width: 200px;
 
 // ---------- begin of layer.client.view.html  --------- //
 .layer-graph {
   position: absolute;
-  left: @left-offset;
+  left: 3px + @left-offset;
   top: 0;
   width: @left-width;
 }
 
 .layer-chart {
   position: absolute;
-  left: @left-offset + @left-width;
+  left: 3px + @left-offset + @left-width;
   top: 0;
 }
 // ---------- end of layer.client.view.html  --------- //
@@ -70,7 +70,8 @@ body {
 // ---------- begin of correlation.client.view.html  --------- //
 .correlation-chart {
   position: absolute;
-  left: @left-offset + @left-width;
+  left: 0;
+  // left: @left-offset + @left-width;
   top: 0;
 }
 // ---------- end of correlation.client.view.html  --------- //

@@ -12,40 +12,40 @@ body {
 }
 .layer-graph {
   position: absolute;
-  left: 100px;
+  left: -3px;
   top: 0;
-  width: 300px;
+  width: 200px;
 }
 .layer-chart {
   position: absolute;
-  left: 400px;
+  left: 197px;
   top: 0;
 }
 .label-text {
   position: absolute;
-  left: 100px;
+  left: -6px;
   top: 0;
-  width: 300px;
+  width: 200px;
   text-align: center;
 }
 .label-chart {
   position: absolute;
-  left: 400px;
+  left: 194px;
   top: 0;
 }
 .timebox-chart {
   position: absolute;
-  left: 400px;
+  left: 194px;
   top: 0;
 }
 .record-chart {
   position: absolute;
-  left: 400px;
+  left: 194px;
   top: 0;
 }
 .correlation-chart {
   position: absolute;
-  left: 400px;
+  left: 0;
   top: 0;
 }
 .collapse-animation {

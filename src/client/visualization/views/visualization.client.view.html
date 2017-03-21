@@ -1,32 +1,28 @@
 <div class="row">
   <div id="main-widget-container" class="col-xs-12 col-sm-12 invisible">
 
-    <div class="vl-div vl-div-global" ng-click="click()"></div>
-    <div id="vl-div-container" style="z-index: 99; width: 100%; height: 100%"></div>
-    <!--<div ng-show="vlDiv" class="vl-div vl-div-current" style="z-index: 100" ng-click="click()"></div>-->
-
-    <div ng-show="config.timebox.show" class="row" style="height: 30px">
-      <div id="widget-container-timebox" ng-controller="TimeBoxController" ng-include="'src/client/visualization/views/timebox.client.view.html'"></div>
-    </div>
-
-    <div ng-show="config.record.show" class="row">
-      <div id="widget-container-recordinfo" ng-controller="RecordController" ng-include="'src/client/visualization/views/record.client.view.html'"></div>
-    </div>
-
-    <div ng-show="config.label.show" class="row" style="margin-top: 10px">
-      <div id="widget-container-labelinfo" ng-controller="LabelController" ng-include="'src/client/visualization/views/label.client.view.html'">
+    <div class="face-time">
+      <div class="row" style="height: 30px">
+        <div id="widget-container-timebox" ng-controller="TimeBoxController" ng-include="'src/client/visualization/views/timebox.client.view.html'"></div>
       </div>
     </div>
-
-    <div ng-show="config.layer.show" class="row" style="margin-top: 10px">
-      <div id="widget-container-layerinfo" ng-controller="LayerController" ng-include="'src/client/visualization/views/layer.client.view.html'"></div>
-    </div>
-
-    <div ng-show="config.correlation.show" class="row" style="margin-top: 10px">
-      <div id="widget-container-correlation" ng-controller="CorrelationController" ng-include="'src/client/visualization/views/correlation.client.view.html'">
+    <div class="face face-front style-3">
+      <div ng-show="config.layer.show" class="row">
+        <div id="widget-container-layerinfo" ng-controller="LayerController" ng-include="'src/client/visualization/views/layer.client.view.html'"></div>
       </div>
     </div>
-
+    <div class="face face-right style-8">
+      <div ng-show="config.correlation.show" class="row">
+        <div id="widget-container-correlation" ng-controller="CorrelationController" ng-include="'src/client/visualization/views/correlation.client.view.html'">
+        </div>
+      </div>
+    </div>
+    <div class="face face-top style-8">
+      <div ng-show="config.label.show" class="row" style="margin-top: 5px">
+        <div id="widget-container-labelinfo" ng-controller="LabelController" ng-include="'src/client/visualization/views/label.client.view.html'">
+        </div>
+      </div>
+    </div>
 
 
   </div>

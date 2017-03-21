@@ -241,7 +241,7 @@ namespace application {
             let ed;
             let e = $('#' + d.name);
             if (e.position()) {
-              ed = [2 * this_.options.width / 3, $('#' + d.name).position().top];
+              ed = [2 * this_.options.width / 3 - 12, $('#' + d.name).position().top];
             } else {
               ed = st;
             }
@@ -349,7 +349,7 @@ namespace application {
               let ed;
               let e = $('#' + o.name);
               if (e.position()) {
-                ed = [2 * this_.options.width / 3, $('#' + o.name).position().top];
+                ed = [2 * this_.options.width / 3 - 12, $('#' + o.name).position().top];
               } else {
                 ed = st;
               }
@@ -405,7 +405,6 @@ namespace application {
               return 0;
             });
 
-          console.log('--------------*************-----------------');
           levelNodeEdges.selectAll('.level-node-edge')
             .attr('x1', (d: any) => {
               let k = 2 * this_.options.width / 3;
@@ -434,8 +433,6 @@ namespace application {
             .style('stroke', '#2089ed')
             .style('stroke-width', 1)
             .style('opacity', d => {
-              console.log(d[0].name, d[1].name, +$('.bar-edge-node-' + d[0].name).css('opacity'),
-                +$('.bar-edge-node-' + d[1].name).css('opacity'));
               let m = Math.min(+$('.bar-edge-node-' + d[0].name).css('opacity'),
                 +$('.bar-edge-node-' + d[1].name).css('opacity'));
               return m;

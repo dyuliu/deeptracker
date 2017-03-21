@@ -184,44 +184,53 @@ namespace application {
       countH = 0;
       countW = 0;
       let wPosition = [];
+      let colWidths = [];
       // draw col vl line
       for (let j = 0; j < this_.options.classNum; j += 1) {
         wPosition.push(countW);
         let d = this_.options.rec[j].size;
-        // colVlLines.append('line')
-        //   .attr('x1', countW)
-        //   .attr('y1', 0)
-        //   .attr('x2', countW)
-        //   .attr('y2', this_.options.height)
-        //   .style('stroke', '#f7a659')
-        //   .style('stroke-width', 1)
-        //   .style('opacity', 0.4);
-        colClsName.append('text')
-          .attr('x', countW)
-          .attr('y', 0)
-          .attr('font-size', '10')
-          .attr('text-anchor', 'start')
-          .text(j);
-        countW += fw(d);
+        colVlLines.append('line')
+          .attr('x1', countW)
+          .attr('y1', 0)
+          .attr('x2', countW)
+          .attr('y2', this_.options.height)
+          .style('stroke', '#f7a659')
+          .style('stroke-width', 1)
+          .style('opacity', 0.6);
+        // colClsName.append('text')
+        //   .attr('x', countW)
+        //   .attr('y', 0)
+        //   .attr('font-size', '10')
+        //   .attr('text-anchor', 'start')
+        //   .text(j);
+        let tmpWidth = fw(d);
+        colWidths.push(tmpWidth);
+        countW += tmpWidth;
       }
 
       let hPosition = [];
+      let rowHeights = [];
       // draw row hr line
       for (let i = 0; i < r2.length; i += 1) {
         let d = r2[i];
         r2[i].y = countH;
         hPosition.push(countH);
         r2[i].x = wPosition;
-        // rowHrLines.append('line')
-        //   .attr('x1', 0)
-        //   .attr('y1', countH)
-        //   .attr('x2', this_.options.width)
-        //   .attr('y2', countH)
-        //   .style('stroke', '#f7a659')
-        //   .style('stroke-width', 1)
-        //   .style('opacity', 0.8);
-        countH += fh(d.filterNum);
+        rowHrLines.append('line')
+          .attr('x1', 0)
+          .attr('y1', countH)
+          .attr('x2', this_.options.width)
+          .attr('y2', countH)
+          .style('stroke', '#f7a659')
+          .style('stroke-width', 1)
+          .style('opacity', 0.6);
+        let tmpHeight = fh(d.filterNum);
+        rowHeights.push(tmpHeight);
+        countH += tmpHeight;
       }
+
+      Pip.emitClsWidth(colWidths);
+      Pip.emitLayerHeight(rowHeights);
 
       let rowInsideHrLines = this_.svg.append('g').attr('class', 'row-hr-inside-line');
       let colInsideVlLines = this_.svg.append('g').attr('class', 'col-vl-inside-line');
