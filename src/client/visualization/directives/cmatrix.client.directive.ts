@@ -208,6 +208,8 @@ namespace application {
         countW += tmpWidth;
       }
 
+      console.log(this_.options);
+
       let hPosition = [];
       let rowHeights = [];
       // draw row hr line
@@ -230,7 +232,12 @@ namespace application {
       }
 
       Pip.emitClsWidth(colWidths);
-      Pip.emitLayerHeight(rowHeights);
+      Pip.emitLayerHeight(
+        _.map(r2, (d, i) => {
+          return [d.lid, this_.options.lidtoName[d.lid], d.miniSet, rowHeights[i]];
+        })
+      );
+      // }[rowHeights, r2, data, this_.options]);
 
       let rowInsideHrLines = this_.svg.append('g').attr('class', 'row-hr-inside-line');
       let colInsideVlLines = this_.svg.append('g').attr('class', 'col-vl-inside-line');

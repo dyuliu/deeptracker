@@ -12,35 +12,48 @@ body {
 }
 .layer-graph {
   position: absolute;
-  left: -3px;
+  left: -20px;
   top: 0;
   width: 200px;
 }
 .layer-chart {
   position: absolute;
-  left: 197px;
+  left: 180px;
   top: 0;
+}
+.layerbox {
+  position: relative;
+  padding: 0;
+  border: 1px solid;
+  border-color: #D6E1EA;
+}
+.layerbox:hover {
+  background-color: #F7F7F7;
+  border-color: #848787;
+}
+.layerbox:first-child {
+  border-top-color: #DDD;
 }
 .label-text {
   position: absolute;
-  left: -6px;
+  left: -20px;
   top: 0;
   width: 200px;
   text-align: center;
 }
 .label-chart {
   position: absolute;
-  left: 194px;
+  left: 180px;
   top: 0;
 }
 .timebox-chart {
   position: absolute;
-  left: 194px;
+  left: 180px;
   top: 0;
 }
 .record-chart {
   position: absolute;
-  left: 194px;
+  left: 180px;
   top: 0;
 }
 .correlation-chart {
@@ -86,21 +99,6 @@ body {
 }
 .time-axis line {
   stroke: #fff;
-}
-.layerbox {
-  margin-top: -1px;
-  position: relative;
-  padding: 0;
-  border: 1px solid;
-  border-color: #848787 #FFF #848787 #FFF;
-}
-.layerbox:hover {
-  background-color: #F7F7F7;
-  border-color: #D6E1EA;
-  border-style: solid;
-}
-.layerbox:first-child {
-  border-top-color: #DDD;
 }
 .level2-off {
   margin-left: 10px;

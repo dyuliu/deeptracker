@@ -106,7 +106,7 @@ namespace application {
           triangleData.push({ x: i, y: d.value, iter: d.iter });
         }
         if (d.valueR >= threshold) {
-          downTriangleData.push({ x: i, y: d.valueR, iter: d.iter });
+          downTriangleData.push({ x: i + 1, y: d.valueR, iter: data[i + 1].iter });
         }
       });
 
@@ -166,7 +166,7 @@ namespace application {
       if (this_.options.type === 'kernel') {
         let scale = d4.scaleLinear()
           .domain(d4.extent(data, d => d.value))
-          .range([0.01, 0.95])
+          .range([1, 0])
           .clamp(true);
         for (let i = 0; i < size; i += 1) {
           ctx.beginPath();
@@ -217,16 +217,17 @@ namespace application {
 
         let start = () => {
           element.empty();
-          // if (scope.options.type === 'kernel') {
-          //   console.log('heatline for kernel', scope.data);
-          // }
           let board = new Painter(element, scope.options);
           board.render(scope.data, Pip);
         };
-        if (!_.isUndefined(scope.data)) { start(); };
-        scope.$watch('data', (n, o) => { if (n !== o && n) { start(); } }, false);
-        scope.$watch('options.height', (n, o) => { if (n !== o && n) { start(); } }, false);
-
+        Pip.onRenderLabelView(scope, msg => {
+          if (!_.isUndefined(scope.data)) { start(); }
+        });
+        if (scope.options.type !== 'cls') {
+          if (!_.isUndefined(scope.data)) { start(); };
+          scope.$watch('data', (n, o) => { if (n !== o && n) { start(); } }, false);
+          scope.$watch('options.height', (n, o) => { if (n !== o && n) { start(); } }, false);
+        }
       };
     }
   }

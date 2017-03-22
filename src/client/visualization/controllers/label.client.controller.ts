@@ -12,6 +12,7 @@ namespace application {
     dataCls: any;
     dataDetail: any;
     selectedCls: any[];
+    selectedClsInverted: any[];
     open: any;
     flip: any;
     click: any;
@@ -210,6 +211,9 @@ namespace application {
           // !!!! delete cls with outlier iter only once
         }
 
+        $scope.selectedClsInverted = _.cloneDeep($scope.selectedCls);
+        _.reverse($scope.selectedClsInverted);
+
         let allQuery = {};
         let parser = 'json', type = 'i_cosine', db = Global.getSelectedDB();
         iterSet.forEach((v) => {
@@ -248,7 +252,7 @@ namespace application {
               minWidth: 6,
               threshold: 4,
               h: 3,
-              w: 6,
+              w: 4,
               margin: {
                 top: 1,
                 right: 0,
@@ -264,9 +268,13 @@ namespace application {
 
       Pip.onClsWidth($scope, msg => {
         for (let i = 0; i < $scope.selectedCls.length; i += 1) {
-          $scope.optionsCls[$scope.selectedCls[i].name].height = msg[i] / 2;
-          $('#label-edgebar-' + $scope.selectedCls[i].name).css('height', msg[i] / 2 - 1);
+          $scope.optionsCls[$scope.selectedCls[i].name].height = msg[i] / Math.sqrt(3);
+          $('#label-edgebar-' + $scope.selectedCls[i].name)
+            .css('height', msg[i] / Math.sqrt(3) - 1);
         }
+        Pip.emitRenderLabelView(null);
+        // scroll to bottom
+        // $('.face-top').scrollTop($('.face-top').height());
         // console.log($scope.selectedCls, msg);
       });
 
@@ -472,8 +480,8 @@ namespace application {
             cellWidth: 1,
             color: d4.scaleSequential(d4.interpolateRdYlGn),
             margin: {
-              top: 1,
-              right: 30,
+              top: 0,
+              right: 0,
               bottom: 0,
               left: 0
             },

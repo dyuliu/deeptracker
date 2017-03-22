@@ -2,23 +2,25 @@
   <div id="main-widget-container" class="col-xs-12 col-sm-12 invisible">
 
     <div class="face-time">
-      <div class="row" style="height: 30px">
+      <div style="height: 30px">
         <div id="widget-container-timebox" ng-controller="TimeBoxController" ng-include="'src/client/visualization/views/timebox.client.view.html'"></div>
       </div>
     </div>
     <div class="face face-front style-3">
-      <div ng-show="config.layer.show" class="row">
+      <div ng-show="config.layer.show">
         <div id="widget-container-layerinfo" ng-controller="LayerController" ng-include="'src/client/visualization/views/layer.client.view.html'"></div>
       </div>
     </div>
     <div class="face face-right style-8">
-      <div ng-show="config.correlation.show" class="row">
+      <!--<div ng-show="config.correlation.show" class="row">-->
+      <div ng-show="config.correlation.show">
         <div id="widget-container-correlation" ng-controller="CorrelationController" ng-include="'src/client/visualization/views/correlation.client.view.html'">
         </div>
       </div>
     </div>
     <div class="face face-top style-8">
-      <div ng-show="config.label.show" class="row" style="margin-top: 5px">
+      <!--<div ng-show="config.label.show" class="row" style="margin-top: 5px">-->
+      <div ng-show="config.label.show">
         <div id="widget-container-labelinfo" ng-controller="LabelController" ng-include="'src/client/visualization/views/label.client.view.html'">
         </div>
       </div>

@@ -14,9 +14,10 @@
   height: @width;
   top: @offTop;
   left: @offLeft;
+  // overflow-y: auto;
   overflow-x: hidden;
   overflow-y: hidden;
-  transform: skewX(-60deg) translateX(@width * 1.73205 / 2);
+  transform: skewX(-60deg) translateX(@width * sqrt(3) / 2);
 }
 
 .face-front {
@@ -30,7 +31,7 @@
 }
 
 .face-right {
-  width: @width * 1.73205;
+  width: @width * sqrt(3);
   height: @height;
   top: @offTop + @width;
   left: @offLeft + @length;
@@ -42,7 +43,8 @@
 .face-time {
   position: absolute;
   top: @offTop - 25px;
-  left: @offLeft + @width * 1.73205;
+  left: @offLeft + @width * sqrt(3);
+
 }
 
 .cls-name {

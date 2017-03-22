@@ -18,6 +18,8 @@ namespace application {
     tree: any;
     dataTree: any[];
     optionsTree: {};
+    picked: {};
+    pickedOptions: {};
     opened: {};
     open: any;    // func to open hl layer
     conf: any;
@@ -180,7 +182,7 @@ namespace application {
             if (scaleType === 'global') {
               // global scale
               let f = d4.scaleLinear();
-              f.range([0.01, 0.95]);
+              f.range([1, 0]);
               let [min, max] = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER];
 
               _.each(data, (dd, i) => {
@@ -200,7 +202,7 @@ namespace application {
               // horizon scale
               _.each(data, (dd, i) => {
                 let [mmin, mmax] = d4.extent(dd.value);
-                let nf = d4.scaleLinear().domain([mmin, mmax]).range([0.01, 0.95]).clamp(true);
+                let nf = d4.scaleLinear().domain([mmin, mmax]).range([1, 0]).clamp(true);
                 dd.value = _.map(dd.value, (o: any) => {
                   let t = nf(o);
                   return t;
@@ -216,7 +218,7 @@ namespace application {
                   if (max < dd.value[i]) { max = dd.value[i]; }
                   if (!dd.index) { dd.index = +j; }
                 });
-                let nf = d4.scaleLinear().domain([min, max]).range([0.01, 0.95]).clamp(true);
+                let nf = d4.scaleLinear().domain([min, max]).range([1, 0]).clamp(true);
                 _.each(data, dd => {
                   dd.value[i] = nf(dd.value[i]);
                 });
@@ -542,7 +544,57 @@ namespace application {
       }
 
       Pip.onLayerHeight($scope, msg => {
-        console.log('layer', msg);
+        let parser = 'json', type = 'i_cosine', db = Global.getSelectedDB();
+        let qArray = {};
+
+        for (let i = 0; i < msg.length; i += 1) {
+          $scope.picked[msg[i][1]] = true;
+          $scope.pickedOptions[msg[i][1]] = {
+            width: this_.Global.getData('iter').num + 30,
+            height: msg[i][3],
+            cellWidth: 1,
+            color: d4.scaleSequential(d4.interpolateBlues),
+            margin: {
+              top: 1,
+              right: 0,
+              bottom: 0,
+              left: 0
+            },
+            type: 'kernel',
+            lineChart: false
+          };
+          let tmpSet = new Set();
+          for (let d of msg[i][2]) {
+            d.forEach(v => { tmpSet.add(v); });
+          }
+          qArray[msg[i][1]] = DataManager.fetchKernel({
+            db, type, layer: [+msg[i][0]], seqidx: Array.from(tmpSet), parser
+          }, false);
+        }
+
+        $scope.dataTopK = {};
+        $scope.optionsTopK = {};
+        $('#layer-data-loading').removeClass('invisible');
+        $q.all(qArray).then(kernelData => {
+          $('#layer-data-loading').addClass('invisible');
+          _.each(kernelData, (v, k) => {
+            $scope.dataTopK[k] = _.map(v, (vd: any) => {
+              return {
+                heatmapData: vd.value,
+                linechartData: null
+              };
+            });
+            $scope.optionsTopK[k] = this_._setOptions('heatline');
+            $scope.optionsTopK[k].height = 3;
+          });
+        });
+
+        setTimeout(function () {
+          for (let i = 0; i < msg.length; i += 1) {
+            $('#layer-edgebar-' + msg[i][1])
+              .css('height', msg[i][3] - 1);
+          }
+        }, 1000);
       });
 
       Pip.onLayerOpen($scope, msg => {
@@ -588,6 +640,8 @@ namespace application {
     private _init() {
       let this_ = this;
       this_.$scope.kData = { 'a': 1, 'b': 2, 'c': 3 };
+      this_.$scope.picked = {};
+      this_.$scope.pickedOptions = {};
 
       this_.$timeout(function () {
         $('#widget-container-layerinfo .scrollable').each(function () {
@@ -831,9 +885,10 @@ namespace application {
             width: this_.Global.getData('iter').num + 30,
             height: 12,
             cellWidth: 1,
-            color: d4.scaleSequential(d4.interpolateBlues),
+            // color: d4.scaleSequential(d4.interpolateBlues),
+            color: d4.scaleSequential(d4.interpolateYlOrRd),
             margin: {
-              top: 1,
+              top: 0,
               right: 0,
               bottom: 0,
               left: 0
@@ -864,7 +919,8 @@ namespace application {
             cellWidth: 1,
             pixelChart: true,
             lineChart: false,
-            color: d4.scaleSequential(d4.interpolateBlues),
+            // color: d4.scaleSequential(d4.interpolateBlues),
+            color: d4.scaleSequential(d4.interpolateYlOrRd),
             marginTop: 0,
             margin: {
               top: 2,

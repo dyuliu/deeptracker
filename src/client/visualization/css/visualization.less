@@ -17,21 +17,44 @@ body {
 // ---------- end of basic utils --------- //
 
 // global variable
-@left-offset: -6px;
+@left-offset: -20px;
 @left-width: 200px;
 
 // ---------- begin of layer.client.view.html  --------- //
 .layer-graph {
   position: absolute;
-  left: 3px + @left-offset;
+  left: @left-offset;
   top: 0;
   width: @left-width;
 }
 
 .layer-chart {
   position: absolute;
-  left: 3px + @left-offset + @left-width;
+  left: @left-offset + @left-width;
   top: 0;
+}
+
+.layerbox {
+  // margin-top: -1px;
+  position: relative;
+  // height: 60px;
+  // padding: 12px 0 12px 0;
+  padding: 0;
+  // border: 1px dotted;
+  border: 1px solid;
+  border-color: #D6E1EA;
+  // border-color: rgba(0, 0, 0, .11) transparent transparent
+}
+
+.layerbox:hover {
+    background-color: #F7F7F7;
+    border-color: #848787;
+    // border-style: solid;
+    // z-index: 1
+}
+
+.layerbox:first-child {
+  border-top-color: #DDD;
 }
 // ---------- end of layer.client.view.html  --------- //
 
@@ -126,28 +149,7 @@ body {
   stroke: #fff;
 }
 
-.layerbox {
-  margin-top: -1px;
-  position: relative;
-  // height: 60px;
-  // padding: 12px 0 12px 0;
-  padding: 0;
-  // border: 1px dotted;
-  border: 1px solid;
-  border-color: #848787 #FFF #848787 #FFF;
-  // border-color: rgba(0, 0, 0, .11) transparent transparent
-}
 
-.layerbox:hover {
-    background-color: #F7F7F7;
-    border-color: #D6E1EA;
-    border-style: solid;
-    // z-index: 1
-}
-
-.layerbox:first-child {
-  border-top-color: #DDD;
-}
 
 
 @level-offset: 10px;

@@ -1,12 +1,10 @@
-<div class="col-xs-12 col-sm-12">
+<div ng-if="!open">
 
-  <div ng-if="!open">
-
-    <div class="label-chart">
-      <div ng-repeat-start="cls in selectedCls" style="position: relative" ng-repeat-end>
-        <small class="clickable cls-name" ng-click="click('flip', cls.name)" style="position: absolute; left: -103px; top: -5px;">{{cls.name}}</small>
-        <img class="clickable cls-name" width="14" height="14" alt="14x14" src="{{cls.file}}" ng-click="showModal(cls.name, 'class')" style="position: absolute; left: -40px; top: -5px;"></img>
-        <!--<div ng-if="flip[cls.name]" style="position: absolute; left: -85px; top: 18px">
+  <div class="label-chart">
+    <div ng-repeat-start="cls in selectedClsInverted" style="position: relative" ng-repeat-end>
+      <small class="clickable cls-name" ng-click="click('flip', cls.name)" style="position: absolute; left: -103px; top: -5px;">{{cls.name}}</small>
+      <img class="clickable cls-name" width="14" height="14" alt="14x14" src="{{cls.file}}" ng-click="showModal(cls.name, 'class')" style="position: absolute; left: -40px; top: -5px;"></img>
+      <!--<div ng-if="flip[cls.name]" style="position: absolute; left: -85px; top: 18px">
           <button class="btn btn-success btn-minier float-right">
             <i class="ace-icon fa fa-search-plus" ng-click="click('zoomin', cls.name)"></i>
           </button>
@@ -15,10 +13,10 @@
             <i class="ace-icon fa fa-search-minus" ng-click="click('zoomout', cls.name)"></i>
           </button>
         </div>-->
-        <div ng-if="!flip[cls.name]" heatline data="dataCls[cls.name]" options="optionsCls[cls.name]"></div>
-        <div id="label-edgebar-{{cls.name}}" style="z-index: 200; position: absolute; top: 1px; right: 16px; height: 7px; width: 12px; background: #2089ed; box-shadow: 3px 1px 1px #888888;"></div>
-      </div>
-
+      <div ng-if="!flip[cls.name]" heatline data="dataCls[cls.name]" options="optionsCls[cls.name]"></div>
+      <div style="position: absolute; top: -0.5px; width: 100%; border-bottom: 1px solid white;"></div>
+      <div id="label-edgebar-{{cls.name}}" style="z-index: 200; position: absolute; top: 0.5px; right: 22px; width: 5px; background: #2089ed; box-shadow: 3px 1px 1px #888888;"></div>
     </div>
+
   </div>
 </div>
