@@ -4,35 +4,35 @@
 }
 .face-top {
   width: 940px;
-  height: 300px;
+  height: 320px;
   top: 100px;
   left: 20px;
   overflow-x: hidden;
   overflow-y: hidden;
-  -webkit-transform: skewX(-60deg) translateX(259.80762114px);
-          transform: skewX(-60deg) translateX(259.80762114px);
+  -webkit-transform: skewX(-65deg) translateX(343.1211072px);
+          transform: skewX(-65deg) translateX(343.1211072px);
 }
 .face-front {
   width: 940px;
   height: 660px;
-  top: 400px;
+  top: 420px;
   left: 20px;
   overflow-x: hidden;
   overflow-y: hidden;
 }
 .face-right {
-  width: 519.61524227px;
+  width: 686.2422144px;
   height: 660px;
-  top: 400px;
+  top: 420px;
   left: 960px;
   overflow: auto;
-  -webkit-transform: skewY(-30deg) translateY(-150px);
-          transform: skewY(-30deg) translateY(-150px);
+  -webkit-transform: skewY(-25deg) translateY(-160px);
+          transform: skewY(-25deg) translateY(-160px);
 }
 .face-time {
   position: absolute;
   top: 75px;
-  left: 539.61524227px;
+  left: 706.2422144px;
 }
 .cls-name {
   -webkit-transform: skewX(60deg);

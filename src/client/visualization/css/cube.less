@@ -1,5 +1,5 @@
 @length: 940px;
-@width: 300px;
+@width: 320px;
 @height: 660px;
 @offTop: 100px;
 @offLeft: 20px;
@@ -17,7 +17,7 @@
   // overflow-y: auto;
   overflow-x: hidden;
   overflow-y: hidden;
-  transform: skewX(-60deg) translateX(@width * sqrt(3) / 2);
+  transform: skewX(-65deg) translateX(@width * 2.14450692 / 2);
 }
 
 .face-front {
@@ -31,19 +31,19 @@
 }
 
 .face-right {
-  width: @width * sqrt(3);
+  width: @width * 2.14450692;
   height: @height;
   top: @offTop + @width;
   left: @offLeft + @length;
   overflow: auto;
   // overflow-y: auto;
-  transform: skewY(-30deg) translateY(-@width / 2);
+  transform: skewY(-25deg) translateY(-@width / 2);
 }
 
 .face-time {
   position: absolute;
   top: @offTop - 25px;
-  left: @offLeft + @width * sqrt(3);
+  left: @offLeft + @width * 2.14450692;
 
 }
 
@@ -51,6 +51,9 @@
   transform: skewX(60deg);
 }
 
+
+
+// --------------- following defines the scrollbar style --------------- //
 /*
  *  STYLE 1
  */

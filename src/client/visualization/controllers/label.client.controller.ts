@@ -268,9 +268,9 @@ namespace application {
 
       Pip.onClsWidth($scope, msg => {
         for (let i = 0; i < $scope.selectedCls.length; i += 1) {
-          $scope.optionsCls[$scope.selectedCls[i].name].height = msg[i] / Math.sqrt(3);
+          $scope.optionsCls[$scope.selectedCls[i].name].height = msg[i] / 2.14450692;
           $('#label-edgebar-' + $scope.selectedCls[i].name)
-            .css('height', msg[i] / Math.sqrt(3) - 1);
+            .css('height', msg[i] / 2.14450692 - 1);
         }
         Pip.emitRenderLabelView(null);
         // scroll to bottom
