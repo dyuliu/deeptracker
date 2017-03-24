@@ -1,38 +1,38 @@
 .face {
   position: absolute;
-  border: 1px solid #e1e1e1;
+  border: 1px solid #c9c9c9;
 }
 .face-top {
   width: 940px;
-  height: 320px;
+  height: 380px;
   top: 100px;
   left: 20px;
   overflow-x: hidden;
   overflow-y: hidden;
-  -webkit-transform: skewX(-65deg) translateX(343.1211072px);
-          transform: skewX(-65deg) translateX(343.1211072px);
+  -webkit-transform: skewX(-65deg) translateX(407.4563148px);
+          transform: skewX(-65deg) translateX(407.4563148px);
 }
 .face-front {
   width: 940px;
   height: 660px;
-  top: 420px;
+  top: 480px;
   left: 20px;
   overflow-x: hidden;
   overflow-y: hidden;
 }
 .face-right {
-  width: 686.2422144px;
+  width: 814.9126296px;
   height: 660px;
-  top: 420px;
+  top: 480px;
   left: 960px;
   overflow: auto;
-  -webkit-transform: skewY(-25deg) translateY(-160px);
-          transform: skewY(-25deg) translateY(-160px);
+  -webkit-transform: skewY(-25deg) translateY(-190px);
+          transform: skewY(-25deg) translateY(-190px);
 }
 .face-time {
   position: absolute;
   top: 75px;
-  left: 706.2422144px;
+  left: 834.9126296px;
 }
 .cls-name {
   -webkit-transform: skewX(60deg);
