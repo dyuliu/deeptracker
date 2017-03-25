@@ -27,7 +27,7 @@ namespace application {
 
       // set container - div
       this.container = d4.select(ele[0])
-        .style('width', (dw + 15) + 'px')
+        .style('width', (dw + 0) + 'px')
         .style('height', (options.marginTop + dh * options.hScale) + 'px')
         .style('position', 'relative')
         .style('background', 'white');
@@ -39,11 +39,11 @@ namespace application {
         .style('position', 'absolute')
         .style('left', 0)
         .style('top', options.marginTop + 'px')
-        .style('width', (dw + 15) + 'px')
+        .style('width', (dw + 0) + 'px')
         .style('height', (dh * options.hScale) + 'px');
       this.rect = this.svg.append('rect')
         .attr('class', 'overlay')
-        .attr('width', (dw + 15))
+        .attr('width', (dw + 0))
         .attr('height', (dh * options.hScale));
       this.svgContainer = this.svg
         .append('g')
@@ -108,7 +108,7 @@ namespace application {
 
           let [dw, dh] = [data.length, this_.options.height];
           this_.container
-            .style('width', (dw + 15) + 'px')
+            .style('width', (dw + 0) + 'px')
             .style('height', (this_.options.marginTop + dh * this_.options.hScale) + 'px');
           $(this_.svgContainer.node()).empty();
           this_.svg

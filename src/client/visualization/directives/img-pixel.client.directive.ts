@@ -17,6 +17,7 @@ namespace application {
     private container: d4.Selection<any, any, any, any>;
     private vldiv: d4.Selection<any, any, any, any>;
     private svg: d4.Selection<any, any, any, any>;
+    private svgDown: d4.Selection<any, any, any, any>;
     private rect: d4.Selection<any, any, any, any>;
     private canvas: d4.Selection<any, any, any, any>;
     private fakeCanvas: d4.Selection<any, any, any, any>;
@@ -31,7 +32,7 @@ namespace application {
       // set container - div
       this.container = d4.select(ele[0])
         .style('width', (dw + 15) + 'px')
-        .style('height', (options.marginTop + dh * options.hScale) + 'px')
+        .style('height', (options.marginTop + options.marginBottom + dh * options.hScale) + 'px')
         .style('position', 'relative')
         .style('background', 'white');
 
@@ -40,10 +41,20 @@ namespace application {
         .append('svg')
         .style('position', 'absolute')
         .style('width', (dw + 15) + 'px')
-        .style('height', (options.marginTop + 10) + 'px');
+        .style('height', (options.marginTop) + 'px');
 
       this.svg = this.svg.append('g')
         .attr('transform', 'translate(0,' + options.marginTop + ')');
+
+      this.svgDown = this.container
+        .append('svg')
+        .style('position', 'absolute')
+        .style('top', options.marginTop + dh * options.hScale)
+        .style('width', (dw + 15) + 'px')
+        .style('height', (options.marginBottom) + 'px');
+
+      // this.svgDown = this.svg.append('g')
+      //   .attr('transform', 'translate(0,' + options.marginBottom + ')');
 
       // initialize canvas configuration
       this.canvas = this.container
@@ -80,16 +91,26 @@ namespace application {
         .on('mousemove', mouseMoveHandler);
 
       let svgContainer = this_.svg.append('g');
-      let triangleData = [];
+      let triangleData = [], downTriangleData = [];
+      // _.each(data.lineChart, (d, i) => {
+      //   if (d.value >= this_.options.threshold) {
+      //     triangleData.push({ x: i, y: d.value, iter: d.iter });
+      //   }
+      // });
+
       _.each(data.lineChart, (d, i) => {
         if (d.value >= this_.options.threshold) {
           triangleData.push({ x: i, y: d.value, iter: d.iter });
         }
+        if (d.valueR >= this_.options.threshold) {
+          downTriangleData.push({ x: i + 1, y: d.valueR, iter: data.lineChart[i + 1].iter });
+        }
       });
+
       let scale = d4.scaleLinear()
         .domain([this_.options.threshold, this_.options.max])
-        .range([6, 17]);
-      this_._addTriangles(svgContainer, triangleData, scale, [sx, sy, sk]);
+        .range([6, 15]);
+      this_._addTriangles(svgContainer, triangleData, downTriangleData, scale, [sx, sy, sk]);
 
       this_._paintPixelChart(this_.fakeCanvas.node().getContext('2d'), data.pixelChart);
       let ctx: CanvasRenderingContext2D = this_.canvas.node().getContext('2d');
@@ -98,7 +119,7 @@ namespace application {
       ctx.drawImage(this_.fakeCanvas.node(), 0, 0);
       ctx.restore();
 
-      if (this_.options.hScale > 4) {
+      if (this_.options.hScale > 6) {
         this_._horizonLine();
       }
 
@@ -106,9 +127,9 @@ namespace application {
         let {x, y, k} = msg;
         [sx, sy, sk] = [x, y, k];   // update x y z
         drawImage();
-        if (this_.options.hScale > 4) { this_._horizonLine(); }
+        if (this_.options.hScale > 6) { this_._horizonLine(); }
         if (k > 6) { this_._verticalLine(x, y, k); }
-        this_._addTriangles(svgContainer, triangleData, scale, [sx, sy, sk]);
+        this_._addTriangles(svgContainer, triangleData, downTriangleData, scale, [sx, sy, sk]);
         // svgContainer.attr('transform', 'translate(' + x + ', 0) scale(' + k + ',1)');
       });
 
@@ -125,16 +146,16 @@ namespace application {
         ctx.lineWidth = 1;
         ctx.stroke();
         ctx.restore();
-        if (this_.options.hScale > 4) { this_._horizonLine(); }
+        if (this_.options.hScale > 6) { this_._horizonLine(); }
         if (sk > 6) { this_._verticalLine(sx, sy, sk); }
-        this_._addTriangles(svgContainer, triangleData, scale, [sx, sy, sk]);
+        this_._addTriangles(svgContainer, triangleData, downTriangleData, scale, [sx, sy, sk]);
       });
 
       Pip.onTimeMouseOut(scope, (msg: any) => {
         drawImage();
-        if (this_.options.hScale > 4) { this_._horizonLine(); }
+        if (this_.options.hScale > 6) { this_._horizonLine(); }
         if (sk > 6) { this_._verticalLine(sx, sy, sk); }
-        this_._addTriangles(svgContainer, triangleData, scale, [sx, sy, sk]);
+        this_._addTriangles(svgContainer, triangleData, downTriangleData, scale, [sx, sy, sk]);
       });
 
       scope.$on('zoom', (evt, msg: any) => {
@@ -151,10 +172,12 @@ namespace application {
           let [dw, dh] = [data.pixelChart[0].iter.length, data.pixelChart.length];
           this_.container
             .style('width', (dw + 15) + 'px')
-            .style('height', (this_.options.marginTop + dh * this_.options.hScale) + 'px');
+            .style('height', (this_.options.marginTop + this_.options.marginBottom + dh * this_.options.hScale) + 'px');
           this_.canvas
             .attr('width', dw + 'px')
             .attr('height', (dh * this_.options.hScale) + 'px');
+          this_.svgDown
+            .style('top', this_.options.marginBottom + dh * this_.options.hScale);
           drawImage();
         }
       });
@@ -217,7 +240,7 @@ namespace application {
       let height = this_.canvas.property('height');
       let width = this_.canvas.property('width');
       let off = this_.options.hScale;
-
+      let ka = 0;
       while (off < height) {
         // ctx.setLineDash([5, 15]);
         ctx.save();
@@ -231,7 +254,9 @@ namespace application {
         ctx.stroke();
         off += this_.options.hScale;
         ctx.restore();
+        ka += 1;
       }
+      console.log(ka);
 
     }
 
@@ -260,22 +285,39 @@ namespace application {
 
     }
 
-    private _addTriangles(container, data, scale, tr) {
+    private _addTriangles(container, data, downTriangleData, scale, tr) {
       let [x, y, k] = tr;
       let this_ = this;
       if (!this_.options.threshold || this_.options.threshold === 0) { return; }
 
       $(container.node()).empty();
+      $(this_.svgDown.node()).empty();
       let panel = container.append('g');
       panel.selectAll('polygon')
         .data(data)
         .enter().append('polygon')
+        .attr('class', 'triangle')
         .attr('points', d => {
           let w = scale(d.y);
           return '0,0 ' + w + ',-9 -' + w + ',-9';
         })
         .attr('fill', '#4682b4')
-        .attr('opacity', 0.9)
+        .style('opacity', 0.8)
+        .attr('transform', (d: any) => 'translate(' + (d.x * k + x + k / 2) + ', 0)')
+        .on('click', clickHandler)
+        .append('title').text(d => 'iter: ' + d.iter + ' value: ' + d.y);
+
+      let panelDown = this_.svgDown.append('g');
+      panelDown.selectAll('polygon')
+        .data(downTriangleData)
+        .enter().append('polygon')
+        .attr('class', 'triangle')
+        .attr('points', d => {
+          let w = scale(d.y);
+          return '0,0 ' + w + ',9 -' + w + ',9';
+        })
+        .attr('fill', '#4682b4')
+        .style('opacity', 0.8)
         .attr('transform', (d: any) => 'translate(' + (d.x * k + x + k / 2) + ', 0)')
         .on('click', clickHandler)
         .append('title').text(d => 'iter: ' + d.iter + ' value: ' + d.y);

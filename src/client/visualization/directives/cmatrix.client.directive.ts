@@ -89,6 +89,7 @@ namespace application {
         // console.log(pa);
         let tmpsum = 0;
         r2[i].miniSet = _.filter(r2[i].miniSet, (d: any, key) => pa[key] * d.size >= threshold);
+        // r2[i].miniSet = _.filter(r2[i].miniSet, (d: any, key) => pa[key] * d.size >= 2);
         for (let j of r2[i].miniSet) { tmpsum += j.size; }
         ch = Math.max(ch, tmpsum);
         r2[i].filterNum = tmpsum;
@@ -254,13 +255,15 @@ namespace application {
             ed = [positionHr[i][j][2], positionHr[i][j][3]],
             weight = positionHr[i][j][4];
 
+          let strokeWidth = weight > 10 ? fWeightStroke(weight) : 0;
           rowInsideHrLines.append('line')
             .attr('x1', wPosition[st[0]] + fCls[st[0]](st[1]))
             .attr('y1', hPosition[i] + miniPosition[j])
             .attr('x2', wPosition[ed[0]] + fCls[ed[0]](ed[1]))
             .attr('y2', hPosition[i] + miniPosition[j])
             .style('stroke', '#363535')
-            .style('stroke-width', fWeightStroke(weight))
+            // .style('stroke-width', fWeightStroke(weight))
+            .style('stroke-width', strokeWidth)
             // .style('opacity', fWeight(weight));
             .style('opacity', 0.6);
         }

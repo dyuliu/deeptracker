@@ -206,7 +206,7 @@ namespace application {
               }
             }
           }
-          if (cc < 2) { $scope.selectedCls.splice(i, 1); i -= 1; }
+          // if (cc < 2) { $scope.selectedCls.splice(i, 1); i -= 1; }
           // !!!! delete cls with outlier iter only once
         }
 
@@ -479,12 +479,16 @@ namespace application {
             cellWidth: 1,
             pixelChart: true,
             lineChart: true,
+            // color: function (d) {
+            //   if (d === 1) { return '#7fc97f'; } else { return '#fdc086'; };
+            // },
             color: function (d) {
-              if (d === 1) { return '#7fc97f'; } else { return '#fdc086'; };
+              if (d === 1) { return '#B6EB9D'; } else { return '#E88984'; };
             },
             marginTop: 9,
+            marginBottom: 9,
             margin: {
-              top: 9,
+              top: 0,
               right: 30,
               bottom: 0,
               left: 0

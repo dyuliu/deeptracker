@@ -33,6 +33,75 @@ body {
   left: @left-offset + @left-width;
   top: 0;
 }
+
+.layerbox {
+  position: relative;
+  padding: 0;
+  border: 1px solid;
+  border-color: #c3c3c3 #FFF #c3c3c3 #FFF;
+  // border-color: rgba(0, 0, 0, .11) transparent transparent
+}
+
+.layerbox:hover {
+    // background-color: #ff6d6d;
+    border: 1px solid;
+    border-color: #f9a814;
+    // border-style: solid;
+    // z-index: 1
+}
+
+// .layerbox:first-child {
+//   border-top-color: #DDD;
+// }
+
+.layer-level1 {
+  position: absolute;
+  left: -14px;
+  width: 13px;
+  top: 0;
+  height: 100%;
+  background: #489ff2;
+}
+
+.layer-level2 {
+  position: absolute;
+  left: -8px;
+  width: 7px;
+  top: 0;
+  height: 100%;
+  background: #489ff2;
+}
+
+.layer-level3 {
+  position: absolute;
+  left: -4px;
+  width: 3px;
+  top: 0;
+  height: 100%;
+  background: #489ff2;
+}
+
+.layer-first-level2 {
+  position: absolute;
+  left: -14px;
+  width: 13px;
+  top: 0;
+  height: 30%;
+  background: #489ff2;
+}
+
+.layer-first-level3 {
+  position: absolute;
+  left: -8px;
+  width: 7px;
+  top: 0;
+  height: 30%;
+  background: #489ff2;
+}
+
+// .layer-level3 {
+// }
+
 // ---------- end of layer.client.view.html  --------- //
 
 // ---------- begin of label.client.view.html  --------- //
@@ -49,6 +118,11 @@ body {
   left: @left-offset + @left-width;
   top: 0;
 }
+
+.triangle:hover {
+  opacity: 1;
+}
+
 // ---------- end of label.client.view.html  --------- //
 
 // ---------- begin of timebox.client.view.html  --------- //
@@ -125,28 +199,7 @@ body {
   stroke: #fff;
 }
 
-.layerbox {
-  margin-top: -1px;
-  position: relative;
-  // height: 60px;
-  // padding: 12px 0 12px 0;
-  padding: 0;
-  // border: 1px dotted;
-  border: 1px solid;
-  border-color: #848787 #FFF #848787 #FFF;
-  // border-color: rgba(0, 0, 0, .11) transparent transparent
-}
 
-.layerbox:hover {
-    background-color: #F7F7F7;
-    border-color: #D6E1EA;
-    border-style: solid;
-    // z-index: 1
-}
-
-.layerbox:first-child {
-  border-top-color: #DDD;
-}
 
 
 @level-offset: 10px;
@@ -222,8 +275,10 @@ body {
   fill: #bd0026;
 }
 .layer.other {
-  fill: #FFB84D;
+  // fill: #FFB84D;
+  fill: #984ea3;
 }
+
 
 .bar {
   cursor: pointer;

@@ -21,6 +21,56 @@ body {
   left: 400px;
   top: 0;
 }
+.layerbox {
+  position: relative;
+  padding: 0;
+  border: 1px solid;
+  border-color: #c3c3c3 #FFF #c3c3c3 #FFF;
+}
+.layerbox:hover {
+  border: 1px solid;
+  border-color: #f9a814;
+}
+.layer-level1 {
+  position: absolute;
+  left: -14px;
+  width: 13px;
+  top: 0;
+  height: 100%;
+  background: #489ff2;
+}
+.layer-level2 {
+  position: absolute;
+  left: -8px;
+  width: 7px;
+  top: 0;
+  height: 100%;
+  background: #489ff2;
+}
+.layer-level3 {
+  position: absolute;
+  left: -4px;
+  width: 3px;
+  top: 0;
+  height: 100%;
+  background: #489ff2;
+}
+.layer-first-level2 {
+  position: absolute;
+  left: -14px;
+  width: 13px;
+  top: 0;
+  height: 30%;
+  background: #489ff2;
+}
+.layer-first-level3 {
+  position: absolute;
+  left: -8px;
+  width: 7px;
+  top: 0;
+  height: 30%;
+  background: #489ff2;
+}
 .label-text {
   position: absolute;
   left: 100px;
@@ -32,6 +82,9 @@ body {
   position: absolute;
   left: 400px;
   top: 0;
+}
+.triangle:hover {
+  opacity: 1;
 }
 .timebox-chart {
   position: absolute;
@@ -86,21 +139,6 @@ body {
 }
 .time-axis line {
   stroke: #fff;
-}
-.layerbox {
-  margin-top: -1px;
-  position: relative;
-  padding: 0;
-  border: 1px solid;
-  border-color: #848787 #FFF #848787 #FFF;
-}
-.layerbox:hover {
-  background-color: #F7F7F7;
-  border-color: #D6E1EA;
-  border-style: solid;
-}
-.layerbox:first-child {
-  border-top-color: #DDD;
 }
 .level2-off {
   margin-left: 10px;
@@ -158,7 +196,7 @@ body {
   fill: #bd0026;
 }
 .layer.other {
-  fill: #FFB84D;
+  fill: #984ea3;
 }
 .bar {
   cursor: pointer;

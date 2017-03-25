@@ -106,7 +106,7 @@ namespace application {
           triangleData.push({ x: i, y: d.value, iter: d.iter });
         }
         if (d.valueR >= threshold) {
-          downTriangleData.push({ x: i, y: d.valueR, iter: d.iter });
+          downTriangleData.push({ x: i + 1, y: d.valueR, iter: data[i + 1].iter });
         }
       });
 
@@ -114,7 +114,7 @@ namespace application {
       let scale = d4.scaleLinear()
         .domain([this_.options.threshold, this_.options.max])
         // .range([5, 14]);
-        .range([5, 14]);
+        .range([6, 15]);
 
       if (this_.options.immediate) {
         scale.range([3, 3]);
@@ -124,11 +124,12 @@ namespace application {
       triangles.selectAll('polygon')
         .data(triangleData)
         .enter().append('polygon')
+        .attr('class', 'triangle')
         .attr('points', d => {
           let w = scale(d.y);
           return '0,3, ' + w + ',-3 -' + w + ',-3';
         })
-        .attr('fill', '#4682b4')
+        .style('fill', '#4682b4')
         .attr('opacity', 0.9)
         .attr('transform', (d: any) => 'translate(' + d.x + ', 4)')
         .on('click', clickHandler)
@@ -138,13 +139,14 @@ namespace application {
         .attr('transform', 'translate(0,' + this_.options.height + ')');
       downTriangles.selectAll('polygon')
         .data(downTriangleData)
+        .attr('class', 'triangle')
         .enter().append('polygon')
         .attr('points', d => {
           let w = scale(d.y);
           return w + ',0 -' + w + ',0 ' + '0,-6';
         })
         .attr('fill', '#4682b4')
-        .attr('opacity', 0.9)
+        .style('opacity', 0.9)
         .attr('transform', (d: any) => 'translate(' + d.x + ', 0)')
         .on('click', clickHandler)
         .append('title').text(d => 'iter: ' + d.iter + ' value: ' + d.y);
@@ -161,6 +163,9 @@ namespace application {
       let size = data.length;
       let lw = this_.options.cellWidth ? this_.options.cellWidth : 1;
       let color = this_.options.color;
+      let definedColor = d3.scale.linear()
+        .domain([0, 0.5, 0.52, 1])
+        .range(['#dd261c', '#ffffbf', '#d9ef8b', '#0e9247']);
       // let color = d4.scaleSequential(d4.interpolateYlOrRd);
       // ctx.globalCompositeOperation = 'destination-over';
       if (this_.options.type === 'kernel') {
@@ -182,7 +187,8 @@ namespace application {
           ctx.moveTo(this_.offsetWidth + i * lw, this_.offsetHeight);
           ctx.lineTo(this_.offsetWidth + i * lw, this_.offsetHeight + this_.height);
           ctx.lineWidth = lw;
-          ctx.strokeStyle = color(1 - data[i].value).toString();
+          ctx.strokeStyle = definedColor(1 - data[i].value).toString();
+          // ctx.strokeStyle = color(Math.max(0.96 - data[i].value, 0)).toString();
           ctx.stroke();
         }
       }

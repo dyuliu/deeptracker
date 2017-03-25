@@ -24,7 +24,9 @@ namespace application {
     btnShow: any;
     size: {};
     click: any;
+    hovering: any;
     layers: any;
+    mouseleave: any;
   }
 
   class Controller {
@@ -58,6 +60,17 @@ namespace application {
         }, 3000);
       }
       updateContainerHeight();
+
+      $scope.hovering = function (name) {
+        $('.layer-bar-' + name).css('background', '#f9a814');
+        Pip.emitHoveringLayer(name);
+      };
+
+      $scope.mouseleave = function (name) {
+        $('.layer-bar-' + name).css('background', '#489ff2');
+        Pip.emitLeavingLayer(name);
+      };
+
 
       $scope.click = function (type, name) {
         if ($scope.showTypes[name] === 'nvd3') {
@@ -252,14 +265,14 @@ namespace application {
         $scope.dataTree = tree;
         $scope.optionsTree = {
           width: 300,
-          height: 2000,
+          height: 8000,
           layers: layers,
           opened: $scope.opened,
           node: {
-            height: 7,
-            width: 15
+            height: 5,
+            width: 16
           },
-          space: 4,
+          space: 3,
           margin: {
             top: 20,
             right: 10,
@@ -620,10 +633,16 @@ namespace application {
       for (let d of data) {
         r.push({ name: d.name, level: 'level1' });
         if (d.nodes) {
+          let first = true;
           for (let dd of d.nodes) {
-            r.push({ name: dd.name, level: 'level2', parent: d });
+            let ft = false;
+            if (first) { ft = true; first = false; }
+            r.push({ name: dd.name, level: 'level2', parent: d, first: ft });
+            let sFirst = true;
             for (let ddd of dd.nodes) {
-              r.push({ name: ddd.name, level: 'level3', parent: dd });
+              let sft = false;
+              if (sFirst) { sft = true; sFirst = false; }
+              r.push({ name: ddd.name, level: 'level3', parent: dd, first: sft });
             }
           }
         }
@@ -824,7 +843,7 @@ namespace application {
           break;
         case 'heatline':
           options = {
-            width: this_.Global.getData('iter').num + 30,
+            width: this_.Global.getData('iter').num,
             height: 12,
             cellWidth: 1,
             color: d4.scaleSequential(d4.interpolateBlues),
@@ -840,7 +859,7 @@ namespace application {
           break;
         case 'horizonGraph':
           options = {
-            width: this_.Global.getData('iter').num + 30,
+            width: this_.Global.getData('iter').num,
             height: 35,
             cellWidth: 1,
             marginTop: 1,
@@ -860,8 +879,10 @@ namespace application {
             cellWidth: 1,
             pixelChart: true,
             lineChart: false,
+            // color: d4.scaleSequential(d4.interpolateYlOrBr),
             color: d4.scaleSequential(d4.interpolateBlues),
-            marginTop: 0,
+            marginTop: 2,
+            marginBottom: 2,
             margin: {
               top: 2,
               right: 0,
