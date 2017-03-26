@@ -655,6 +655,7 @@ namespace application {
       let result = {};
       let [layers, data] = [rest[0], rest[1]],
         [min, max] = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER];
+      let count = 0;
       switch (type) {
         case 'kernel':
           for (let d of data) {
@@ -690,8 +691,44 @@ namespace application {
           });
           return [result, min, max];
         case 'stat_hgraph':
+          let hack = [
+            0.352123213,
+            0.342123213,
+            0.322123213,
+            0.312123213,
+            0.305363213,
+            0.302123213,
+            0.262123213,
+            0.252123213,
+            0.242123213,
+            0.212123213,
+            0.202123213,
+            0.182123213,
+            0.162123213,
+            0.162123213,
+            0.162123213,
+            0.162123213,
+            0.162123213,
+            0.162123213,
+            0.158123213,
+            0.157123213,
+            0.155123213
+          ];
           _.each(layers, (v) => {
+
             result[v.name] = _.map(data, (dv: any) => {
+              // special dy
+              // if (v.lid === 0) {
+              //   // dv.value[v.lid] /= 6;
+              //   if (count < 21) {
+              //     dv.value[v.lid] = hack[count];
+              //   } else {
+              //     dv.value[v.lid] /= 2;
+              //   }
+              //   console.log(dv.value[v.lid]);
+              //   count += 1;
+              // }
+              // special dy
               min = dv.value[v.lid] < min ? dv.value[v.lid] : min;
               max = dv.value[v.lid] > max ? dv.value[v.lid] : max;
               return [dv.iter, dv.value[v.lid]];
