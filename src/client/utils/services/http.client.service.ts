@@ -5,7 +5,7 @@ namespace application {
     type?: string;
     range?: {start: number, end: number};
     iter?: number;
-    layer?: number[];
+    layer?: any;
     seqidx?: number[];
     parser?: string;
     cls?: any; // string or string[]

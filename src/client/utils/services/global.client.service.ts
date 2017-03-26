@@ -252,7 +252,8 @@ namespace application {
           selectedRatio: [9, 18, 27, 36]
         },
         correlation: {
-          show: false
+          show: false,
+          filterRange: null
         }
       };
 

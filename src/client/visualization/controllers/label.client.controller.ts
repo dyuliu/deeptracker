@@ -188,6 +188,124 @@ namespace application {
         } else {
           $scope.selectedCls = _.reverse(_.sortBy(selectedCls, ['pmax']));
         }
+
+        let iterInfo = Global.getData('iter');
+        let iterSet = new Set();
+        let rec = [];
+        let resMap = new Map();
+
+        let orderStr = '';
+        for (let i = 0; i < $scope.selectedCls.length; i += 1) {
+          rec.push(new Set());
+          let cc = 0;
+          let d = $scope.dataCls[$scope.selectedCls[i].name].linechartData;
+          for (let j = 0; j < d.length; j += 1) {
+            if (d[j].value >= conf.threshold) { cc += 1; iterSet.add(iterInfo.array[j]); rec[i].add(iterInfo.array[j]); }
+            if (d[j].valueR >= conf.threshold) {
+              if (j + 1 < iterInfo.array.length) {
+                cc += 1;
+                iterSet.add(iterInfo.array[j + 1]); rec[i].add(iterInfo.array[j + 1]);
+              }
+            }
+          }
+          // !!!! delete cls with outlier iter only once
+          if (cc < 2) { $scope.selectedCls.splice(i, 1); i -= 1; }
+        }
+
+        // manual order
+        let orderArr = [
+          'n11879895',
+          'n02489166',
+          'n11939491',
+          'n04487081',
+          'n03344393',
+          'n03447447',
+          'n04562935',
+          'n02509815',
+          'n02510455',
+          'n01531178',
+          'n02951358',
+          'n04153751',
+          'n06359193',
+          'n03590841',
+          'n02965783',
+          'n02280649',
+          'n03888257',
+          'n01930112',
+          'n02782093',
+          'n02690373',
+          'n07730033',
+          'n03956157',
+          'n04019541',
+          'n04398044',
+          'n01910747',
+          'n02096051',
+          'n10565667',
+          'n03791053',
+          'n02097209',
+          'n12998815',
+          'n04147183',
+          'n01773157',
+          'n04536866',
+          'n01773797',
+          'n03447721',
+          'n02895154'
+        ];
+
+        // order as specified order
+        let tmpCls = [];
+        for (let o of orderArr) {
+          let idx = _.findIndex($scope.selectedCls, d => d.name === o);
+          tmpCls.push($scope.selectedCls[idx]);
+        }
+        $scope.selectedCls = tmpCls;
+
+        let allQuery = {};
+        let parser = 'json', type = 'i_cosine', db = Global.getSelectedDB();
+        iterSet.forEach((v) => {
+          allQuery[v] = DataManager.fetchKernel({ db, type, iter: v, parser }, false);
+        });
+        let lidtoName = {};
+        $('#correlation-data-loading').removeClass('invisible');
+        $q.all(allQuery).then((data: any) => {
+          for (let i = 0; i < $scope.selectedCls.length; i += 1) {
+            rec[i].forEach((v) => {
+              let d = data[v];
+              for (let j = 0; j < d.length; j += 1) {
+                if (!lidtoName[d[j].lid]) { lidtoName[d[j].lid] = d[j].name; }
+                if (!resMap.has(d[j].lid)) { resMap.set(d[j].lid, {}); }
+                let o = resMap.get(d[j].lid);
+                if (!o[i]) { o[i] = {}; };
+                if (!o[i][v]) { o[i][v] = [rec[i]]; }
+                o[i][v].push(d[j].idx);
+              }
+            });
+          }
+          Pip.emitCorrelationReady({
+            data: resMap,
+            options: {
+              class: $scope.selectedCls,
+              classNum: $scope.selectedCls.length,
+              lidtoName,
+              rec,
+              width: 2000,
+              height: 1600,
+              minHeight: 6,
+              minWidth: 6,
+              threshold: 4,
+              h: 3,
+              w: 6,
+              margin: {
+                top: 12,
+                right: 0,
+                bottom: 0,
+                left: 0
+              }
+            }
+          });
+          $('#correlation-data-loading').addClass('invisible');
+        });
+
       }
 
       function mdsLayout(data) {
