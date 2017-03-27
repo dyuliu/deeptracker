@@ -217,7 +217,8 @@ namespace application {
           clsStat: null
         },
         correlation: {
-          filterRange: null
+          filterRange: null,
+          allLayers: null
         }
       };
 

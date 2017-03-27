@@ -292,13 +292,14 @@ namespace application {
             options: {
               class: $scope.selectedCls,
               classNum: $scope.selectedCls.length,
+              allLayers: this_.Global.getData('correlation').allLayers,
               lidtoName,
               rec,
               width: 2000,
               height: 1600,
-              minHeight: 1,
+              minHeight: 2,
               minWidth: 8,
-              threshold: 2,
+              threshold: 4,
               h: 4,
               w: 4,
               margin: {
@@ -488,6 +489,7 @@ namespace application {
           });
         });
     }
+
     private _processData(type, ...rest: any[]) {
       let this_ = this;
       let result = {};

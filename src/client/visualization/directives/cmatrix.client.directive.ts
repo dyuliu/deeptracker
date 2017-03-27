@@ -67,7 +67,11 @@ namespace application {
         rawdata.forEach((v, k) => {
           r.push({ lid: +k, value: v });
         });
-        r = _.sortBy(r, ['lid']);
+        r = _.sortBy(r, d => {
+          return _.findIndex(this_.options.allLayers, (dd: any) => {
+            return dd.name === this_.options.lidtoName[d.lid];
+          });
+        });
         for (let i = 0; i < r.length; i += 1) {
           let tmp: any = _.map(r[i].value, (d: any, j) => {
             return [+j, d];
@@ -285,7 +289,7 @@ namespace application {
             .style('stroke-width', Math.max(r2[i].miniSet[j].size * this_.options.h - 2.5, 0.5))
             // .style('stroke-width', fWeightStroke(weight))
             .style('opacity', fWeight(weight));
-            // .style('opacity', 0.6);
+          // .style('opacity', 0.6);
         }
       }
 

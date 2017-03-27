@@ -543,7 +543,7 @@ namespace application {
         }
 
         $scope.tree = this_._treeDataConstruction($scope.dataTree);
-        console.log($scope.tree);
+        this_.Global.getData('correlation').allLayers = $scope.tree;
 
         if (!previousOpen) { previousOpen = $scope.opened; }
         else { $scope.opened = previousOpen; }
@@ -572,6 +572,7 @@ namespace application {
         let confMiniPositions = {};
         for (let i = 0; i < msg.length; i += 1) {
           let [lid, name, miniSet, rowHeight, options] = msg[i];
+          console.log(name);
           $scope.picked[name] = true;
           $scope.pickedOptions[name] = {
             width: this_.Global.getData('iter').num ,
@@ -640,7 +641,7 @@ namespace application {
             // tlast.offH =
             // // $scope.optionsTopK[k].height = confMiniPositions[k][0][1];
             $scope.optionsTopK[k].position = confMiniPositions[k];
-            console.log(k, confMiniPositions[k]);
+            // console.log(k, confMiniPositions[k]);
             // compute height
           });
         });

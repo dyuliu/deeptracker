@@ -27,6 +27,16 @@ body {
 .layer-minibar {
   position: absolute;
 }
+.layer-edgebar {
+  height: calc(97%);
+  width: 4px;
+  z-index: 200;
+  position: absolute;
+  top: 0px;
+  right: 21px;
+  background: #2089ed;
+  box-shadow: 2px 1px 1px #888888;
+}
 .layerbox {
   position: relative;
   padding: 0;
@@ -35,7 +45,7 @@ body {
   border-color: #FFF #FFF #c3c3c3 #FFF;
 }
 .layerbox:hover {
-  border: 2px solid;
+  border: 1px solid;
   border-color: #f9a814;
 }
 .label-text {
@@ -49,6 +59,15 @@ body {
   position: absolute;
   left: 180px;
   top: 0;
+}
+.label-edgebar {
+  z-index: 200;
+  position: absolute;
+  top: 0.5px;
+  right: 22px;
+  width: 5px;
+  background: #2089ed;
+  box-shadow: 3px 1px 1px #888888;
 }
 .timebox-chart {
   position: absolute;

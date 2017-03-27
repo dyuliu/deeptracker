@@ -173,6 +173,7 @@ namespace application {
             $('#label-data-loading').addClass('invisible');
             let labelData = this_.Global.getData('label');
             labelData.clsStat = data;
+            console.log('cache ', this_.Global.getData('label'));
           });
 
         // // cached label cls stat
@@ -181,7 +182,6 @@ namespace application {
           .then(data => {
             $('#correlation-data-loading').addClass('invisible');
             let correlationConf = this_.Global.getData('correlation');
-            console.log('pre range', data);
             correlationConf.filterRange = data;
           });
 
@@ -230,10 +230,12 @@ namespace application {
             layer: data.infoLayer,
             cls: data.infoCls,
           }, 'info');
-          this_.Global.setData({
-            modelStat: data.labelStat,
-            clsStat: null
-          }, 'label');
+          let labelData = this_.Global.getData('label');
+          labelData.modelStat = data.labelStat;
+          // this_.Global.setData({
+          //   modelStat: data.labelStat,
+          //   clsStat: null
+          // }, 'label');
           this_.Pip.emitModelChanged(null);
         }).catch(reason => {
           console.log(reason);

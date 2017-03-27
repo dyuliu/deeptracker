@@ -267,27 +267,27 @@ namespace application {
             return 0;
           });
 
-        // barEdgeNodes.selectAll('.bar-edge-node')
-        //   .data(barData)
-        //   .enter().append('circle')
-        //   .attr('class', d => 'bar-edge-node ' + d.level + ' bar-edge-node-' + d.name)
-        //   .attr('cx', 2 * this_.options.width / 3 - 12)
-        //   .attr('cy', (d: any) => {
-        //     let ed;
-        //     let e = $('#' + d.name);
-        //     if (e.position()) {
-        //       return $('#' + d.name).position().top;
-        //     }
-        //   })
-        //   .attr('r', 2)
-        //   .style('fill', '#2089ed')
-        //   .style('opacity', d => {
-        //     let e = $('#' + d.name);
-        //     if (e.position()) {
-        //       return 1;
-        //     }
-        //     return 0;
-        //   });
+        barEdgeNodes.selectAll('.bar-edge-node')
+          .data(barData)
+          .enter().append('circle')
+          .attr('class', d => 'bar-edge-node ' + d.level + ' bar-edge-node-' + d.name)
+          .attr('cx', 2 * this_.options.width / 3 - 12)
+          .attr('cy', (d: any) => {
+            let ed;
+            let e = $('#' + d.name);
+            if (e.position()) {
+              return $('#' + d.name).position().top - 18;
+            }
+          })
+          .attr('r', 2)
+          .style('fill', '#2089ed')
+          .style('opacity', d => {
+            let e = $('#' + d.name);
+            if (e.position()) {
+              return 1;
+            }
+            return 0;
+          });
 
         // levelNodeEdges.selectAll('.level-node-edge')
         //   .data(levelLinkData)
@@ -427,6 +427,25 @@ namespace application {
               return 0;
             });
 
+          barEdgeNodes.selectAll('.bar-edge-node')
+            .attr('class', d => 'bar-edge-node ' + d.level + ' bar-edge-node-' + d.name)
+            .attr('cx', 2 * this_.options.width / 3 - 12)
+            .attr('cy', (d: any) => {
+              let ed;
+              let e = $('#' + d.name);
+              if (e.position()) {
+                return $('#' + d.name).position().top - 18;
+              }
+            })
+            .attr('r', 2)
+            .style('fill', '#2089ed')
+            .style('opacity', d => {
+              let e = $('#' + d.name);
+              if (e.position()) {
+                return 1;
+              }
+              return 0;
+            });
           updateEdge();
         }, 500);
       }

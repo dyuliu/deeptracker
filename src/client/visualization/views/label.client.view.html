@@ -2,8 +2,8 @@
 
   <div class="label-chart">
     <div ng-repeat-start="cls in selectedClsInverted" style="position: relative" ng-repeat-end>
-      <small class="clickable cls-name" ng-click="click('flip', cls.name)" style="position: absolute; left: -103px; top: -5px;">{{cls.name}}</small>
-      <img class="clickable cls-name" width="14" height="14" alt="14x14" src="{{cls.file}}" ng-click="showModal(cls.name, 'class')" style="position: absolute; left: -40px; top: -5px;"></img>
+      <small class="clickable cls-name" ng-click="click('flip', cls.name)" style="position: absolute; left: -112px; top: -10px;">{{cls.name}}</small>
+      <img class="clickable cls-name" width="14" height="14" alt="14x14" src="{{cls.file}}" ng-click="showModal(cls.name, 'class')" style="position: absolute; left: -40px; top: -8px;"></img>
       <!--<div ng-if="flip[cls.name]" style="position: absolute; left: -85px; top: 18px">
           <button class="btn btn-success btn-minier float-right">
             <i class="ace-icon fa fa-search-plus" ng-click="click('zoomin', cls.name)"></i>
@@ -15,7 +15,7 @@
         </div>-->
       <div ng-if="!flip[cls.name]" heatline data="dataCls[cls.name]" options="optionsCls[cls.name]"></div>
       <div style="position: absolute; top: -0.5px; width: 100%; border-bottom: 1px solid white;"></div>
-      <div id="label-edgebar-{{cls.name}}" style="z-index: 200; position: absolute; top: 0.5px; right: 22px; width: 5px; background: #2089ed; box-shadow: 3px 1px 1px #888888;"></div>
+      <div id="label-edgebar-{{cls.name}}" class="label-edgebar"></div>
     </div>
 
   </div>
