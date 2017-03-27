@@ -71,7 +71,7 @@ namespace application {
         .on('mouseout', mouseOutHandler)
         .on('mousemove', mouseMoveHandler);
 
-      this_._paintHeatMap(data.heatmapData);
+      this_._paintHeatMap(data.heatmapData, data.filterRange);
       if (this_.options.threshold > 0) {
         this_._addTriangles(data.linechartData);
         if (this_.options.triangle === true) {
@@ -126,7 +126,7 @@ namespace application {
         .enter().append('polygon')
         .attr('points', d => {
           let w = scale(d.y);
-          return '0,3, ' + w + ',-3 -' + w + ',-3';
+          return '0,2, ' + w + ',-2 -' + w + ',-2';
         })
         .attr('fill', '#4682b4')
         .attr('opacity', 0.9)
@@ -141,7 +141,7 @@ namespace application {
         .enter().append('polygon')
         .attr('points', d => {
           let w = scale(d.y);
-          return w + ',0 -' + w + ',0 ' + '0,-6';
+          return w + ',0 -' + w + ',0 ' + '0,-4';
         })
         .attr('fill', '#4682b4')
         .attr('opacity', 0.9)
@@ -154,26 +154,31 @@ namespace application {
 
     }
 
-    private _paintHeatMap(data: IDTypeEle) {
+    private _paintHeatMap(data: IDTypeEle, filterRange: any) {
       // to do
       let this_ = this;
       let ctx: CanvasRenderingContext2D = this_.canvas.node().getContext('2d');
       let size = data.length;
       let lw = this_.options.cellWidth ? this_.options.cellWidth : 1;
       let color = this_.options.color;
+      let definedColor = d3.scale.linear()
+        .domain([0, 0.5, 0.52, 1])
+        .range(['#dd261c', '#ffffbf', '#d9ef8b', '#0e9247']);
       // let color = d4.scaleSequential(d4.interpolateYlOrRd);
       // ctx.globalCompositeOperation = 'destination-over';
       if (this_.options.type === 'kernel') {
         let scale = d4.scaleLinear()
           .domain(d4.extent(data, d => d.value))
-          .range([1, 0])
+          .range([0.95, 0.15])
           .clamp(true);
         for (let i = 0; i < size; i += 1) {
+          let nf = d4.scaleLinear().domain([filterRange.value[i][0], filterRange.value[i][1]]).range([0.95, 0.15]).clamp(true);
           ctx.beginPath();
           ctx.moveTo(this_.offsetWidth + i * lw, this_.offsetHeight);
           ctx.lineTo(this_.offsetWidth + i * lw, this_.offsetHeight + this_.height);
           ctx.lineWidth = lw;
-          ctx.strokeStyle = color(scale(data[i].value)).toString();
+          ctx.strokeStyle = color(nf(data[i].value)).toString();
+          // ctx.strokeStyle = color(scale(data[i].value)).toString();
           ctx.stroke();
         }
       } else {
@@ -182,7 +187,8 @@ namespace application {
           ctx.moveTo(this_.offsetWidth + i * lw, this_.offsetHeight);
           ctx.lineTo(this_.offsetWidth + i * lw, this_.offsetHeight + this_.height);
           ctx.lineWidth = lw;
-          ctx.strokeStyle = color(1 - data[i].value).toString();
+          // ctx.strokeStyle = color(1 - data[i].value).toString();
+          ctx.strokeStyle = definedColor(1 - data[i].value).toString();
           ctx.stroke();
         }
       }

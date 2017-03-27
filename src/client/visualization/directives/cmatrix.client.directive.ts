@@ -59,44 +59,51 @@ namespace application {
       let fr = d4.scaleBand().range([0, this_.height]);
       let fc = d4.scaleBand().range([0, this_.width]);
       let threshold = this_.options.threshold;
-      let r = [], r2 = [], ch = 0, cw = 0;
-      data.forEach((v, k) => {
-        r.push({ lid: +k, value: v });
-      });
-      r = _.sortBy(r, ['lid']);
-      for (let i = 0; i < r.length; i += 1) {
-        let tmp: any = _.map(r[i].value, (d: any, j) => {
-          return [+j, d];
-        });
-        let sc = computeSetEle(tmp);
-        tmp = { lid: r[i].lid, data: tmp, miniSet: sc };
-        r2.push(tmp);
-      }
+      let ch = 0, cw = 0;
 
-      // pre filter noisy set
-      for (let i = 0; i < r2.length; i += 1) {
-        let dt = r2[i].data;
-        let pa = Array(r2[i].miniSet.length).fill(0);
-        _.each(dt, dtt => {
-          let tmp = _.map(dtt[1], (d: any, j) => {
-            // d.splice(0, 1);
-            return d.slice(1, d.length);
-          });
-          _.each(tmp, (t, ti) => {
-            let tf = countSet(new Set(t), r2[i].miniSet, pa);
-          });
+      let r2 = preprocessData(data);
+      function preprocessData(rawdata): any[] {
+        let r = [], res = [];
+        rawdata.forEach((v, k) => {
+          r.push({ lid: +k, value: v });
         });
-        // console.log(pa);
-        let tmpsum = 0;
-        r2[i].miniSet = _.filter(r2[i].miniSet, (d: any, key) => pa[key] * d.size >= threshold);
-        for (let j of r2[i].miniSet) { tmpsum += j.size; }
-        ch = Math.max(ch, tmpsum);
-        r2[i].filterNum = tmpsum;
-        if (r2[i].miniSet.length === 0) {
-          r2.splice(i, 1);
-          i -= 1;
+        r = _.sortBy(r, ['lid']);
+        for (let i = 0; i < r.length; i += 1) {
+          let tmp: any = _.map(r[i].value, (d: any, j) => {
+            return [+j, d];
+          });
+          let sc = computeSetEle(tmp);
+          tmp = { lid: r[i].lid, data: tmp, miniSet: sc };
+          res.push(tmp);
         }
-      }
+
+        // pre filter noisy set
+        for (let i = 0; i < res.length; i += 1) {
+          let dt = res[i].data;
+          let pa = Array(res[i].miniSet.length).fill(0);
+          _.each(dt, dtt => {
+            let tmp = _.map(dtt[1], (d: any, j) => {
+              // d.splice(0, 1);
+              return d.slice(1, d.length);
+            });
+            _.each(tmp, (t, ti) => {
+              let tf = countSet(new Set(t), res[i].miniSet, pa);
+            });
+          });
+          // console.log(pa);
+          let tmpsum = 0;
+          res[i].miniSet = _.filter(res[i].miniSet, (d: any, key) => pa[key] * d.size >= threshold);
+          // res[i].miniSet = _.filter(res[i].miniSet, (d: any, key) => pa[key] * d.size >= 2);
+          for (let j of res[i].miniSet) { tmpsum += j.size; }
+          ch = Math.max(ch, tmpsum);
+          res[i].filterNum = tmpsum;
+          if (res[i].miniSet.length === 0) {
+            res.splice(i, 1);
+            i -= 1;
+          }
+        }
+        return res;
+      };
 
       let maxWeight = -1;
       // compute position for hr lines
@@ -196,7 +203,7 @@ namespace application {
           .attr('y2', this_.options.height)
           .style('stroke', '#f7a659')
           .style('stroke-width', 1)
-          .style('opacity', 0.6);
+          .style('opacity', 0.5);
         // colClsName.append('text')
         //   .attr('x', countW)
         //   .attr('y', 0)
@@ -208,7 +215,6 @@ namespace application {
         countW += tmpWidth;
       }
 
-      console.log(this_.options);
 
       let hPosition = [];
       let rowHeights = [];
@@ -225,7 +231,7 @@ namespace application {
           .attr('y2', countH)
           .style('stroke', '#f7a659')
           .style('stroke-width', 1)
-          .style('opacity', 0.6);
+          .style('opacity', 0.5);
         let tmpHeight = fh(d.filterNum);
         rowHeights.push(tmpHeight);
         countH += tmpHeight;
@@ -234,14 +240,14 @@ namespace application {
       Pip.emitClsWidth(colWidths);
       Pip.emitLayerHeight(
         _.map(r2, (d, i) => {
-          return [d.lid, this_.options.lidtoName[d.lid], d.miniSet, rowHeights[i]];
+          return [d.lid, this_.options.lidtoName[d.lid], d.miniSet, rowHeights[i], this_.options];
         })
       );
       // }[rowHeights, r2, data, this_.options]);
 
       let rowInsideHrLines = this_.svg.append('g').attr('class', 'row-hr-inside-line');
       let colInsideVlLines = this_.svg.append('g').attr('class', 'col-vl-inside-line');
-      let fWeight = d4.scaleLinear<any>().domain([threshold, maxWeight]).range([0.1, 1]);
+      let fWeight = d4.scaleLinear<any>().domain([threshold, maxWeight]).range([0.05, 0.5]);
       let fWeightStroke = d4.scaleLinear<any>().domain([threshold, maxWeight]).range([0.5, this_.options.h - 1]);
       let fCls = [];
       for (let i = 0; i < this_.options.rec.length; i += 1) {
@@ -276,9 +282,10 @@ namespace application {
             .attr('x2', wPosition[ed[0]] + fCls[ed[0]](ed[1]))
             .attr('y2', hPosition[i] + miniPosition[j])
             .style('stroke', '#363535')
-            .style('stroke-width', fWeightStroke(weight))
-            // .style('opacity', fWeight(weight));
-            .style('opacity', 0.6);
+            .style('stroke-width', Math.max(r2[i].miniSet[j].size * this_.options.h - 2.5, 0.5))
+            // .style('stroke-width', fWeightStroke(weight))
+            .style('opacity', fWeight(weight));
+            // .style('opacity', 0.6);
         }
       }
 
@@ -353,7 +360,7 @@ namespace application {
             // if (d[1] > 1) {
             //   return '#ff0a0a';
             // } else {
-            return '#3068a0';
+            return '#3879ba';
             // }
           })
           // .attr('stroke', '#525252')

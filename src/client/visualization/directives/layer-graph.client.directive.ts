@@ -50,10 +50,10 @@ namespace application {
       this.height = options.height - options.margin.top - options.margin.bottom;
     }
 
-    public render(Pip: IPipService) {
+    public render(Pip: IPipService, scope: any) {
       let this_ = this;
       this_.Pip = Pip;
-      console.log('rendering', this_.data);
+      this_.options.sOpen = {};
       let data = this_.nodesDataConstruction(this_.data);
 
       // move g to the center
@@ -84,8 +84,9 @@ namespace application {
         .attr('height', this_.options.node.height)
         .on('click', function (d) {
           Pip.emitFlip(d.name);
-          updateEdge();
         })
+        .on('mouseover', d => { layerMouseOver(d.name); })
+        .on('mouseout', d => { layerMouseOut(d.name); })
         .append('title')
         .text(d => {
           if (d.type !== 'data' && d.type !== 'other') {
@@ -174,6 +175,10 @@ namespace application {
         }
       }
       let barData = this_.barDataConstruction(this_.data, location);
+      let barEdgeColor = {};
+      _.each(barData, d => {
+        barEdgeColor[d.name] = { color: '#2089ed' };
+      });
       let stretchData = this_.stretchData(this_.data);
       let levelLinkData = this_.levelLinkDataConstruction(this_.data);
       let bars = this_.svg.append('g')
@@ -199,10 +204,10 @@ namespace application {
         .attr('height', d => d.ed - d.st)
         .attr('fill', '#3093f2')
         .style('opacity', d => {
-          if (stretchData[d.name].parent && !this_.options.opened[stretchData[d.name].parent.name]) {
+          if (stretchData[d.name].parent && !this_.options.sOpen[stretchData[d.name].parent.name]) {
             return 0.2;
           }
-          if (!this_.options.opened[d.name]) { return 1; }
+          if (!this_.options.sOpen[d.name]) { return 1; }
           return 0.2;
         })
         .on('click', clickHandler);
@@ -241,7 +246,7 @@ namespace application {
             let ed;
             let e = $('#' + d.name);
             if (e.position()) {
-              ed = [2 * this_.options.width / 3 - 12, $('#' + d.name).position().top];
+              ed = [2 * this_.options.width / 3, $('#' + d.name).position().top - 18];
             } else {
               ed = st;
             }
@@ -251,87 +256,123 @@ namespace application {
             return lineCurve(pd);
           })
           .style('fill', 'none')
-          .style('stroke', '#3093f2')
+          // .style('stroke', '#3093f2')
+          .style('stroke', d => barEdgeColor[d.name].color)
           .style('stroke-width', 1)
           .style('opacity', d => {
-            if (stretchData[d.name].parent && !this_.options.opened[stretchData[d.name].parent.name]) {
+            if (stretchData[d.name].parent && !this_.options.sOpen[stretchData[d.name].parent.name]) {
               return 0;
             }
-            if (!this_.options.opened[d.name]) { return 1; }
+            if (!this_.options.sOpen[d.name]) { return 0.6; }
             return 0;
           });
 
-        barEdgeNodes.selectAll('.bar-edge-node')
-          .data(barData)
-          .enter().append('circle')
-          .attr('class', d => 'bar-edge-node ' + d.level + ' bar-edge-node-' + d.name)
-          .attr('cx', 2 * this_.options.width / 3 - 12)
-          .attr('cy', (d: any) => {
-            let ed;
-            let e = $('#' + d.name);
-            if (e.position()) {
-              return $('#' + d.name).position().top;
-            }
-          })
-          .attr('r', 2)
-          .style('fill', '#2089ed')
-          .style('opacity', d => {
-            let e = $('#' + d.name);
-            if (e.position()) {
-              return 1;
-            }
-            return 0;
-          });
+        // barEdgeNodes.selectAll('.bar-edge-node')
+        //   .data(barData)
+        //   .enter().append('circle')
+        //   .attr('class', d => 'bar-edge-node ' + d.level + ' bar-edge-node-' + d.name)
+        //   .attr('cx', 2 * this_.options.width / 3 - 12)
+        //   .attr('cy', (d: any) => {
+        //     let ed;
+        //     let e = $('#' + d.name);
+        //     if (e.position()) {
+        //       return $('#' + d.name).position().top;
+        //     }
+        //   })
+        //   .attr('r', 2)
+        //   .style('fill', '#2089ed')
+        //   .style('opacity', d => {
+        //     let e = $('#' + d.name);
+        //     if (e.position()) {
+        //       return 1;
+        //     }
+        //     return 0;
+        //   });
 
-        levelNodeEdges.selectAll('.level-node-edge')
-          .data(levelLinkData)
-          .enter().append('line')
-          .attr('class', 'level-node-edge')
-          .attr('x1', 2 * this_.options.width / 3 - 12)
-          .attr('y1', (d: any) => {
-            return $('.bar-edge-node-' + d[0].name).attr('cy');
-          })
-          .attr('x2', 2 * this_.options.width / 3 - 12)
-          .attr('y2', (d: any) => {
-            return $('.bar-edge-node-' + d[1].name).attr('cy');
-          })
-          .style('stroke', '#2089ed')
-          .style('stroke-width', 1)
-          .style('opacity', 0.6);
+        // levelNodeEdges.selectAll('.level-node-edge')
+        //   .data(levelLinkData)
+        //   .enter().append('line')
+        //   .attr('class', 'level-node-edge')
+        //   .attr('x1', 2 * this_.options.width / 3 - 12)
+        //   .attr('y1', (d: any) => {
+        //     return $('.bar-edge-node-' + d[0].name).attr('cy');
+        //   })
+        //   .attr('x2', 2 * this_.options.width / 3 - 12)
+        //   .attr('y2', (d: any) => {
+        //     return $('.bar-edge-node-' + d[1].name).attr('cy');
+        //   })
+        //   .style('stroke', '#2089ed')
+        //   .style('stroke-width', 1)
+        //   .style('opacity', 0.6);
       }, 2000);
+      updateEdge();
+
+      function layerMouseOver(layerName) {
+        $('.bar').attr('fill', '#3093f2');
+        $('.bar-' + layerName).attr('fill', '#f9a814');
+        _.each(barEdgeColor, (d: any) => {
+          d.color = '#2089ed';
+        });
+        barEdgeColor[layerName].color = '#f9a814';
+      }
+
+      function layerMouseOut(layerName) {
+        $('.bar').attr('fill', '#3093f2');
+        _.each(barEdgeColor, (d: any) => {
+          d.color = '#2089ed';
+        });
+      }
+
+      Pip.onHoveringLayer(scope, layerName => {
+        layerMouseOver(layerName);
+      });
+
+      Pip.onLeavingLayer(scope, layerName => {
+        layerMouseOut(layerName);
+      });
 
       function clickHandler(d) {
-        let open = !this_.options.opened[d.name];
+        let open = !this_.options.sOpen[d.name];
         if (open && stretchData[d.name].nodes) {
           let p = stretchData[d.name].parent;
-          if (!(p && !this_.options.opened[p.name])) {
+          if (!(p && !this_.options.sOpen[p.name])) {
             $(this).css('opacity', 0.1);
-            this_.options.opened[d.name] = true;
+            this_.options.sOpen[d.name] = true;
             for (let o of stretchData[d.name].nodes) {
               $('.bar-' + o.name).css('opacity', 1);
             }
           }
         } else if (!open && stretchData[d.name].nodes) {
           $(this).css('opacity', 1);
-          this_.options.opened[d.name] = false;
+          this_.options.sOpen[d.name] = false;
           for (let o of stretchData[d.name].nodes) {
             $('.bar-' + o.name).css('opacity', 0.1);
-            this_.options.opened[o.name] = false;
+            this_.options.sOpen[o.name] = false;
             if (o.nodes) {
               for (let oo of o.nodes) {
                 $('.bar-' + oo.name).css('opacity', 0.1);
-                this_.options.opened[oo.name] = false;
+                this_.options.sOpen[oo.name] = false;
               }
             }
           }
         }
         Pip.emitLayerOpen(null);
-
-        updateEdge();
       }
 
       function updateEdge() {
         setTimeout(function () {
+          bars.selectAll('.bar')
+            .style('opacity', (d: any) => {
+              let e = $('#' + d.name);
+              if (!e.position()) {
+                return 0.2;
+              }
+              if (stretchData[d.name].parent && !this_.options.sOpen[stretchData[d.name].parent.name]) {
+                return 0.2;
+              }
+              if (!this_.options.sOpen[d.name]) { return 1; }
+              return 0.2;
+            });
           barEdges.selectAll('.bar-edge')
             .attr('d', (o: any) => {
               let pd = [];
@@ -349,7 +390,7 @@ namespace application {
               let ed;
               let e = $('#' + o.name);
               if (e.position()) {
-                ed = [2 * this_.options.width / 3 - 12, $('#' + o.name).position().top];
+                ed = [2 * this_.options.width / 3, $('#' + o.name).position().top - 18];
               } else {
                 ed = st;
               }
@@ -376,67 +417,17 @@ namespace application {
 
             })
             .style('fill', 'none')
-            .style('stroke', '#3093f2')
+            .style('stroke', (d: any) => barEdgeColor[d.name].color)
             .style('stroke-width', 1)
             .style('opacity', (o: any) => {
-              if (stretchData[o.name].parent && !this_.options.opened[stretchData[o.name].parent.name]) {
+              if (stretchData[o.name].parent && !this_.options.sOpen[stretchData[o.name].parent.name]) {
                 return 0;
               }
-              if (!this_.options.opened[o.name]) { return 1; }
+              if (!this_.options.sOpen[o.name]) { return 0.6; }
               return 0;
             });
 
-          barEdgeNodes.selectAll('.bar-edge-node')
-            .attr('cx', 2 * this_.options.width / 3 - 12)
-            .attr('cy', (d: any) => {
-              let ed;
-              let e = $('#' + d.name);
-              if (e.position()) {
-                return $('#' + d.name).position().top;
-              }
-            })
-            .attr('r', 2)
-            .style('fill', '#2089ed')
-            .style('opacity', (d: any) => {
-              let e = $('#' + d.name);
-              if (e.position()) {
-                return 1;
-              }
-              return 0;
-            });
-
-          levelNodeEdges.selectAll('.level-node-edge')
-            .attr('x1', (d: any) => {
-              let k = 2 * this_.options.width / 3;
-              if (d[2] === -1) {
-                k -= 12;
-              } else {
-                k -= 20;
-              }
-              return k;
-            })
-            .attr('y1', (d: any) => {
-              return $('.bar-edge-node-' + d[0].name).attr('cy');
-            })
-            .attr('x2', (d: any) => {
-              let k = 2 * this_.options.width / 3;
-              if (d[2] === -1) {
-                k -= 12;
-              } else {
-                k -= 20;
-              }
-              return k;
-            })
-            .attr('y2', (d: any) => {
-              return $('.bar-edge-node-' + d[1].name).attr('cy');
-            })
-            .style('stroke', '#2089ed')
-            .style('stroke-width', 1)
-            .style('opacity', d => {
-              let m = Math.min(+$('.bar-edge-node-' + d[0].name).css('opacity'),
-                +$('.bar-edge-node-' + d[1].name).css('opacity'));
-              return m;
-            });
+          updateEdge();
         }, 500);
       }
       // console.log(data);
@@ -450,19 +441,23 @@ namespace application {
         if (!d.nodes) {
           dst = location[d.name]; ded = dst + this_.options.node.height;
           r.push({ name: d.name, level: 'level1', st: dst, ed: ded });
+          this_.options.sOpen[d.name] = false;
         } else if (d.nodes) {
+          this_.options.sOpen[d.name] = true;
           dst = location[d.nodes[0].nodes[0].name];
           let tmp: any = _.last(d.nodes);
           tmp = _.last(tmp.nodes);
           ded = location[tmp.name] + this_.options.node.height;
           r.push({ name: d.name, level: 'level1', st: dst, ed: ded });
           for (let dd of d.nodes) {
+            this_.options.sOpen[dd.name] = true;
             let ddst, dded;
             ddst = location[dd.nodes[0].name];
             let tmp2: any = _.last(dd.nodes);
             dded = location[tmp2.name] + this_.options.node.height;
             r.push({ name: dd.name, level: 'level2', st: ddst, ed: dded });
             for (let ddd of dd.nodes) {
+              this_.options.sOpen[ddd.name] = false;
               let dddst, ddded;
               dddst = location[ddd.name];
               ddded = dddst + this_.options.node.height;
@@ -580,7 +575,7 @@ namespace application {
         let start = () => {
           element.empty();
           let board = new Painter(element, scope.options, scope.data);
-          board.render(Pip);
+          board.render(Pip, scope);
         };
         if (!_.isUndefined(scope.data)) { start(); };
         scope.$watch('data', (n, o) => { if (n !== o && n) { start(); } }, false);

@@ -14,7 +14,12 @@ body {
 .clickable {
   cursor: pointer;
 }
+
+#main-widget-container {
+  height: 1200px;
+}
 // ---------- end of basic utils --------- //
+
 
 // global variable
 @left-offset: -20px;
@@ -34,28 +39,49 @@ body {
   top: 0;
 }
 
+.layer-minibar {
+  position: absolute;
+}
+
 .layerbox {
-  // margin-top: -1px;
   position: relative;
-  // height: 60px;
-  // padding: 12px 0 12px 0;
   padding: 0;
-  // border: 1px dotted;
+  width: 779px;
   border: 1px solid;
-  border-color: #D6E1EA;
+  border-color: #FFF #FFF #c3c3c3 #FFF;
+  // border-color: #6448f2;
   // border-color: rgba(0, 0, 0, .11) transparent transparent
 }
 
 .layerbox:hover {
-    background-color: #F7F7F7;
-    border-color: #848787;
+    // background-color: #ff6d6d;
+    border: 2px solid;
+    border-color: #f9a814;
     // border-style: solid;
     // z-index: 1
 }
+// .layerbox {
+//   // margin-top: -1px;
+//   position: relative;
+//   // height: 60px;
+//   // padding: 12px 0 12px 0;
+//   padding: 0;
+//   // border: 1px dotted;
+//   border: 1px solid;
+//   border-color: #D6E1EA;
+//   // border-color: rgba(0, 0, 0, .11) transparent transparent
+// }
 
-.layerbox:first-child {
-  border-top-color: #DDD;
-}
+// .layerbox:hover {
+//     background-color: #F7F7F7;
+//     border-color: #848787;
+//     // border-style: solid;
+//     // z-index: 1
+// }
+
+// .layerbox:first-child {
+//   border-top-color: #DDD;
+// }
 // ---------- end of layer.client.view.html  --------- //
 
 // ---------- begin of label.client.view.html  --------- //
@@ -225,7 +251,8 @@ body {
   fill: #bd0026;
 }
 .layer.other {
-  fill: #FFB84D;
+  // fill: #FFB84D;
+  fill: #984ea3;
 }
 
 .bar {

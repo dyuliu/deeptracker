@@ -211,6 +211,54 @@ namespace application {
           // !!!! delete cls with outlier iter only once
         }
 
+        // manual order
+        let orderArr = [
+          'n11879895',
+          'n02489166',
+          'n11939491',
+          'n04487081',
+          'n03344393',
+          'n03447447',
+          'n04562935',
+          'n02509815',
+          'n02510455',
+          'n01531178',
+          'n02951358',
+          'n04153751',
+          'n06359193',
+          'n03590841',
+          'n02965783',
+          'n02280649',
+          'n03888257',
+          'n01930112',
+          'n02782093',
+          'n02690373',
+          'n07730033',
+          'n03956157',
+          'n04019541',
+          'n04398044',
+          'n01910747',
+          'n02096051',
+          'n10565667',
+          'n03791053',
+          'n02097209',
+          'n12998815',
+          'n04147183',
+          'n01773157',
+          'n04536866',
+          'n01773797',
+          'n03447721',
+          'n02895154'
+        ];
+
+        // order as specified order
+        let tmpCls = [];
+        for (let o of orderArr) {
+          let idx = _.findIndex($scope.selectedCls, d => d.name === o);
+          tmpCls.push($scope.selectedCls[idx]);
+        }
+        $scope.selectedCls = tmpCls;
+
         $scope.selectedClsInverted = _.cloneDeep($scope.selectedCls);
         _.reverse($scope.selectedClsInverted);
 
@@ -248,13 +296,13 @@ namespace application {
               rec,
               width: 2000,
               height: 1600,
-              minHeight: 6,
-              minWidth: 6,
-              threshold: 4,
-              h: 3,
+              minHeight: 1,
+              minWidth: 8,
+              threshold: 2,
+              h: 4,
               w: 4,
               margin: {
-                top: 1,
+                top: 0,
                 right: 0,
                 bottom: 0,
                 left: 0
@@ -497,7 +545,8 @@ namespace application {
             pixelChart: true,
             lineChart: true,
             color: function (d) {
-              if (d === 1) { return '#7fc97f'; } else { return '#fdc086'; };
+              // if (d === 1) { return '#7fc97f'; } else { return '#fdc086'; };
+              if (d === 1) { return '#B6EB9D'; } else { return '#E88984'; };
             },
             marginTop: 9,
             margin: {

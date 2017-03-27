@@ -166,13 +166,23 @@ namespace application {
         if (!n) { return; }
         this_.Global.setSelectedDB(n);
         let [db, parser] = [n, 'json'];
-        $('#label-data-loading').removeClass('invisible');
         // cached label cls stat
+        $('#label-data-loading').removeClass('invisible');
         this_.DataManager.fetchImg({ db, type: 'cls_stat', seqidx: [this_.Global.getConfig('label').abnormal], cls: [], parser }, false)
           .then(data => {
             $('#label-data-loading').addClass('invisible');
             let labelData = this_.Global.getData('label');
             labelData.clsStat = data;
+          });
+
+        // // cached label cls stat
+        $('#correlation-data-loading').removeClass('invisible');
+        this_.DataManager.fetchKernel({ db, type: 'i_cosine_range', parser }, false)
+          .then(data => {
+            $('#correlation-data-loading').addClass('invisible');
+            let correlationConf = this_.Global.getData('correlation');
+            console.log('pre range', data);
+            correlationConf.filterRange = data;
           });
 
         // // cached change ratio data

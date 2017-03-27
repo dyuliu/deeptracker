@@ -27,6 +27,8 @@ namespace application {
     size: {};
     click: any;
     layers: any;
+    hovering: any;
+    mouseleave: any;
   }
 
   class Controller {
@@ -60,6 +62,17 @@ namespace application {
         }, 3000);
       }
       updateContainerHeight();
+
+
+      $scope.hovering = function (name) {
+        $('.layer-bar-' + name).css('background', '#f9a814');
+        Pip.emitHoveringLayer(name);
+      };
+
+      $scope.mouseleave = function (name) {
+        // $('.layer-bar-' + name).css('background', '#489ff2');
+        Pip.emitLeavingLayer(name);
+      };
 
       $scope.click = function (type, name) {
         if ($scope.showTypes[name] === 'nvd3') {
@@ -254,12 +267,12 @@ namespace application {
         $scope.dataTree = tree;
         $scope.optionsTree = {
           width: 200,
-          height: 690,
+          height: 3685,
           layers: layers,
           opened: $scope.opened,
           node: {
             height: 5,
-            width: 12
+            width: 13
           },
           space: 4,
           margin: {
@@ -543,15 +556,26 @@ namespace application {
         }, 1000);
       }
 
+      // important
       Pip.onLayerHeight($scope, msg => {
         let parser = 'json', type = 'i_cosine', db = Global.getSelectedDB();
         let qArray = {};
 
+        // let miniPosition = [];
+        // let curH = this_.options.minHeight / 2;
+        // for (let j = 0; j < r2[i].miniSet.length; j += 1) {
+        //   let nowH = r2[i].miniSet[j].size * this_.options.h;
+        //   miniPosition.push(curH + nowH / 2);
+        //   curH += nowH;
+        // }
+        // miniPositions[i] = miniPosition;
+        let confMiniPositions = {};
         for (let i = 0; i < msg.length; i += 1) {
-          $scope.picked[msg[i][1]] = true;
-          $scope.pickedOptions[msg[i][1]] = {
-            width: this_.Global.getData('iter').num + 30,
-            height: msg[i][3],
+          let [lid, name, miniSet, rowHeight, options] = msg[i];
+          $scope.picked[name] = true;
+          $scope.pickedOptions[name] = {
+            width: this_.Global.getData('iter').num ,
+            height: rowHeight,
             cellWidth: 1,
             color: d4.scaleSequential(d4.interpolateBlues),
             margin: {
@@ -564,11 +588,25 @@ namespace application {
             lineChart: false
           };
           let tmpSet = new Set();
-          for (let d of msg[i][2]) {
-            d.forEach(v => { tmpSet.add(v); });
+          confMiniPositions[name] = [];
+          let curH = options.minHeight / 2;
+          let di = 0;
+          for (let d of miniSet) {
+            let nowH = miniSet[di].size * options.h;
+            let ch = (nowH - 1) / miniSet[di].size;
+            let cv = 0;
+            d.forEach(v => {
+              tmpSet.add(v);
+              // confMiniPositions[name].push([curH + options.h * cv, options.h]);
+              confMiniPositions[name].push([curH + ch * cv, ch]);
+              cv += 1;
+            });
+            // confMiniPositions[name].push([curH + 0.5, (nowH - 1) / miniSet[di].size]);
+            curH += nowH;
+            di += 1;
           }
-          qArray[msg[i][1]] = DataManager.fetchKernel({
-            db, type, layer: [+msg[i][0]], seqidx: Array.from(tmpSet), parser
+          qArray[name] = DataManager.fetchKernel({
+            db, type, layer: [+lid], seqidx: Array.from(tmpSet), parser
           }, false);
         }
 
@@ -581,11 +619,29 @@ namespace application {
             $scope.dataTopK[k] = _.map(v, (vd: any) => {
               return {
                 heatmapData: vd.value,
-                linechartData: null
+                linechartData: null,
+                filterRange: this_.Global.getData('correlation').filterRange[k]
               };
             });
             $scope.optionsTopK[k] = this_._setOptions('heatline');
             $scope.optionsTopK[k].height = 3;
+            // if (!$scope.optionsTopK[k].config) { $scope.optionsTopK[k].config = []; }
+            // $scope.optionsTopK[k].config.push(this_._setOptions('heatline'));
+            $scope.optionsTopK[k].config = [];
+            for (let i = 0; i < $scope.dataTopK[k].length; i += 1) {
+              let tt: any = this_._setOptions('heatline');
+              tt.height = confMiniPositions[k][i][1];
+              tt.offH = confMiniPositions[k][i][0];
+              $scope.optionsTopK[k].config.push(tt);
+            }
+            // let ti = le
+            // let tlast = _.last($scope.optionsTopK[k].config);
+            // tlast.height =
+            // tlast.offH =
+            // // $scope.optionsTopK[k].height = confMiniPositions[k][0][1];
+            $scope.optionsTopK[k].position = confMiniPositions[k];
+            console.log(k, confMiniPositions[k]);
+            // compute height
           });
         });
 
@@ -882,11 +938,11 @@ namespace application {
           break;
         case 'heatline':
           options = {
-            width: this_.Global.getData('iter').num + 30,
+            width: this_.Global.getData('iter').num ,
             height: 12,
             cellWidth: 1,
-            // color: d4.scaleSequential(d4.interpolateBlues),
-            color: d4.scaleSequential(d4.interpolateYlOrRd),
+            color: d4.scaleSequential(d4.interpolateGnBu),
+            // color: d4.scaleSequential(d4.interpolateYlOrRd),
             margin: {
               top: 0,
               right: 0,

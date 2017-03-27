@@ -2,15 +2,15 @@
   <div class="layer-graph" layer-graph options="optionsTree" data="dataTree"></div>
 
   <div class="layer-chart">
-    <div class="layerbox" ng-repeat-start="la in tree" ng-if="picked[la.name]" id="{{la.name}}" style="position: relative; height: {{pickedOptions[la.name].height}}px" ng-repeat-end>
+    <div class="layerbox" ng-repeat-start="la in tree" ng-if="picked[la.name]" id="{{la.name}}" style="position: relative; height: {{pickedOptions[la.name].height + 1}}px" ng-mouseleave="mouseleave(la.name)" ng-mouseover="hovering(la.name)" ng-repeat-end>
       <!--<div ng-if="showTypes[la.name] === 'topk' ">
         <div class="space-2"></div>
         <div ng-repeat-start="dTopK in dataTopK[la.name]" heatline data="dTopK" options="optionsTopK[la.name]" style="z-index: 100" ng-repeat-end> </div>
         <div class="space-2"></div>
       </div>-->
-      <div>
-        <div ng-repeat-start="dTopK in dataTopK[la.name]" heatline data="dTopK" options="optionsTopK[la.name]" style="z-index: 100" ng-repeat-end> </div>
-      </div>
+      <!--<div>-->
+        <div ng-repeat-start="dTopK in dataTopK[la.name] track by $index" class="layer-minibar" heatline data="dTopK" options="optionsTopK[la.name].config[$index]" style="z-index: 100; top: {{optionsTopK[la.name].config[$index].offH}}px" ng-repeat-end> </div>
+      <!--</div>-->
 
       <!--<div id="layer-edgebar-{{la.name}}" style="z-index: 200; position: absolute; top: 0.5px; right: 22px; width: 5px; background: #2089ed; box-shadow: 3px 1px 1px #888888;"></div>-->
     </div>

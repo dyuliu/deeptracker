@@ -215,6 +215,9 @@ namespace application {
         label: {
           modelStat: null,
           clsStat: null
+        },
+        correlation: {
+          filterRange: null
         }
       };
 

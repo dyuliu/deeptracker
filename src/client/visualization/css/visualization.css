@@ -10,6 +10,9 @@ body {
 .clickable {
   cursor: pointer;
 }
+#main-widget-container {
+  height: 1200px;
+}
 .layer-graph {
   position: absolute;
   left: -20px;
@@ -21,18 +24,19 @@ body {
   left: 180px;
   top: 0;
 }
+.layer-minibar {
+  position: absolute;
+}
 .layerbox {
   position: relative;
   padding: 0;
+  width: 779px;
   border: 1px solid;
-  border-color: #D6E1EA;
+  border-color: #FFF #FFF #c3c3c3 #FFF;
 }
 .layerbox:hover {
-  background-color: #F7F7F7;
-  border-color: #848787;
-}
-.layerbox:first-child {
-  border-top-color: #DDD;
+  border: 2px solid;
+  border-color: #f9a814;
 }
 .label-text {
   position: absolute;
@@ -156,7 +160,7 @@ body {
   fill: #bd0026;
 }
 .layer.other {
-  fill: #FFB84D;
+  fill: #984ea3;
 }
 .bar {
   cursor: pointer;

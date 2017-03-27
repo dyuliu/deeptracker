@@ -255,6 +255,7 @@ export let tables: ITables = {
     ['i_euclidean', 'KernelIvEuclidean'],
     ['i_manhattan', 'KernelIvManhattan'],
     ['i_cosine', 'KernelIvCosine'],
+    ['i_cosine_range', 'KernelIvCosineRange'],
     ['i_norm1', 'KernelIvCRNorm1'],
     ['i_nomr2', 'KernelIvCRNorm2']
   ]),

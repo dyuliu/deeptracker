@@ -73,7 +73,6 @@ export function respond(options: IOption, res: Response) {
   // console.time(colName);
 
   let [cond, project, sort] = getConfig(options);
-  // console.log(cond, project, sort);
 
   let cached = false;
   // if (_.startsWith(options.type, 'i_') && !_.isEmpty(options.layer)) {
@@ -108,11 +107,23 @@ export function respond(options: IOption, res: Response) {
 function getConfig(options: IOption) {
   let cond, project, sort;
 
-  if (_.startsWith(options.type, 'i_')) {
+  if (_.endsWith(options.type, 'range')) {
+    cond = {};
+    sort = {lid: 1, iter: 1};
+    project = { _id: 0 };
+  } else if (_.startsWith(options.type, 'i_')) {
     cond = {};
     sort = { iter: 1 };
     if (options.iter) { cond.iter = options.iter; sort = { lid: 1 }; }
-    if (!_.isEmpty(options.layer)) { cond.lid = options.layer[0]; }
+    if (options.layer === 'all') {
+      cond.lid = {}; // for test only
+      // sort = { lid: 1 };
+    } else {
+      if (!_.isEmpty(options.layer)) {
+        cond.lid = options.layer[0];
+        sort = { iter: 1 };
+      }
+    }
     project = { _id: 0 };
   } else {
     // default
@@ -131,8 +142,20 @@ function getConfig(options: IOption) {
   return [cond, project, sort];
 }
 
-function postProcess(data: any[], options: IOption): any[] {
-  if (_.startsWith(options.type, 'i_') && options.iter) {
+function postProcess(data: any[], options: IOption): any {
+  if (_.endsWith(options.type, 'range')) {
+    let tmp = {};
+    let count = 0;
+    for (let d of data) {
+      if (d.lid === 267 && d.name === 'fc1000') { continue; }
+      if (d.lid === 1 && d.name === 'conv1') { continue; }
+      if (d.name === 'conv1') { count += 1; }
+      if (!tmp[d.name]) { tmp[d.name] = { lid: d.lid, name: d.name, iter: [], value: []}; }
+      tmp[d.name].iter.push(d.iter);
+      tmp[d.name].value.push(d.value);
+    }
+    return tmp;
+  } else if (_.startsWith(options.type, 'i_') && options.iter) {
     let tmp = [];
     for (let layer of data) {
       if (layer.lid === 267 && layer.name === 'fc1000') { continue; }
@@ -158,7 +181,7 @@ function postProcess(data: any[], options: IOption): any[] {
       for (let i = 0; i < size; i += 1) {
         let tmp = { key: options.seqidx[i], value: [] };
         for (let d of data) {
-          tmp.value.push({iter: d.iter, value: d.value[i]});
+          tmp.value.push({ iter: d.iter, value: d.value[i] });
         }
         r.push(tmp);
       }
