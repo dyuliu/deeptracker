@@ -126,7 +126,7 @@ namespace application {
         .enter().append('polygon')
         .attr('points', d => {
           let w = scale(d.y);
-          return '0,2, ' + w + ',-2 -' + w + ',-2';
+          return '0,0, ' + w + ',-4 -' + w + ',-4';
         })
         .attr('fill', '#4682b4')
         .attr('opacity', 0.9)

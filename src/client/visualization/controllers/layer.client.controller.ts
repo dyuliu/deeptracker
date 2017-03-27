@@ -594,16 +594,16 @@ namespace application {
           let di = 0;
           for (let d of miniSet) {
             let nowH = miniSet[di].size * options.h;
-            let ch = (nowH - 1) / miniSet[di].size;
+            // let ch = (nowH - 1) / miniSet[di].size;
             let cv = 0;
             d.forEach(v => {
               tmpSet.add(v);
-              // confMiniPositions[name].push([curH + options.h * cv, options.h]);
-              confMiniPositions[name].push([curH + ch * cv, ch]);
+              confMiniPositions[name].push([curH + options.h * cv, options.h]);
+              // confMiniPositions[name].push([curH + ch * cv, ch]);
               cv += 1;
             });
             // confMiniPositions[name].push([curH + 0.5, (nowH - 1) / miniSet[di].size]);
-            curH += nowH;
+            curH += nowH + 1;
             di += 1;
           }
           qArray[name] = DataManager.fetchKernel({

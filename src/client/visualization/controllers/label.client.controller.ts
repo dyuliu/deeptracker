@@ -315,6 +315,7 @@ namespace application {
               threshold: 4,
               h: 4,
               w: 4,
+              space: 1,
               margin: {
                 top: 0,
                 right: 0,

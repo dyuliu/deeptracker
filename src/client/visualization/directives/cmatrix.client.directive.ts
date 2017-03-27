@@ -59,7 +59,7 @@ namespace application {
       let fr = d4.scaleBand().range([0, this_.height]);
       let fc = d4.scaleBand().range([0, this_.width]);
       let threshold = this_.options.threshold;
-      let ch = 0, cw = 0;
+      let ch = 0, cw = 0, cch = 0;
 
       let r2 = preprocessData(data);
       function preprocessData(rawdata): any[] {
@@ -99,7 +99,9 @@ namespace application {
           res[i].miniSet = _.filter(res[i].miniSet, (d: any, key) => pa[key] * d.size >= threshold);
           // res[i].miniSet = _.filter(res[i].miniSet, (d: any, key) => pa[key] * d.size >= 2);
           for (let j of res[i].miniSet) { tmpsum += j.size; }
-          ch = Math.max(ch, tmpsum);
+          // ch = Math.max(ch, tmpsum);
+          ch = Math.max(ch, res[i].miniSet.length);
+          cch = Math.max(ch, tmpsum);
           res[i].filterNum = tmpsum;
           if (res[i].miniSet.length === 0) {
             res.splice(i, 1);
@@ -163,7 +165,8 @@ namespace application {
 
       _.each(this_.options.rec, d => { cw = Math.max(cw, d.size); });
       let fh = d4.scaleLinear()
-        .range([this_.options.minHeight, this_.options.minHeight + ch * this_.options.h])
+        .range([this_.options.minHeight, this_.options.minHeight + (ch - 1) * this_.options.space
+          + (this_.options.h * cch) ])
         .domain([0, ch]);
       let fw = d4.scaleLinear()
         .range([this_.options.minWidth, this_.options.minWidth + cw * this_.options.w])
@@ -172,7 +175,7 @@ namespace application {
       let rowHrLines = this_.svg.append('g').attr('class', 'row-hr-line');
       let colVlLines = this_.svg.append('g').attr('class', 'col-vl-line');
       let colClsName = this_.svg.append('g').attr('class', 'col-cls-name');
-      let countH = 0, countW = 0;
+      let countH = this_.options.minHeight / 2, countW = 0;
 
       for (let j = 0; j < this_.options.classNum; j += 1) {
         let d = this_.options.rec[j].size;
@@ -180,8 +183,9 @@ namespace application {
       }
       for (let i = 0; i < r2.length; i += 1) {
         let d = r2[i];
-        countH += fh(d.filterNum);
+        countH += (d.miniSet.length - 1) * this_.options.space + (this_.options.h * d.filterNum);
       }
+      countH += this_.options.minHeight / 2;
       let newWidth = countW, newHeight = countH;
       this_.container
         .style('width', this_.options.margin.left + this_.options.margin.right + newWidth + 'px')
@@ -192,7 +196,7 @@ namespace application {
       this_.options.width = newWidth;
       this_.options.height = newHeight;
 
-      countH = 0;
+      countH = this_.options.minHeight / 2;
       countW = 0;
       let wPosition = [];
       let colWidths = [];
@@ -236,7 +240,7 @@ namespace application {
           .style('stroke', '#f7a659')
           .style('stroke-width', 1)
           .style('opacity', 0.5);
-        let tmpHeight = fh(d.filterNum);
+        let tmpHeight = (d.miniSet.length - 1) * this_.options.space + (this_.options.h * d.filterNum) + this_.options.minHeight;
         rowHeights.push(tmpHeight);
         countH += tmpHeight;
       }
@@ -271,7 +275,7 @@ namespace application {
         for (let j = 0; j < r2[i].miniSet.length; j += 1) {
           let nowH = r2[i].miniSet[j].size * this_.options.h;
           miniPosition.push(curH + nowH / 2);
-          curH += nowH;
+          curH += nowH + this_.options.space;
         }
         miniPositions[i] = miniPosition;
 
@@ -286,7 +290,7 @@ namespace application {
             .attr('x2', wPosition[ed[0]] + fCls[ed[0]](ed[1]))
             .attr('y2', hPosition[i] + miniPosition[j])
             .style('stroke', '#363535')
-            .style('stroke-width', Math.max(r2[i].miniSet[j].size * this_.options.h - 2.5, 0.5))
+            .style('stroke-width', Math.max(r2[i].miniSet[j].size * this_.options.h - 3, 0.5))
             // .style('stroke-width', fWeightStroke(weight))
             .style('opacity', fWeight(weight));
           // .style('opacity', 0.6);
@@ -357,9 +361,9 @@ namespace application {
           .enter().append('rect')
           .attr('class', 'cell-rect-s')
           .attr('x', -this_.options.w / 2)
-          .attr('y', (d: any) => d[0] - this_.options.h * d[1] / 2 + 0.5)
+          .attr('y', (d: any) => d[0] - this_.options.h * d[1] / 2)
           .attr('width', this_.options.w)
-          .attr('height', (d: any) => this_.options.h * d[1] - 1)
+          .attr('height', (d: any) => this_.options.h * d[1])
           .attr('fill', (d: any) => {
             // if (d[1] > 1) {
             //   return '#ff0a0a';
