@@ -4,39 +4,39 @@
 }
 .face-top {
   width: 940px;
-  height: 320px;
-  top: 35px;
+  height: 345px;
+  top: 20px;
   left: 20px;
   overflow-x: hidden;
   overflow-y: hidden;
-  -webkit-transform: skewX(-65deg) translateX(343.1211072px);
-          transform: skewX(-65deg) translateX(343.1211072px);
+  -webkit-transform: skewX(-63deg) translateX(338.55031297px);
+          transform: skewX(-63deg) translateX(338.55031297px);
 }
 .face-front {
   width: 940px;
   height: 700px;
-  top: 355px;
+  top: 365px;
   left: 20px;
   overflow-x: hidden;
   overflow-y: hidden;
 }
 .face-right {
-  width: 686.2422144px;
+  width: 677.10062595px;
   height: 700px;
-  top: 355px;
+  top: 365px;
   left: 960px;
   overflow: auto;
-  -webkit-transform: skewY(-25deg) translateY(-160px);
-          transform: skewY(-25deg) translateY(-160px);
+  -webkit-transform: skewY(-27deg) translateY(-172.5px);
+          transform: skewY(-27deg) translateY(-172.5px);
 }
 .face-time {
   position: absolute;
-  top: 10px;
-  left: 706.2422144px;
+  top: -5px;
+  left: 697.10062595px;
 }
 .cls-name {
-  -webkit-transform: skewX(65deg);
-          transform: skewX(65deg);
+  -webkit-transform: skewX(63deg);
+          transform: skewX(63deg);
 }
 /*
  *  STYLE 1

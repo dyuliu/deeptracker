@@ -18,6 +18,8 @@ namespace application {
     click: any;
     showModal: any;
     btnShow: any;
+    hovering: any;
+    mouseleave: any;
   }
 
   class Controller {
@@ -38,6 +40,17 @@ namespace application {
     ) {
       let this_ = this;
       let first;
+
+      $scope.hovering = function (name) {
+        $('.cls-name-' + name).css('color', '#f9a814');
+        // Pip.emitHoveringLayer(name);
+      };
+
+      $scope.mouseleave = function (name) {
+        $('.cls-name-' + name).css('color', 'black');
+        // $('.layer-bar-' + name).css('background', '#489ff2');
+        // Pip.emitLeavingLayer(name);
+      };
 
       let previous_conf = null;
       this_._init();
@@ -317,9 +330,9 @@ namespace application {
 
       Pip.onClsWidth($scope, msg => {
         for (let i = 0; i < $scope.selectedCls.length; i += 1) {
-          $scope.optionsCls[$scope.selectedCls[i].name].height = msg[i] / 2.14450692;
+          $scope.optionsCls[$scope.selectedCls[i].name].height = msg[i] / 1.96261051;
           $('#label-edgebar-' + $scope.selectedCls[i].name)
-            .css('height', msg[i] / 2.14450692 - 1);
+            .css('height', msg[i] / 1.96261051 - 1);
         }
         Pip.emitRenderLabelView(null);
         // scroll to bottom

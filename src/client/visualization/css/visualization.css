@@ -47,6 +47,7 @@ body {
 .layerbox:hover {
   border: 1px solid;
   border-color: #f9a814;
+  z-index: 300;
 }
 .label-text {
   position: absolute;
@@ -68,6 +69,16 @@ body {
   width: 5px;
   background: #2089ed;
   box-shadow: 3px 1px 1px #888888;
+}
+.clsbox {
+  position: relative;
+  width: 779px;
+  box-sizing: content-box;
+}
+.clsbox:hover {
+  border: 1px solid;
+  border-color: #f9a814;
+  z-index: 300;
 }
 .timebox-chart {
   position: absolute;
