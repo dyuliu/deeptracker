@@ -42,15 +42,29 @@ namespace application {
       let first;
 
       $scope.hovering = function (name) {
-        $('.cls-name-' + name).css('color', '#f9a814');
+        Pip.emitHoveringCls(name);
         // Pip.emitHoveringLayer(name);
       };
 
       $scope.mouseleave = function (name) {
-        $('.cls-name-' + name).css('color', 'black');
+        Pip.emitLeavingCls(name);
         // $('.layer-bar-' + name).css('background', '#489ff2');
         // Pip.emitLeavingLayer(name);
       };
+
+      Pip.onHoveringCls($scope, name => {
+        $('.cls-name-' + name).css('color', '#f9a814');
+        $('.clsbox-' + name)
+          .css('border', '1px solid')
+          .css('border-color', '#f9a814')
+          .css('z-index', '300');
+      });
+
+      Pip.onLeavingCls($scope, name => {
+        $('.cls-name-' + name).css('color', 'black');
+        $('.clsbox-' + name)
+          .css('border', '0px solid');
+      });
 
       let previous_conf = null;
       this_._init();
@@ -208,19 +222,33 @@ namespace application {
         let rec = [];
         let resMap = new Map();
         for (let i = 0; i < $scope.selectedCls.length; i += 1) {
+          let tmp = [];
           rec.push(new Set());
           let cc = 0;
           let d = $scope.dataCls[$scope.selectedCls[i].name].linechartData;
           for (let j = 0; j < d.length; j += 1) {
-            if (d[j].value >= conf.threshold) { cc += 1; iterSet.add(iterInfo.array[j]); rec[i].add(iterInfo.array[j]); }
+            if (d[j].value >= conf.threshold) {
+              cc += 1;
+              // iterSet.add(iterInfo.array[j]);
+              rec[i].add(iterInfo.array[j]);
+              tmp.push(iterInfo.array[j]);
+            }
             if (d[j].valueR >= conf.threshold) {
               if (j + 1 < iterInfo.array.length) {
                 cc += 1;
-                iterSet.add(iterInfo.array[j + 1]); rec[i].add(iterInfo.array[j + 1]);
+                tmp.push(iterInfo.array[j + 1]);
+                // iterSet.add(iterInfo.array[j + 1]);
+                rec[i].add(iterInfo.array[j + 1]);
               }
             }
           }
-          if (cc < 2) { $scope.selectedCls.splice(i, 1); i -= 1; }
+          if (cc < 2) {
+            $scope.selectedCls.splice(i, 1);
+            rec.splice(i, 1);
+            i -= 1;
+          } else {
+            for (let o of tmp) { iterSet.add(o); }
+          }
           // !!!! delete cls with outlier iter only once
         }
 
@@ -257,20 +285,24 @@ namespace application {
           'n02097209',
           'n12998815',
           'n04147183',
-          'n01773157',
-          'n04536866',
           'n01773797',
           'n03447721',
+          'n01773157',
+          'n04536866',
           'n02895154'
         ];
 
         // order as specified order
-        let tmpCls = [];
+        let tmpCls = [], tmpRec = [];
         for (let o of orderArr) {
           let idx = _.findIndex($scope.selectedCls, d => d.name === o);
-          tmpCls.push($scope.selectedCls[idx]);
+          if (idx >= 0) {
+            tmpCls.push($scope.selectedCls[idx]);
+            tmpRec.push(rec[idx]);
+          }
         }
         $scope.selectedCls = tmpCls;
+        rec = tmpRec;
 
         $scope.selectedClsInverted = _.cloneDeep($scope.selectedCls);
         _.reverse($scope.selectedClsInverted);
@@ -279,9 +311,7 @@ namespace application {
         let parser = 'json', type = 'i_cosine', db = Global.getSelectedDB();
         iterSet.forEach((v) => {
           allQuery[v] = DataManager.fetchKernel({ db, type, iter: v, parser }, false);
-          // allQuery.push(DataManager.fetchKernel({ db, type, iter: v, parser }, false));
         });
-        // console.log($scope.dataCls, $scope.selectedCls, iterSet);
         console.time('startA');
         let lidtoName = {};
         $('#correlation-data-loading').removeClass('invisible');

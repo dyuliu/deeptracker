@@ -26,6 +26,8 @@ namespace application {
     emitRenderLabelView(msg: any): void;
     emitHoveringLayer(msg: any): void;
     emitLeavingLayer(msg: any): void;
+    emitHoveringCls(msg: any): void;
+    emitLeavingCls(msg: any): void;
     onUrlChanged(scope: ng.IScope, cb: (msg: any) => void): void;
     onVlDiv(scope: ng.IScope, cb: (msg: any) => void): void;
     onModelChanged(scope: ng.IScope, cb: (msg: any) => void): void;
@@ -50,6 +52,8 @@ namespace application {
     onRenderLabelView(scope: ng.IScope, cb: (msg: any) => void): void;
     onHoveringLayer(scope: ng.IScope, cb: (msg: any) => void): void;
     onLeavingLayer(scope: ng.IScope, cb: (msg: any) => void): void;
+    onHoveringCls(scope: ng.IScope, cb: (msg: any) => void): void;
+    onLeavingCls(scope: ng.IScope, cb: (msg: any) => void): void;
   }
 
   export class Pip {
@@ -113,6 +117,8 @@ namespace application {
       this.addEvent('renderLabelView');
       this.addEvent('hoveringLayer');
       this.addEvent('leavingLayer');
+      this.addEvent('hoveringCls');
+      this.addEvent('leavingCls');
     }
   }
 

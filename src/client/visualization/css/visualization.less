@@ -44,11 +44,11 @@ body {
 }
 
 .layer-edgebar {
-  height: calc(100% - 3px);
+  height: calc(~"100% - 1px");
   width: 4px;
   z-index: 200;
   position: absolute;
-  top: 0px;
+  top: -1px;
   right: 21px;
   background: #2089ed;
   box-shadow: 2px 1px 1px #888888;
@@ -58,19 +58,21 @@ body {
   position: relative;
   padding: 0;
   width: 779px;
-  border: 1px solid;
+  // box-sizing: content-box;
+  box-sizing: border-box;
+  border: 0px solid;
   border-color: #FFF #FFF #c3c3c3 #FFF;
   // border-color: #6448f2;
   // border-color: rgba(0, 0, 0, .11) transparent transparent
 }
 
-.layerbox:hover {
-    // background-color: #ff6d6d;
-    border: 1px solid;
-    border-color: #f9a814;
-    // border-style: solid;
-    z-index: 300
-}
+// .layerbox:hover {
+//     // background-color: #ff6d6d;
+//     border: 1px solid;
+//     border-color: #f9a814;
+//     // border-style: solid;
+//     z-index: 300
+// }
 // .layerbox {
 //   // margin-top: -1px;
 //   position: relative;
@@ -93,6 +95,14 @@ body {
 // .layerbox:first-child {
 //   border-top-color: #DDD;
 // }
+.front-vl-div {
+  height: 100%;
+  position: absolute;
+  left: 0;
+  // border-left: 1px dashed rgba(0, 0, 255, 0.3);
+  border-left: 1px dashed #ee5f2a;
+  z-index: 99;
+}
 // ---------- end of layer.client.view.html  --------- //
 
 // ---------- begin of label.client.view.html  --------- //
@@ -124,17 +134,27 @@ body {
   position: relative;
   // padding: -1px;
   width: 779px;
-  box-sizing: content-box;
+  // box-sizing: content-box;
+  box-sizing: border-box;
   // border: 1px solid;
   // border-color: #FFF #FFF #c3c3c3 #FFF;
   // border-color: #6448f2;
   // border-color: rgba(0, 0, 0, .11) transparent transparent
 }
 
-.clsbox:hover {
-    border: 1px solid;
-    border-color: #f9a814;
-    z-index: 300
+// .clsbox:hover {
+//     border: 1px solid;
+//     border-color: #f9a814;
+//     z-index: 300
+// }
+
+.top-vl-div {
+  height: 100%;
+  position: absolute;
+  left: 0;
+  // border-left: 1px dashed rgba(0, 0, 255, 0.3);
+  border-left: 1px dashed #ee5f2a;
+  z-index: 99;
 }
 // ---------- end of label.client.view.html  --------- //
 

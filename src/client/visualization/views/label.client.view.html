@@ -1,7 +1,7 @@
 <div ng-if="!open">
 
   <div class="label-chart">
-    <div ng-repeat-start="cls in selectedClsInverted" class="clsbox" ng-mouseleave="mouseleave(cls.name)" ng-mouseover="hovering(cls.name)" style="position: relative" ng-repeat-end>
+    <div ng-repeat-start="cls in selectedClsInverted" class="clsbox clsbox-{{cls.name}}" ng-mouseleave="mouseleave(cls.name)" ng-mouseover="hovering(cls.name)" style="position: relative" ng-repeat-end>
       <small class="clickable cls-name cls-name-{{cls.name}}" ng-click="click('flip', cls.name)" style="position: absolute; left: -112px; top: -10px;">{{cls.name}}</small>
       <img class="clickable cls-name" width="14" height="14" alt="14x14" src="{{cls.file}}" ng-click="showModal(cls.name, 'class')" style="position: absolute; left: -40px; top: -8px;"></img>
       <!--<div ng-if="flip[cls.name]" style="position: absolute; left: -85px; top: 18px">

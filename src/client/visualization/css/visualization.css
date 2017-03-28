@@ -28,11 +28,11 @@ body {
   position: absolute;
 }
 .layer-edgebar {
-  height: calc(97%);
+  height: calc(100% - 1px);
   width: 4px;
   z-index: 200;
   position: absolute;
-  top: 0px;
+  top: -1px;
   right: 21px;
   background: #2089ed;
   box-shadow: 2px 1px 1px #888888;
@@ -41,13 +41,16 @@ body {
   position: relative;
   padding: 0;
   width: 779px;
-  border: 1px solid;
+  box-sizing: border-box;
+  border: 0px solid;
   border-color: #FFF #FFF #c3c3c3 #FFF;
 }
-.layerbox:hover {
-  border: 1px solid;
-  border-color: #f9a814;
-  z-index: 300;
+.front-vl-div {
+  height: 100%;
+  position: absolute;
+  left: 0;
+  border-left: 1px dashed #ee5f2a;
+  z-index: 99;
 }
 .label-text {
   position: absolute;
@@ -73,12 +76,14 @@ body {
 .clsbox {
   position: relative;
   width: 779px;
-  box-sizing: content-box;
+  box-sizing: border-box;
 }
-.clsbox:hover {
-  border: 1px solid;
-  border-color: #f9a814;
-  z-index: 300;
+.top-vl-div {
+  height: 100%;
+  position: absolute;
+  left: 0;
+  border-left: 1px dashed #ee5f2a;
+  z-index: 99;
 }
 .timebox-chart {
   position: absolute;

@@ -28,7 +28,8 @@ namespace application {
       let svg, focus, rect, svgContainer, picked;
       let scale = null;
       let sx = 0, sy = 0, sk = 1;
-      let vlDivContainer = d4.select('#vl-div-container');
+      let topVlDivContainer = d4.select('#top-vl-div-container');
+      let frontVlDivContainer = d4.select('#front-vl-div-container');
       let color = d3.scale.category10().range();
 
 
@@ -127,32 +128,49 @@ namespace application {
 
       // handle mouse event
       Pip.onTimePicked($scope, (msg) => {
-        if (!msg && !Global.getConfig('timebox').pin) { return; }
-        let ci, cv;
-        if (!msg) {
-          ci = currentIdx;
-          cv = iterInfo.array[currentIdx];
-        } else {
-          [ci, cv] = msg;
-        }
+        _.each(msg, d => {
+          let ci, cv;
+          ci = _.findIndex(iterInfo.array, ad => +ad === +d);
+          cv = iterInfo.array[ci];
+          // if (!msg && !Global.getConfig('timebox').pin) { return; }
 
-        if (!iterInfo.picked) { iterInfo.picked = []; }
-        iterInfo.picked.push([ci, cv]);
+          // let ci, cv;
+          // if (!msg) {
+          //   ci = currentIdx;
+          //   cv = iterInfo.array[currentIdx];
+          // } else {
+          //   [ci, cv] = msg;
+          // }
 
-        let myColor = color[iterInfo.picked.length];
-        picked.append('circle')
-          .attr('cx', scale(cv))
-          .attr('cy', 20)
-          .attr('r', 4)
-          .attr('fill', '#438EB9');
+          if (!iterInfo.picked) { iterInfo.picked = []; }
+          iterInfo.picked.push([ci, cv]);
 
-        let offset = $('#timebox').offset().left - $('.vl-div-global').parent().offset().left;
+          let myColor = color[iterInfo.picked.length];
+          picked.append('circle')
+            .attr('cx', scale(cv))
+            .attr('cy', 20)
+            .attr('r', 4)
+            .attr('fill', '#438EB9');
 
-        vlDivContainer.append('div')
-          .attr('class', 'vl-div-pin')
-          // .style('border-left', '1px dashed ' + myColor)
-          // .style('opacity', 0.5)
-          .style('left', offset + scale(cv) + 'px');
+          topVlDivContainer.append('div')
+            .attr('class', 'top-vl-div')
+            .style('left', $('.label-chart').position().left + scale(cv) + 'px');
+
+          frontVlDivContainer.append('div')
+            .attr('class', 'front-vl-div')
+            .style('left', $('.layer-chart').position().left + scale(cv) + 'px');
+        });
+
+
+        // $('.label-chart').position().left + scale(cv);
+        // $('.layer-chart').position().left + scale(cv);
+        // let offset = $('#timebox').offset().left - $('.vl-div-global').parent().offset().left;
+
+        // vlDivContainer.append('div')
+        //   .attr('class', 'vl-div-pin')
+        //   // .style('border-left', '1px dashed ' + myColor)
+        //   // .style('opacity', 0.5)
+        //   .style('left', offset + scale(cv) + 'px');
 
 
 
@@ -172,8 +190,12 @@ namespace application {
         focus.attr('transform', 'translate(' + v + ',' + 20 + ')');
         currentIdx = Math.trunc(v);
         focus.select('text').text(iterInfo.array[currentIdx].toString());
-        let offset = $('#timebox').offset().left - $('.vl-div-global').parent().offset().left;
-        $('.vl-div-global').css('left', offset + v);
+        // let offset = $('#timebox').offset().left - $('.vl-div-global').parent().offset().left;
+        // $('.vl-div-global').css('left', offset + v);
+        // top-vl-div
+        // let offset = $('#timebox').offset().left - $('.top-vl-div-global').parent().offset().left;
+        $('.top-vl-div-global').css('left', $('.label-chart').position().left + v);
+        $('.front-vl-div-global').css('left', $('.layer-chart').position().left + v);
       });
 
 

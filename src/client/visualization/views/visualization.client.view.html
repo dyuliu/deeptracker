@@ -7,6 +7,8 @@
       </div>
     </div>
     <div class="face face-front style-3">
+      <div class="front-vl-div front-vl-div-global"></div>
+      <div id="front-vl-div-container" style="height: 100%; position: absolute; left: 0; z-index: 99;"></div>
       <div ng-show="config.layer.show">
         <div id="widget-container-layerinfo" ng-controller="LayerController" ng-include="'src/client/visualization/views/layer.client.view.html'"></div>
       </div>
@@ -20,6 +22,8 @@
     </div>
     <div class="face face-top style-8">
       <!--<div ng-show="config.label.show" class="row" style="margin-top: 5px">-->
+      <div class="top-vl-div top-vl-div-global"></div>
+      <div id="top-vl-div-container" style="height: 100%; position: absolute; left: 0; z-index: 99;"></div>
       <div ng-show="config.label.show">
         <div id="widget-container-labelinfo" ng-controller="LabelController" ng-include="'src/client/visualization/views/label.client.view.html'">
         </div>

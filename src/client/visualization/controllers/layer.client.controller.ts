@@ -65,7 +65,6 @@ namespace application {
 
 
       $scope.hovering = function (name) {
-        $('.layer-bar-' + name).css('background', '#f9a814');
         Pip.emitHoveringLayer(name);
       };
 
@@ -73,6 +72,19 @@ namespace application {
         // $('.layer-bar-' + name).css('background', '#489ff2');
         Pip.emitLeavingLayer(name);
       };
+
+      Pip.onHoveringLayer($scope, name => {
+        $('.layer-bar-' + name).css('background', '#f9a814');
+        $('.layerbox-' + name)
+          .css('border', '1px solid')
+          .css('border-color', '#f9a814')
+          .css('z-index', 300);
+      });
+
+      Pip.onLeavingLayer($scope, name => {
+        $('.layerbox-' + name)
+          .css('border', '0px solid');
+      });
 
       $scope.click = function (type, name) {
         if ($scope.showTypes[name] === 'nvd3') {
@@ -572,10 +584,9 @@ namespace application {
         let confMiniPositions = {};
         for (let i = 0; i < msg.length; i += 1) {
           let [lid, name, miniSet, rowHeight, options] = msg[i];
-          console.log(name);
           $scope.picked[name] = true;
           $scope.pickedOptions[name] = {
-            width: this_.Global.getData('iter').num ,
+            width: this_.Global.getData('iter').num,
             height: rowHeight,
             cellWidth: 1,
             color: d4.scaleSequential(d4.interpolateBlues),
@@ -616,6 +627,7 @@ namespace application {
         $('#layer-data-loading').removeClass('invisible');
         $q.all(qArray).then(kernelData => {
           $('#layer-data-loading').addClass('invisible');
+          console.log(kernelData);
           _.each(kernelData, (v, k) => {
             $scope.dataTopK[k] = _.map(v, (vd: any) => {
               return {
@@ -646,12 +658,12 @@ namespace application {
           });
         });
 
-        setTimeout(function () {
-          for (let i = 0; i < msg.length; i += 1) {
-            $('#layer-edgebar-' + msg[i][1])
-              .css('height', msg[i][3] - 1);
-          }
-        }, 1000);
+        // setTimeout(function () {
+        //   for (let i = 0; i < msg.length; i += 1) {
+        //     $('#layer-edgebar-' + msg[i][1])
+        //       .css('height', msg[i][3] - 1);
+        //   }
+        // }, 1000);
       });
 
       Pip.onLayerOpen($scope, msg => {
@@ -939,7 +951,7 @@ namespace application {
           break;
         case 'heatline':
           options = {
-            width: this_.Global.getData('iter').num ,
+            width: this_.Global.getData('iter').num,
             height: 12,
             cellWidth: 1,
             color: d4.scaleSequential(d4.interpolateGnBu),
