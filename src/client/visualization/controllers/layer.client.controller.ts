@@ -286,7 +286,7 @@ namespace application {
             height: 5,
             width: 13
           },
-          space: 4,
+          space: 3,
           margin: {
             top: 20,
             right: 2,

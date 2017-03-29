@@ -177,8 +177,8 @@ namespace application {
           ctx.moveTo(this_.offsetWidth + i * lw, this_.offsetHeight);
           ctx.lineTo(this_.offsetWidth + i * lw, this_.offsetHeight + this_.height);
           ctx.lineWidth = lw;
-          // ctx.strokeStyle = color(nf(data[i].value)).toString();
-          ctx.strokeStyle = color(scale(data[i].value)).toString();
+          ctx.strokeStyle = color(nf(data[i].value)).toString();
+          // ctx.strokeStyle = color(scale(data[i].value)).toString();
           ctx.stroke();
         }
       } else {
