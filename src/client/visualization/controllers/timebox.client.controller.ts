@@ -149,7 +149,7 @@ namespace application {
           picked.append('circle')
             .attr('cx', scale(cv))
             .attr('cy', 20)
-            .attr('r', 4)
+            .attr('r', 3)
             .attr('fill', '#438EB9');
 
           topVlDivContainer.append('div')

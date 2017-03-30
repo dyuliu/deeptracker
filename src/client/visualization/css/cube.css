@@ -4,39 +4,40 @@
 }
 .face-top {
   width: 940px;
-  height: 330px;
+  height: 320px;
   top: 50px;
   left: 20px;
   overflow-x: hidden;
   overflow-y: hidden;
-  -webkit-transform: skewX(-63deg) translateX(323.83073415px);
-          transform: skewX(-63deg) translateX(323.83073415px);
+  -webkit-transform: skewX(-64deg) translateX(328.0486144px);
+          transform: skewX(-64deg) translateX(328.0486144px);
 }
 .face-front {
   width: 940px;
-  height: 620px;
-  top: 380px;
+  height: 625px;
+  top: 370px;
   left: 20px;
   overflow-x: hidden;
   overflow-y: hidden;
 }
 .face-right {
-  width: 647.6614683px;
-  height: 620px;
-  top: 380px;
+  width: 656.0972288px;
+  height: 625px;
+  top: 370px;
   left: 960px;
-  overflow: auto;
-  -webkit-transform: skewY(-27deg) translateY(-165px);
-          transform: skewY(-27deg) translateY(-165px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-transform: skewY(-26deg) translateY(-160px);
+          transform: skewY(-26deg) translateY(-160px);
 }
 .face-time {
   position: absolute;
   top: 25px;
-  left: 667.6614683px;
+  left: 676.0972288px;
 }
 .cls-name {
-  -webkit-transform: skewX(63deg);
-          transform: skewX(63deg);
+  -webkit-transform: skewX(64deg);
+          transform: skewX(64deg);
 }
 /*
  *  STYLE 1
@@ -157,7 +158,7 @@
 }
 .style-8::-webkit-scrollbar {
   width: 6px;
-  height: 10px;
+  height: 6px;
   background-color: #F5F5F5;
 }
 .style-8::-webkit-scrollbar-thumb {

@@ -176,10 +176,10 @@ namespace application {
         countH += tmpHeight;
       }
 
-      this_.rect
+      // this_.rect
         // .on('mouseover', rectMouseOverHandler)
-        .on('mouseout', rectMouseOutHandler)
-        .on('mousemove', rectMouseMoveHandler);
+        // .on('mouseout', rectMouseOutHandler)
+        // .on('mousemove', rectMouseMoveHandler);
       function rectMouseMoveHandler() {
         let point = d4.mouse(this);
         let colIdx;
@@ -260,7 +260,6 @@ namespace application {
       }
       let miniPositions = Array(positionHr.length);
       // draw inside (relation) line
-      console.log(r2);
       for (let i = 0; i < positionHr.length; i += 1) {
         let miniPosition = [];
         let curH = this_.options.minHeight / 2;
@@ -318,7 +317,7 @@ namespace application {
             .attr('y2', hPosition[d[2]] + miniPositions[d[2]][d[3]])
             .style('stroke', '#464646')
             .style('stroke-width', 0.5)
-            .style('opacity', 0.6);
+            .style('opacity', 0.5);
         });
       }
 
