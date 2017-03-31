@@ -74,10 +74,10 @@ namespace application {
       };
 
       Pip.onHoveringLayer($scope, name => {
-        $('.layer-bar-' + name).css('background', '#f9a814');
+        $('.layer-bar-' + name).css('background', '#eb8a2f');
         $('.layerbox-' + name)
           .css('border', '1px solid')
-          .css('border-color', '#f9a814')
+          .css('border-color', '#eb8a2f')
           .css('z-index', 300);
       });
 

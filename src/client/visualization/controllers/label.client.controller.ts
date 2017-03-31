@@ -53,10 +53,10 @@ namespace application {
       };
 
       Pip.onHoveringCls($scope, name => {
-        $('.cls-name-' + name).css('color', '#f9a814');
+        $('.cls-name-' + name).css('color', '#eb8a2f');
         $('.clsbox-' + name)
           .css('border', '1px solid')
-          .css('border-color', '#f9a814')
+          .css('border-color', '#eb8a2f')
           .css('z-index', '300');
       });
 

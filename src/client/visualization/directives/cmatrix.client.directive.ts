@@ -147,7 +147,7 @@ namespace application {
           .attr('y1', 0)
           .attr('x2', countW)
           .attr('y2', this_.options.height)
-          .style('stroke', '#f7a659')
+          .style('stroke', '#eb8a2f')
           .style('stroke-width', 1)
           .style('opacity', 0);
         let tmpWidth = fw(d);
@@ -168,7 +168,7 @@ namespace application {
           .attr('y1', countH)
           .attr('x2', this_.options.width)
           .attr('y2', countH)
-          .style('stroke', '#f7a659')
+          .style('stroke', '#eb8a2f')
           .style('stroke-width', 1)
           .style('opacity', 0);
         let tmpHeight = (d.miniSet.length - 1) * this_.options.space + (this_.options.h * d.filterNum) + this_.options.minHeight;
@@ -176,10 +176,10 @@ namespace application {
         countH += tmpHeight;
       }
 
-      // this_.rect
+      this_.rect
         // .on('mouseover', rectMouseOverHandler)
-        // .on('mouseout', rectMouseOutHandler)
-        // .on('mousemove', rectMouseMoveHandler);
+        .on('mouseout', rectMouseOutHandler)
+        .on('mousemove', rectMouseMoveHandler);
       function rectMouseMoveHandler() {
         let point = d4.mouse(this);
         let colIdx;
@@ -246,7 +246,7 @@ namespace application {
 
       let rowInsideHrLines = this_.svg.append('g').attr('class', 'row-hr-inside-line');
       let colInsideVlLines = this_.svg.append('g').attr('class', 'col-vl-inside-line');
-      let fWeight = d4.scaleLinear<any>().domain([threshold, maxWeight]).range([0.05, 0.5]);
+      let fWeight = d4.scaleLinear<any>().domain([threshold * threshold, maxWeight * maxWeight]).range([0.1, 0.65]);
       let fWeightStroke = d4.scaleLinear<any>().domain([threshold, maxWeight]).range([0.5, this_.options.h - 1]);
       let fCls = [];
       for (let i = 0; i < this_.options.rec.length; i += 1) {
@@ -280,9 +280,10 @@ namespace application {
             .attr('x2', wPosition[ed[0]] + fCls[ed[0]](ed[1]))
             .attr('y2', hPosition[i] + miniPosition[j])
             .style('stroke', '#363535')
-            .style('stroke-width', Math.max(r2[i].miniSet[j].size * this_.options.h - 3, 0.5))
+            // .style('stroke-width', Math.max(r2[i].miniSet[j].size * this_.options.h - 3, 0.5))
+            .style('stroke-width', Math.max(r2[i].miniSet[j].size * this_.options.h - 1, 2))
             // .style('stroke-width', fWeightStroke(weight))
-            .style('opacity', fWeight(weight))
+            .style('opacity', fWeight(weight * weight))
             .on('click', function () {
               let layerName = this_.options.lidtoName[r2[i].lid];
               let layerIterSet = new Set();
