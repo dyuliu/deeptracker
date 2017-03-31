@@ -128,8 +128,8 @@ namespace application {
           let w = scale(d.y);
           return '0,0, ' + w + ',-4 -' + w + ',-4';
         })
-        .attr('fill', '#4682b4')
-        .attr('opacity', 0.9)
+        .attr('fill', '#1a6aab')
+        // .attr('opacity', 0.9)
         .attr('transform', (d: any) => 'translate(' + d.x + ', 4)')
         .on('click', clickHandler)
         .append('title').text(d => 'iter: ' + d.iter + ' value: ' + d.y);
@@ -143,8 +143,8 @@ namespace application {
           let w = scale(d.y);
           return w + ',0 -' + w + ',0 ' + '0,-4';
         })
-        .attr('fill', '#4682b4')
-        .attr('opacity', 0.9)
+        .attr('fill', '#1a6aab')
+        // .attr('opacity', 0.9)
         .attr('transform', (d: any) => 'translate(' + d.x + ', 0)')
         .on('click', clickHandler)
         .append('title').text(d => 'iter: ' + d.iter + ' value: ' + d.y);

@@ -26,7 +26,6 @@
   top: 370px;
   left: 960px;
   overflow-x: auto;
-  overflow-y: hidden;
   -webkit-transform: skewY(-26deg) translateY(-160px);
           transform: skewY(-26deg) translateY(-160px);
 }

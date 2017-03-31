@@ -157,7 +157,7 @@ namespace application {
       ];
 
       this.all.layerKernelScale = [
-        { label: 'global', value: 'global' },
+        // { label: 'global', value: 'global' },
         { label: 'horizon', value: 'horizon' },
         { label: 'vertical', value: 'vertical' }
       ];
