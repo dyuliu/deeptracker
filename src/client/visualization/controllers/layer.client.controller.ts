@@ -63,12 +63,17 @@ namespace application {
       }
       updateContainerHeight();
 
+      let cfa = Global.getConfig('interaction');
+
 
       $scope.hovering = function (name) {
+        if (!cfa.hovering) { return; }
+
         Pip.emitHoveringLayer(name);
       };
 
       $scope.mouseleave = function (name) {
+        if (!cfa.hovering) { return; }
         // $('.layer-bar-' + name).css('background', '#489ff2');
         Pip.emitLeavingLayer(name);
       };
@@ -76,7 +81,7 @@ namespace application {
       Pip.onHoveringLayer($scope, name => {
         $('.layer-bar-' + name).css('background', '#eb8a2f');
         $('.layerbox-' + name)
-          .css('border', '1px solid')
+          .css('border', '2px solid')
           .css('border-color', '#eb8a2f')
           .css('z-index', 300);
       });

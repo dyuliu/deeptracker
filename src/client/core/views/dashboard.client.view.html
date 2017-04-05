@@ -11,7 +11,7 @@
     </button>
 
     <!-- save current explore state-->
-    <button class="btn btn-warning" ng-click="click('showTopKernel')">
+    <button class="btn btn-warning" ng-click="click('hovering')">
       <i class="ace-icon fa fa-search"></i>
     </button>
 
@@ -120,7 +120,51 @@
           </label>
           </div>
         </div>
-      </div>
+
+                <div class="ace-spinner middle" style="width: 100%">
+          <div class="col-xs-4">
+            <label>
+              <input ng-model="config.label.triangle" name="form-field-checkbox" type="checkbox" class="ace" />
+              <span class="lbl">threshold</span>
+            </label>
+          </div>
+          <div class="col-xs-8">
+            <div class="input-group">
+              <input ng-model="config.label.threshold" type="text" class="spinbox-input form-control text-center">
+              <div class="spinbox-buttons input-group-btn btn-group-vertical">
+                <button ng-click="spinnerChange(1, 'threshold')" type="button" class="btn spinbox-up btn-sm btn-info">
+                <i class="ace-icon fa fa-chevron-up"></i>
+              </button>
+                <button ng-click="spinnerChange(-1, 'threshold')" type="button" class="btn spinbox-down btn-sm btn-info">
+                <i class="ace-icon fa fa-chevron-down"></i>
+              </button>
+              </div>
+            </div>
+          </div>
+        </div>
+<!--
+        <div class="ace-spinner middle" style="width: 100%">
+          <div class="col-xs-4">
+            <label>
+              <input name="form-field-checkbox32" type="checkbox" class="ace" />
+              <span class="lbl">threshold</span>
+            </label>
+          </div>
+          <div class="col-xs-8">
+            <div class="input-group">
+              <input ng-model="config.label.threshold" type="text" class="spinbox-input form-control text-center">
+              <div class="spinbox-buttons input-group-btn btn-group-vertical">
+                <button ng-click="spinnerChange(1, 'threshold')" type="button" class="btn spinbox-up btn-sm btn-info">
+                <i class="ace-icon fa fa-chevron-up"></i>
+              </button>
+                <button ng-click="spinnerChange(-1, 'threshold')" type="button" class="btn spinbox-down btn-sm btn-info">
+                <i class="ace-icon fa fa-chevron-down"></i>
+              </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>-->
       <!-- end of record panel -->
       <!--<hr/>-->
 
@@ -165,27 +209,7 @@
           </label>
         </div>-->
 
-        <div class="ace-spinner middle" style="width: 100%">
-          <div class="col-xs-4">
-            <label>
-              <input ng-model="config.label.triangle" name="form-field-checkbox" type="checkbox" class="ace" />
-              <span class="lbl">threshold</span>
-            </label>
-          </div>
-          <div class="col-xs-8">
-            <div class="input-group">
-              <input ng-model="config.label.threshold" type="text" class="spinbox-input form-control text-center">
-              <div class="spinbox-buttons input-group-btn btn-group-vertical">
-                <button ng-click="spinnerChange(1, 'threshold')" type="button" class="btn spinbox-up btn-sm btn-info">
-                <i class="ace-icon fa fa-chevron-up"></i>
-              </button>
-                <button ng-click="spinnerChange(-1, 'threshold')" type="button" class="btn spinbox-down btn-sm btn-info">
-                <i class="ace-icon fa fa-chevron-down"></i>
-              </button>
-              </div>
-            </div>
-          </div>
-        </div>
+
         <div class="space-4"></div>
         <!--<div class="checkbox">
           <label>
@@ -221,7 +245,7 @@
 
 
 
-    </div>
+      </div>
 
   </li>
 </ul>

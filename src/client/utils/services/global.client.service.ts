@@ -223,6 +223,9 @@ namespace application {
       };
 
       this.all.config = {
+        interaction: {
+          hovering: true
+        },
         timebox: {
           show: true,
           pin: false

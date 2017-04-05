@@ -41,21 +41,25 @@ namespace application {
       let this_ = this;
       let first;
 
+      let cfa = Global.getConfig('interaction');
+
       $scope.hovering = function (name) {
+        if (!cfa.hovering) { return; }
         Pip.emitHoveringCls(name);
         // Pip.emitHoveringLayer(name);
       };
 
       $scope.mouseleave = function (name) {
+        if (!cfa.hovering) { return; }
         Pip.emitLeavingCls(name);
         // $('.layer-bar-' + name).css('background', '#489ff2');
         // Pip.emitLeavingLayer(name);
       };
 
       Pip.onHoveringCls($scope, name => {
-        $('.cls-name-' + name).css('color', '#eb8a2f');
+        $('.cls-name-' + name).css('color', '##f8851b');
         $('.clsbox-' + name)
-          .css('border', '1px solid')
+          .css('border', '2px solid')
           .css('border-color', '#eb8a2f')
           .css('z-index', '300');
       });
@@ -155,6 +159,7 @@ namespace application {
         if (first) {
           $scope.optionsHeatLine = this_._setOptions('heatline');
           $scope.optionsHeatLine.height = 100;
+          conf.threshold = 6;
           let gd = Global.getData();
 
           $scope.dataModel = {
@@ -279,11 +284,11 @@ namespace application {
           'n04019541',
           'n04398044',
           'n01910747',
+          'n02097209',
+          'n12998815',
           'n02096051',
           'n10565667',
           'n03791053',
-          'n02097209',
-          'n12998815',
           'n03447721',
           'n04147183',
           'n01773797',
@@ -342,7 +347,7 @@ namespace application {
               height: 1600,
               minHeight: 2,
               minWidth: 8,
-              threshold: 4,
+              threshold: 2,
               h: 4,
               w: 4,
               space: 1,

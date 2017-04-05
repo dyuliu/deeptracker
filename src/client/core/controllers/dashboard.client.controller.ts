@@ -129,6 +129,10 @@ namespace application {
           case 'showTopKernel':
             this_.Pip.emitShowTopKernel(null);
             break;
+          case 'hovering':
+            let cff = this_.Global.getConfig('interaction');
+            cff.hovering = !cff.hovering;
+            break;
           default:
             break;
         };

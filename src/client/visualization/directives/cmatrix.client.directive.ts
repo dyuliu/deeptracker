@@ -52,7 +52,7 @@ namespace application {
       this.height = options.height - options.margin.top - options.margin.bottom;
     }
 
-    public render(data: any, Pip: IPipService, scope: any) {
+    public render(data: any, Pip: IPipService, scope: any, Global: IGlobalService) {
       let this_ = this;
       this_.Pip = Pip;
       let threshold = this_.options.threshold;
@@ -106,6 +106,8 @@ namespace application {
 
       let rowHrLines = this_.svg.append('g').attr('class', 'row-hr-line');
       let colVlLines = this_.svg.append('g').attr('class', 'col-vl-line');
+      let colVlRects = this_.svg.append('g').attr('class', 'col-vl-rect');
+      let rowHrRects = this_.svg.append('g').attr('class', 'row-hr-rect');
       let colClsName = this_.svg.append('g').attr('class', 'col-cls-name');
       let countH = 0, countW = 0;
 
@@ -140,16 +142,27 @@ namespace application {
         wPosition.push(countW);
         let d = this_.options.rec[j].size;
         let colClass = 'cmatrix-col cmatrix-col-' + this_.options.class[j].name;
-        if (j > 0) { colClass += ' cmatrix-col-' + this_.options.class[j - 1].name; }
-        colVlLines.append('line')
+
+        colVlRects.append('rect')
           .attr('class', colClass)
-          .attr('x1', countW)
-          .attr('y1', 0)
-          .attr('x2', countW)
-          .attr('y2', this_.options.height)
-          .style('stroke', '#eb8a2f')
-          .style('stroke-width', 1)
+          .attr('x', countW)
+          .attr('y', 0)
+          .attr('width', fw(d))
+          .attr('height', this_.options.height)
+          .attr('fill', '#dea46e')
           .style('opacity', 0);
+
+        // if (j > 0) { colClass += ' cmatrix-col-' + this_.options.class[j - 1].name; }
+        // colVlLines.append('line')
+        //   .attr('class', colClass)
+        //   .attr('x1', countW)
+        //   .attr('y1', 0)
+        //   .attr('x2', countW)
+        //   .attr('y2', this_.options.height)
+        //   .style('stroke', '#eb8a2f')
+        //   .style('stroke-width', 1)
+        //   .style('opacity', 0);
+
         let tmpWidth = fw(d);
         colWidths.push(tmpWidth);
         countW += tmpWidth;
@@ -162,25 +175,36 @@ namespace application {
         r2[i].x = wPosition;
         let rowClass = 'cmatrix-row cmatrix-row-' + this_.options.lidtoName[r2[i].lid];
         if (i > 0) { rowClass += ' cmatrix-row-' + this_.options.lidtoName[r2[i - 1].lid]; }
-        rowHrLines.append('line')
-          .attr('class', rowClass)
-          .attr('x1', 0)
-          .attr('y1', countH)
-          .attr('x2', this_.options.width)
-          .attr('y2', countH)
-          .style('stroke', '#eb8a2f')
-          .style('stroke-width', 1)
-          .style('opacity', 0);
         let tmpHeight = (d.miniSet.length - 1) * this_.options.space + (this_.options.h * d.filterNum) + this_.options.minHeight;
+
+        rowHrRects.append('rect')
+          .attr('class', rowClass)
+          .attr('x', 0)
+          .attr('y', countH)
+          .attr('width', this_.options.width)
+          .attr('height', tmpHeight)
+          .attr('fill', '#dead7f')
+          .style('opacity', 0);
+        // rowHrLines.append('line')
+        //   .attr('class', rowClass)
+        //   .attr('x1', 0)
+        //   .attr('y1', countH)
+        //   .attr('x2', this_.options.width)
+        //   .attr('y2', countH)
+        //   .style('stroke', '#eb8a2f')
+        //   .style('stroke-width', 1)
+        //   .style('opacity', 0);
         rowHeights.push(tmpHeight);
         countH += tmpHeight;
       }
 
+      let cf = Global.getConfig('interaction');
       this_.rect
         // .on('mouseover', rectMouseOverHandler)
         .on('mouseout', rectMouseOutHandler)
         .on('mousemove', rectMouseMoveHandler);
       function rectMouseMoveHandler() {
+        if (!cf.hovering) { return; }
         let point = d4.mouse(this);
         let colIdx;
         for (colIdx = 0; colIdx < this_.options.classNum; colIdx += 1) {
@@ -205,18 +229,19 @@ namespace application {
         // $('.cmatrix-row-' + this_.options.lidtoName[r2[rowIdx].lid]).css('opacity', 1);
       };
       function rectMouseOutHandler() {
+        if (!cf.hovering) { return; }
         $('.cmatrix-col').css('opacity', 0);
         $('.cmatrix-row').css('opacity', 0);
       }
 
       function onHoveringLayer(name) {
-        $('.cmatrix-row-' + name).css('opacity', 1);
+        $('.cmatrix-row-' + name).css('opacity', 0.5);
       }
       function onLeavingLayer(name) {
         $('.cmatrix-row-' + name).css('opacity', 0);
       }
       function onHoveringCls(name) {
-        $('.cmatrix-col-' + name).css('opacity', 1);
+        $('.cmatrix-col-' + name).css('opacity', 0.5);
       }
       function onLeavingCls(name) {
         $('.cmatrix-col-' + name).css('opacity', 0);
@@ -390,6 +415,7 @@ namespace application {
             console.log('click', fData, layerName, colName);
             Pip.emitHoveringCls(colName);
             Pip.emitHoveringLayer(layerName);
+            Pip.emitTimePicked([+fData[0]]);
             // onHoveringCls(colName);
             // onHoveringLayer(layerName);
           })
@@ -509,12 +535,12 @@ namespace application {
     };
 
     public static factory() {
-      let directive = function (Pip) { return new Directive(Pip); };
-      directive.$inject = ['Pip'];
+      let directive = function (Pip, Global) { return new Directive(Pip, Global); };
+      directive.$inject = ['Pip', 'Global'];
       return directive;
     }
 
-    constructor(Pip: IPipService) {
+    constructor(Pip: IPipService, Global: IGlobalService) {
       this.link = function (
         scope: IScope,
         element: ng.IAugmentedJQuery,
@@ -524,7 +550,7 @@ namespace application {
         let start = () => {
           element.empty();
           let board = new Painter(element, scope.options);
-          board.render(scope.data, Pip, scope);
+          board.render(scope.data, Pip, scope, Global);
         };
         if (!_.isUndefined(scope.data)) { start(); };
         scope.$watch('data', (n, o) => { if (n !== o && n) { start(); } }, false);
