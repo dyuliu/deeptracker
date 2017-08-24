@@ -189,7 +189,6 @@ namespace application {
             $scope.optionsDetail[name].name = name;
 
             let scaleType = Global.getConfig('layer').kernelScale;
-
             if (scaleType === 'global') {
               // global scale
               let f = d4.scaleLinear();
@@ -214,10 +213,14 @@ namespace application {
               _.each(data, (dd, i) => {
                 let [mmin, mmax] = d4.extent(dd.value);
                 let nf = d4.scaleLinear().domain([mmin, mmax]).range([0.01, 0.95]).clamp(true);
+                // let count0 = 0;
                 dd.value = _.map(dd.value, (o: any) => {
                   let t = nf(o);
+                  // if (t === 0.01) { count0 += 1; }
                   return t;
                 });
+                // if (count0 > 10) { dd.dead = true; }
+                // console.log(count0);
                 if (!dd.index) { dd.index = +i; }
               });
             } else if (scaleType === 'vertical') {
@@ -235,6 +238,10 @@ namespace application {
                 });
               }
             }
+            // console.log('revise fig 7e: ', data);
+            // for (let i = 0; i < data.length; i += 1) {
+            //   if (data[i].dead) { console.log('revise fig 7e: ', data[i]); }
+            // }
             $scope.dataDetail[name] = {
               pixelChart: data,
               lineChart: null

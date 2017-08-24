@@ -76,6 +76,20 @@
       <div style="margin-left: 5px">
         <div class="row">
           <div class="col-xs-8">
+            <label class="control-label bolder blue">Cube</label>
+          </div>
+          <div class="col-xs-4" style="margin-left: -15px">
+            <label>
+            <input ng-model="config.cube.show" name="switch-field-1" class="ace ace-switch" type="checkbox" />
+            <span class="lbl">&nbsp;</span>
+          </label>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-left: 5px">
+        <div class="row">
+          <div class="col-xs-8">
             <label class="control-label bolder blue">Model Info</label>
           </div>
           <div class="col-xs-4" style="margin-left: -15px">
@@ -94,6 +108,23 @@
       </div>
       <!-- end of record panel -->
       <!--<hr/>-->
+
+
+
+      <div style="margin-left: 5px">
+        <div class="row">
+          <div class="col-xs-8">
+            <label class="control-label bolder blue">Correlation View</label>
+            <i id="correlation-data-loading" class="ace-icon fa fa-spinner fa-spin orange bigger-125 invisible"></i>
+          </div>
+          <div class="col-xs-4" style="margin-left: -15px">
+            <label>
+            <input ng-model="config.correlation.show" name="switch-field-1" class="ace ace-switch" type="checkbox" />
+            <span class="lbl">&nbsp;</span>
+          </label>
+          </div>
+        </div>
+      </div>
 
       <div style="margin-left: 5px">
         <div class="row">
@@ -300,20 +331,7 @@
         </div>
       </div>
 
-      <div style="margin-left: 5px">
-        <div class="row">
-          <div class="col-xs-8">
-            <label class="control-label bolder blue">Correlation View</label>
-            <i id="correlation-data-loading" class="ace-icon fa fa-spinner fa-spin orange bigger-125 invisible"></i>
-          </div>
-          <div class="col-xs-4" style="margin-left: -15px">
-            <label>
-            <input ng-model="config.correlation.show" name="switch-field-1" class="ace ace-switch" type="checkbox" />
-            <span class="lbl">&nbsp;</span>
-          </label>
-          </div>
-        </div>
-      </div>
+
 
     </div>
 
