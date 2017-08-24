@@ -102,12 +102,9 @@ body {
   top: 0;
 }
 .collapse-animation {
-  -webkit-transition-property: height;
   transition-property: height;
-  -webkit-transition-duration: 2s;
-          transition-duration: 2s;
-  -webkit-transition-timing-function: ease;
-          transition-timing-function: ease;
+  transition-duration: 2s;
+  transition-timing-function: ease;
 }
 .vl-div {
   height: 100%;
@@ -155,12 +152,9 @@ body {
 .level1,
 .level2,
 .level3 {
-  -webkit-transition-property: height;
   transition-property: height;
-  -webkit-transition-duration: 2s;
-          transition-duration: 2s;
-  -webkit-transition-timing-function: ease;
-          transition-timing-function: ease;
+  transition-duration: 2s;
+  transition-timing-function: ease;
 }
 .overlay {
   fill: none;
@@ -200,10 +194,8 @@ body {
 }
 .bar {
   cursor: pointer;
-  -webkit-transition: opacity 1s;
   transition: opacity 1s;
 }
 .bar-edge {
-  -webkit-transition: opacity 1s;
   transition: opacity 1s;
 }

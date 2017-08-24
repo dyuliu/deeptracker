@@ -83,8 +83,8 @@ export let env: mean.IEnv = {
   livereload: true,
   db: {
     // uri: 'mongodb://msraiv:5000/cifar-resnet164',
-    uri: 'mongodb://msraiv:5000/final',
-    // uri: 'mongodb://localhost:27017/final',
+    // uri: 'mongodb://msraiv:5000/final',
+    uri: 'mongodb://localhost:27017/final',
     // uri: 'mongodb://localhost:27017/final',
     options: {
       user: '',
@@ -100,7 +100,7 @@ export let env: mean.IEnv = {
     debug: process.env.MONGODB_DEBUG || false
   },
   projectDir: process.cwd(),
-  port: process.env.PORT || 3000,
+  port: process.env.PORT || 5000,
   host: process.env.HOST || '0.0.0.0',
   templateEngine: 'swig',
   favicon: 'public/assets/images/favicon.ico',
