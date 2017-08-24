@@ -192,7 +192,7 @@ namespace application {
             if (scaleType === 'global') {
               // global scale
               let f = d4.scaleLinear();
-              f.range([0.01, 0.95]);
+              f.range([1, 0]);
               let [min, max] = [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER];
 
               _.each(data, (dd, i) => {
@@ -212,15 +212,14 @@ namespace application {
               // horizon scale
               _.each(data, (dd, i) => {
                 let [mmin, mmax] = d4.extent(dd.value);
-                let nf = d4.scaleLinear().domain([mmin, mmax]).range([0.01, 0.95]).clamp(true);
-                // let count0 = 0;
+                let nf = d4.scaleLinear().domain([mmin, mmax]).range([1, 0]).clamp(true);
+                let count0 = 0;
                 dd.value = _.map(dd.value, (o: any) => {
                   let t = nf(o);
-                  // if (t === 0.01) { count0 += 1; }
+                  if (t === 1) { count0 += 1; }
                   return t;
                 });
-                // if (count0 > 10) { dd.dead = true; }
-                // console.log(count0);
+                if (count0 > 10) { console.log('revise fig 7e: ', dd.index); }
                 if (!dd.index) { dd.index = +i; }
               });
             } else if (scaleType === 'vertical') {
@@ -232,16 +231,17 @@ namespace application {
                   if (max < dd.value[i]) { max = dd.value[i]; }
                   if (!dd.index) { dd.index = +j; }
                 });
-                let nf = d4.scaleLinear().domain([min, max]).range([0.01, 0.95]).clamp(true);
+                let nf = d4.scaleLinear().domain([min, max]).range([1, 0]).clamp(true);
+                let tmpSort = [];
                 _.each(data, dd => {
                   dd.value[i] = nf(dd.value[i]);
+                  tmpSort.push([dd.value[i], dd.index]);
                 });
+                tmpSort = _.sortBy(tmpSort, [function(o) { return -o[0]; }]);
+                console.log('revise fig 8a: ', 'iter-' + i, tmpSort[0][1], tmpSort[1][1], tmpSort[2][1], tmpSort[3][1]);
               }
             }
-            // console.log('revise fig 7e: ', data);
-            // for (let i = 0; i < data.length; i += 1) {
-            //   if (data[i].dead) { console.log('revise fig 7e: ', data[i]); }
-            // }
+
             $scope.dataDetail[name] = {
               pixelChart: data,
               lineChart: null
@@ -890,7 +890,8 @@ namespace application {
             width: this_.Global.getData('iter').num,
             height: 12,
             cellWidth: 1,
-            color: d4.scaleSequential(d4.interpolateBlues),
+            color: d4.scaleSequential(d4.interpolateGnBu),
+            // color: d4.scaleSequential(d4.interpolateBlues),
             margin: {
               top: 1,
               right: 0,
@@ -923,8 +924,9 @@ namespace application {
             cellWidth: 1,
             pixelChart: true,
             lineChart: false,
+            color: d4.scaleSequential(d4.interpolateGnBu),
             // color: d4.scaleSequential(d4.interpolateYlOrBr),
-            color: d4.scaleSequential(d4.interpolateBlues),
+            // color: d4.scaleSequential(d4.interpolateBlues),
             marginTop: 2,
             marginBottom: 2,
             margin: {
