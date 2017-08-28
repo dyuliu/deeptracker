@@ -219,8 +219,8 @@ namespace application {
                   if (t === 1) { count0 += 1; }
                   return t;
                 });
-                if (count0 > 10) { console.log('revise fig 7e: ', dd.index); }
                 if (!dd.index) { dd.index = +i; }
+                if (count0 > 10) { console.log('revise fig 7e: ', i); }
               });
             } else if (scaleType === 'vertical') {
               // vertical scale
@@ -234,11 +234,12 @@ namespace application {
                 let nf = d4.scaleLinear().domain([min, max]).range([1, 0]).clamp(true);
                 let tmpSort = [];
                 _.each(data, dd => {
-                  dd.value[i] = nf(dd.value[i]);
                   tmpSort.push([dd.value[i], dd.index]);
+                  dd.value[i] = nf(dd.value[i]);
                 });
-                tmpSort = _.sortBy(tmpSort, [function(o) { return -o[0]; }]);
-                console.log('revise fig 8a: ', 'iter-' + i, tmpSort[0][1], tmpSort[1][1], tmpSort[2][1], tmpSort[3][1]);
+                tmpSort = _.sortBy(tmpSort, [function(o) { return o[0]; }]);
+                console.log('revise fig 8c: ', 'iter-' + i, tmpSort[0][0], tmpSort[1][0], tmpSort[2][0], tmpSort[3][0]);
+                console.log('revise fig 8c: ', 'iter-' + i, tmpSort[0][1], tmpSort[1][1], tmpSort[2][1], tmpSort[3][1]);
               }
             }
 
