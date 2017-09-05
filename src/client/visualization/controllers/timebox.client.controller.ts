@@ -154,7 +154,7 @@ namespace application {
           // .style('opacity', 0.5)
           .style('left', offset + scale(cv) + 'px');
 
-
+        Pip.emitShowTopKernel(null);
 
       });
 

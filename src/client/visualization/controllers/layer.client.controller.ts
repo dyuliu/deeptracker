@@ -96,6 +96,7 @@ namespace application {
       Pip.onShowTopKernel($scope, (msg => {
         let parser = 'json', type = 'i_cosine', db = Global.getSelectedDB();
         let iterInfo = Global.getData('iter');
+        console.log('show top kernels - ', iterInfo);
         let allQuery = [];
         for (let iter of iterInfo.picked) {
           allQuery.push(DataManager.fetchKernel({ db, type, iter: iter[1], parser }, false));
