@@ -246,7 +246,7 @@ namespace application {
             let ed;
             let e = $('#' + d.name);
             if (e.position()) {
-              ed = [2 * this_.options.width / 3, $('#' + d.name).position().top];
+              ed = [2 * this_.options.width / 3, $('#' + d.name).position().top - 19];
             } else {
               ed = st;
             }
@@ -379,7 +379,7 @@ namespace application {
               let ed;
               let e = $('#' + o.name);
               if (e.position()) {
-                ed = [2 * this_.options.width / 3, $('#' + o.name).position().top];
+                ed = [2 * this_.options.width / 3, $('#' + o.name).position().top - 19];
               } else {
                 ed = st;
               }

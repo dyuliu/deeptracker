@@ -113,6 +113,7 @@ namespace application {
         iterInfo.picked = null;
         $(picked.node()).empty();
         $('.vl-div-pin').remove();
+        Pip.emitShowTopKernel(null);
       };
 
       $scope.clean = function () {

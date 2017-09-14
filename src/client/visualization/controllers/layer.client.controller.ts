@@ -27,6 +27,8 @@ namespace application {
     hovering: any;
     layers: any;
     mouseleave: any;
+    topk: boolean;
+    picked: {};
   }
 
   class Controller {
@@ -48,7 +50,9 @@ namespace application {
       let layers, hlLayers = [], allLayers;
       let previousOpen = null;
       let oldShowType = {};
+      let oldOpened = null;
       $scope.showTypes = {};
+      $scope.topk = false;
 
       this_._init();
 
@@ -97,17 +101,28 @@ namespace application {
         let parser = 'json', type = 'i_cosine', db = Global.getSelectedDB();
         let iterInfo = Global.getData('iter');
         console.log('show top kernels - ', iterInfo);
+        $scope.topk = true;
+        console.log(_.isUndefined(iterInfo.picked));
+        if (iterInfo.picked == null) {
+          $scope.topk = false;
+          _.each($scope.opened, (od, ok) => {
+            $scope.opened[ok] = false;
+          });
+          return;
+        }
         let allQuery = [];
         for (let iter of iterInfo.picked) {
           allQuery.push(DataManager.fetchKernel({ db, type, iter: iter[1], parser }, false));
         }
         $('#layer-data-loading').removeClass('invisible');
         $q.all(allQuery).then((data: any) => {
+          console.log('dongyu data', data);
           // computer intersect
           if (iterInfo.picked.length === 1) { data[0] = data[0].slice(0, 20); }
           let map = new Map();
           _.each(data, (d: any) => {
             for (let i = 0; i < d.length; i += 1) {
+              $scope.picked[d[i].name] = true;
               let name = d[i].lid.toString() + '.' + d[i].idx.toString();
               if (!map.has(name)) { map.set(name, { count: 0, d: [] }); }
               let td = map.get(name);
@@ -134,6 +149,7 @@ namespace application {
           $scope.optionsTopK = {};
           if (!_.isEmpty(qArray)) {
             $q.all(qArray).then(kernelData => {
+              console.log('dongyu data2', kernelData);
               $('#layer-data-loading').addClass('invisible');
               _.each(kernelData, (v, k) => {
                 $scope.dataTopK[k] = _.map(v, (vd: any) => {
@@ -142,19 +158,18 @@ namespace application {
                     linechartData: null
                   };
                 });
-                $scope.showTypes[k] = 'topk';
+                // $scope.showTypes[k] = 'topk';
                 $scope.optionsTopK[k] = this_._setOptions('heatline');
                 $scope.optionsTopK[k].num = $scope.layers[k].kernelNum;
                 let cnode = layerTree[k];
                 let count = 0;
+                oldOpened = _.cloneDeep($scope.opened);
                 if (cnode.parent) {
-                  // console.log(cnode.parent);
-                  // console.log(cnode.parent.parent);
                   $scope.opened[cnode.parent.parent.name] = true;
                   $scope.opened[cnode.parent.name] = true;
-                  $('#' + cnode.parent.parent.name).show();
-                  $('#' + cnode.parent.parent.name + ' .level2').show();
-                  $('#' + cnode.parent.name + ' .level3').show();
+                  // $('#' + cnode.parent.parent.name).show();
+                  // $('#' + cnode.parent.parent.name + ' .level2').show();
+                  // $('#' + cnode.parent.name + ' .level3').show();
                   count += 1;
                 }
                 // console.log(count);
@@ -605,6 +620,7 @@ namespace application {
 
     private _init() {
       let this_ = this;
+      this_.$scope.picked = {};
       this_.$scope.kData = { 'a': 1, 'b': 2, 'c': 3 };
 
       this_.$timeout(function () {
