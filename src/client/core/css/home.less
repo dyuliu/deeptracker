@@ -1,0 +1,31 @@
+.header-title {
+    position: relative;
+    top: -3px;
+}
+
+// theme change
+.nav-list>li>.submenu:before {
+    display: none;
+}
+
+@sideWidth: 220px;
+
+.sidebar {
+    width: @sideWidth;
+}
+
+.sidebar+.main-content {
+    margin-left: @sideWidth;
+}
+
+.timerange {
+    margin-top: 10px;
+}
+
+.my-btn-scroll-up {
+    border-width: 0;
+    position: fixed;
+    right: 20px;
+    z-index: 99;
+    bottom: 2px;
+}

@@ -1,0 +1,42 @@
+<div class="col-xs-12 col-sm-12">
+
+  <div ng-if="!open">
+    <div class="label-text clickable" ng-click="click('open')">
+      Click to see all classes
+    </div>
+    <div class="label-chart">
+      <div heatline data="dataModel" options="optionsHeatLine"></div>
+    </div>
+  </div>
+
+
+  <div ng-if="open">
+
+    <div class="label-chart">
+      <div ng-repeat-start="d in aggregations" style="position: relative" ng-repeat-end>
+        <div style="width: 1000px">
+            <img ng-repeat-start="cls in d.classes" width="15" height="15" alt="15x15" src="{{cls.one}}"
+              class="clickable" ng-click="showModal(cls.name, 'class')" ng-repeat-end>
+            </img>
+        </div>
+        <div heatline data="d.data" options="d.options"></div>
+      </div>
+      <!-- <div ng-repeat-start="cls in selectedCls" style="position: relative" ng-repeat-end>
+        <small class="clickable" ng-click="click('flip', cls.name)" style="position: absolute; left: -110px;">{{cls.name}}</small>
+        <img class="clickable" width="14" height="14" alt="14x14" src="{{cls.file}}" ng-click="showModal(cls.name, 'class')" style="position: absolute; left: -40px;"></img>
+        <div ng-if="flip[cls.name]" style="position: absolute; left: -85px; top: 18px">
+          <button class="btn btn-success btn-minier float-right">
+            <i class="ace-icon fa fa-search-plus" ng-click="click('zoomin', cls.name)"></i>
+          </button>
+          <span> &nbsp; </span>
+          <button class="btn btn-success btn-minier float-right">
+            <i class="ace-icon fa fa-search-minus" ng-click="click('zoomout', cls.name)"></i>
+          </button>
+        </div>
+        <div ng-if="!flip[cls.name]" heatline data="dataCls[cls.name]" options="optionsCls[cls.name]"></div>
+        <div ng-if="flip[cls.name]" img-pixel data="dataDetail[cls.name]" options="optionsDetail[cls.name]" style="z-index: 100"></div>
+      </div>
+
+    </div> -->
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div ng-if="open" class="col-xs-12 col-sm-12">
+  <div class="layer-graph" layer-graph options="optionsTree" data="dataTree"></div>
+
+  <div ng-if="topk" class="layer-chart">
+    <div ng-repeat-start="la in tree" ng-if="picked[la.name]" class="layerbox layerbox-{{la.name}}" id="{{la.name}}" style="position: relative; height: {{pickedOptions[la.name].height}}px" ng-mouseleave="mouseleave(la.name)" ng-mouseover="hovering(la.name)" ng-repeat-end>
+
+        <div class="space-2"></div>
+          <div ng-repeat-start="dTopK in dataTopK[la.name]" heatline data="dTopK" options="optionsTopK[la.name]" style="z-index: 100" ng-repeat-end> </div>
+        <div class="space-2"></div>
+
+        <div class="layer-edgebar"> </div>
+    </div>
+  </div>
+
+  <div ng-if="!topk" class="layer-chart">
+    <div ng-repeat-start="la in tree" class="layerbox" ng-if="(!la.parent && !opened[la.name]) || (la.parent && opened[la.parent.name] && !opened[la.name])" ng-mouseleave="mouseleave(la.name)" ng-mouseover="hovering(la.name)" id="{{la.name}}" ng-repeat-end>
+      <nvd3 ng-if="showTypes[la.name] === 'nvd3' " options="options[la.name]" data="data[la.name]"></nvd3>
+      <div ng-if="showTypes[la.name] === 'cr' " crchart options="optionsCR[la.name]" data="dataCR[la.name]" style="z-index: 100"></div>
+      <div ng-if="showTypes[la.name] === 'pchart' " kernel-pixel options="optionsDetail[la.name]" data="dataDetail[la.name]" style="z-index: 100"></div>
+      <div ng-if="showTypes[la.name] === 'hgraph' " horizon-graph options="optionsHGraph[la.name]" data="dataHGraph[la.name]"></div>
+      <!-- <div ng-if="showTypes[la.name] === 'topk' ">
+        <div class="space-2"></div>
+        <div ng-repeat-start="dTopK in dataTopK[la.name]" heatline data="dTopK" options="optionsTopK[la.name]" style="z-index: 100" ng-repeat-end> </div>
+        <div class="space-2"></div>
+      </div> -->
+
+      <div style="position: absolute; right: -55px; top: 8px">
+        <button class="btn btn-success btn-minier float-right">
+          <i class="ace-icon fa fa-search-plus" ng-click="click('zoomin', la.name)"></i>
+        </button>
+        <span> &nbsp; </span>
+        <button class="btn btn-success btn-minier float-right">
+          <i class="ace-icon fa fa-search-minus" ng-click="click('zoomout', la.name)"></i>
+        </button>
+      </div>
+
+      <div class="layer-{{la.level}} layer-bar-{{la.name}}"></div>
+      <div ng-if="la.first" class="layer-first-{{la.level}} layer-bar-{{la.name}}"></div>
+
+    </div>
+  </div>
+</div>

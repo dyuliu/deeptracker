@@ -1,0 +1,458 @@
+[
+  {
+    "name": "conv1"
+  },
+  {
+    "name": "conv2",
+    "nodes": [
+      {
+        "name": "interstellar2a",
+        "nodes": [
+          { "name": "interstellar2a_branch2a" },
+          { "name": "interstellar2a_branch2b" },
+          { "name": "interstellar2a_branch2c" },
+          { "name": "interstellar2a_branch1" }
+        ]
+      },
+      {
+        "name": "interstellar2b1",
+        "nodes": [
+          { "name": "interstellar2b1_branch2a" },
+          { "name": "interstellar2b1_branch2b" },
+          { "name": "interstellar2b1_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b2",
+        "nodes": [
+          { "name": "interstellar2b2_branch2a" },
+          { "name": "interstellar2b2_branch2b" },
+          { "name": "interstellar2b2_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b3",
+        "nodes": [
+          { "name": "interstellar2b3_branch2a" },
+          { "name": "interstellar2b3_branch2b" },
+          { "name": "interstellar2b3_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b4",
+        "nodes": [
+          { "name": "interstellar2b4_branch2a" },
+          { "name": "interstellar2b4_branch2b" },
+          { "name": "interstellar2b4_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b5",
+        "nodes": [
+          { "name": "interstellar2b5_branch2a" },
+          { "name": "interstellar2b5_branch2b" },
+          { "name": "interstellar2b5_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b6",
+        "nodes": [
+          { "name": "interstellar2b6_branch2a" },
+          { "name": "interstellar2b6_branch2b" },
+          { "name": "interstellar2b6_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b7",
+        "nodes": [
+          { "name": "interstellar2b7_branch2a" },
+          { "name": "interstellar2b7_branch2b" },
+          { "name": "interstellar2b7_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b8",
+        "nodes": [
+          { "name": "interstellar2b8_branch2a" },
+          { "name": "interstellar2b8_branch2b" },
+          { "name": "interstellar2b8_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b9",
+        "nodes": [
+          { "name": "interstellar2b9_branch2a" },
+          { "name": "interstellar2b9_branch2b" },
+          { "name": "interstellar2b9_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b10",
+        "nodes": [
+          { "name": "interstellar2b10_branch2a" },
+          { "name": "interstellar2b10_branch2b" },
+          { "name": "interstellar2b10_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b11",
+        "nodes": [
+          { "name": "interstellar2b11_branch2a" },
+          { "name": "interstellar2b11_branch2b" },
+          { "name": "interstellar2b11_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b12",
+        "nodes": [
+          { "name": "interstellar2b12_branch2a" },
+          { "name": "interstellar2b12_branch2b" },
+          { "name": "interstellar2b12_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b13",
+        "nodes": [
+          { "name": "interstellar2b13_branch2a" },
+          { "name": "interstellar2b13_branch2b" },
+          { "name": "interstellar2b13_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b14",
+        "nodes": [
+          { "name": "interstellar2b14_branch2a" },
+          { "name": "interstellar2b14_branch2b" },
+          { "name": "interstellar2b14_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b15",
+        "nodes": [
+          { "name": "interstellar2b15_branch2a" },
+          { "name": "interstellar2b15_branch2b" },
+          { "name": "interstellar2b15_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b16",
+        "nodes": [
+          { "name": "interstellar2b16_branch2a" },
+          { "name": "interstellar2b16_branch2b" },
+          { "name": "interstellar2b16_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar2b17",
+        "nodes": [
+          { "name": "interstellar2b17_branch2a" },
+          { "name": "interstellar2b17_branch2b" },
+          { "name": "interstellar2b17_branch2c" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "conv3",
+    "nodes": [
+      {
+        "name": "interstellar3a",
+        "nodes": [
+          { "name": "interstellar3a_branch2a" },
+          { "name": "interstellar3a_branch2b" },
+          { "name": "interstellar3a_branch2c" },
+          { "name": "interstellar3a_branch1" }
+        ]
+      },
+      {
+        "name": "interstellar3b1",
+        "nodes": [
+          { "name": "interstellar3b1_branch2a" },
+          { "name": "interstellar3b1_branch2b" },
+          { "name": "interstellar3b1_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b2",
+        "nodes": [
+          { "name": "interstellar3b2_branch2a" },
+          { "name": "interstellar3b2_branch2b" },
+          { "name": "interstellar3b2_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b3",
+        "nodes": [
+          { "name": "interstellar3b3_branch2a" },
+          { "name": "interstellar3b3_branch2b" },
+          { "name": "interstellar3b3_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b4",
+        "nodes": [
+          { "name": "interstellar3b4_branch2a" },
+          { "name": "interstellar3b4_branch2b" },
+          { "name": "interstellar3b4_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b5",
+        "nodes": [
+          { "name": "interstellar3b5_branch2a" },
+          { "name": "interstellar3b5_branch2b" },
+          { "name": "interstellar3b5_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b6",
+        "nodes": [
+          { "name": "interstellar3b6_branch2a" },
+          { "name": "interstellar3b6_branch2b" },
+          { "name": "interstellar3b6_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b7",
+        "nodes": [
+          { "name": "interstellar3b7_branch2a" },
+          { "name": "interstellar3b7_branch2b" },
+          { "name": "interstellar3b7_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b8",
+        "nodes": [
+          { "name": "interstellar3b8_branch2a" },
+          { "name": "interstellar3b8_branch2b" },
+          { "name": "interstellar3b8_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b9",
+        "nodes": [
+          { "name": "interstellar3b9_branch2a" },
+          { "name": "interstellar3b9_branch2b" },
+          { "name": "interstellar3b9_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b10",
+        "nodes": [
+          { "name": "interstellar3b10_branch2a" },
+          { "name": "interstellar3b10_branch2b" },
+          { "name": "interstellar3b10_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b11",
+        "nodes": [
+          { "name": "interstellar3b11_branch2a" },
+          { "name": "interstellar3b11_branch2b" },
+          { "name": "interstellar3b11_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b12",
+        "nodes": [
+          { "name": "interstellar3b12_branch2a" },
+          { "name": "interstellar3b12_branch2b" },
+          { "name": "interstellar3b12_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b13",
+        "nodes": [
+          { "name": "interstellar3b13_branch2a" },
+          { "name": "interstellar3b13_branch2b" },
+          { "name": "interstellar3b13_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b14",
+        "nodes": [
+          { "name": "interstellar3b14_branch2a" },
+          { "name": "interstellar3b14_branch2b" },
+          { "name": "interstellar3b14_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b15",
+        "nodes": [
+          { "name": "interstellar3b15_branch2a" },
+          { "name": "interstellar3b15_branch2b" },
+          { "name": "interstellar3b15_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b16",
+        "nodes": [
+          { "name": "interstellar3b16_branch2a" },
+          { "name": "interstellar3b16_branch2b" },
+          { "name": "interstellar3b16_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar3b17",
+        "nodes": [
+          { "name": "interstellar3b17_branch2a" },
+          { "name": "interstellar3b17_branch2b" },
+          { "name": "interstellar3b17_branch2c" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "conv4",
+    "nodes": [
+      {
+        "name": "interstellar4a",
+        "nodes": [
+          { "name": "interstellar4a_branch2a" },
+          { "name": "interstellar4a_branch2b" },
+          { "name": "interstellar4a_branch2c" },
+          { "name": "interstellar4a_branch1" }
+        ]
+      },
+      {
+        "name": "interstellar4b1",
+        "nodes": [
+          { "name": "interstellar4b1_branch2a" },
+          { "name": "interstellar4b1_branch2b" },
+          { "name": "interstellar4b1_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b2",
+        "nodes": [
+          { "name": "interstellar4b2_branch2a" },
+          { "name": "interstellar4b2_branch2b" },
+          { "name": "interstellar4b2_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b3",
+        "nodes": [
+          { "name": "interstellar4b3_branch2a" },
+          { "name": "interstellar4b3_branch2b" },
+          { "name": "interstellar4b3_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b4",
+        "nodes": [
+          { "name": "interstellar4b4_branch2a" },
+          { "name": "interstellar4b4_branch2b" },
+          { "name": "interstellar4b4_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b5",
+        "nodes": [
+          { "name": "interstellar4b5_branch2a" },
+          { "name": "interstellar4b5_branch2b" },
+          { "name": "interstellar4b5_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b6",
+        "nodes": [
+          { "name": "interstellar4b6_branch2a" },
+          { "name": "interstellar4b6_branch2b" },
+          { "name": "interstellar4b6_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b7",
+        "nodes": [
+          { "name": "interstellar4b7_branch2a" },
+          { "name": "interstellar4b7_branch2b" },
+          { "name": "interstellar4b7_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b8",
+        "nodes": [
+          { "name": "interstellar4b8_branch2a" },
+          { "name": "interstellar4b8_branch2b" },
+          { "name": "interstellar4b8_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b9",
+        "nodes": [
+          { "name": "interstellar4b9_branch2a" },
+          { "name": "interstellar4b9_branch2b" },
+          { "name": "interstellar4b9_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b10",
+        "nodes": [
+          { "name": "interstellar4b10_branch2a" },
+          { "name": "interstellar4b10_branch2b" },
+          { "name": "interstellar4b10_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b11",
+        "nodes": [
+          { "name": "interstellar4b11_branch2a" },
+          { "name": "interstellar4b11_branch2b" },
+          { "name": "interstellar4b11_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b12",
+        "nodes": [
+          { "name": "interstellar4b12_branch2a" },
+          { "name": "interstellar4b12_branch2b" },
+          { "name": "interstellar4b12_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b13",
+        "nodes": [
+          { "name": "interstellar4b13_branch2a" },
+          { "name": "interstellar4b13_branch2b" },
+          { "name": "interstellar4b13_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b14",
+        "nodes": [
+          { "name": "interstellar4b14_branch2a" },
+          { "name": "interstellar4b14_branch2b" },
+          { "name": "interstellar4b14_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b15",
+        "nodes": [
+          { "name": "interstellar4b15_branch2a" },
+          { "name": "interstellar4b15_branch2b" },
+          { "name": "interstellar4b15_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b16",
+        "nodes": [
+          { "name": "interstellar4b16_branch2a" },
+          { "name": "interstellar4b16_branch2b" },
+          { "name": "interstellar4b16_branch2c" }
+        ]
+      },
+      {
+        "name": "interstellar4b17",
+        "nodes": [
+          { "name": "interstellar4b17_branch2a" },
+          { "name": "interstellar4b17_branch2b" },
+          { "name": "interstellar4b17_branch2c" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "fc10"
+  }
+]

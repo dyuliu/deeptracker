@@ -1,0 +1,39 @@
+<div class="col-xs-12 col-sm-12">
+
+  <div class="record-chart">
+    <div ng-show="show.lr" style="margin-top: 5px; margin-bottom: 10px">
+      <svg id="lr-svg"></svg>
+    </div>
+
+    <div ng-show="show.error">
+      <span style="position: absolute; left: -135px">Error </span>
+      <div style="position: absolute; left: -90px">
+        <button class="btn btn-success btn-minier float-right">
+          <i class="ace-icon fa fa-search-plus" ng-click="click('zoomin', 'error')"></i>
+        </button>
+        <span> &nbsp; </span>
+        <button class="btn btn-success btn-minier float-right">
+          <i class="ace-icon fa fa-search-minus" ng-click="click('zoomout', 'error')"></i>
+        </button>
+      </div>
+
+      <nvd3 options="options.error" data="data.error"></nvd3>
+    </div>
+
+    <div ng-show="show.loss">
+      <span style="position: absolute; left: -135px">Loss </span>
+      <div style="position: absolute; left: -90px">
+        <button class="btn btn-success btn-minier float-right">
+          <i class="ace-icon fa fa-search-plus" ng-click="click('zoomin', 'loss')"></i>
+        </button>
+        <span> &nbsp; </span>
+        <button class="btn btn-success btn-minier float-right">
+          <i class="ace-icon fa fa-search-minus" ng-click="click('zoomout', 'loss')"></i>
+        </button>
+      </div>
+      <nvd3 options="options.loss" data="data.loss"></nvd3>
+    </div>
+
+  </div>
+
+</div>

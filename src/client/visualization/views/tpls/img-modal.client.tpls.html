@@ -1,0 +1,28 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="img-modal modal-content" ng-style="myStyle">
+      <div class="modal-header" hidden="true">
+        <button type="button" class="close" ng-click="$hide()">&times;</button>
+        <h4 class="modal-title" ng-bind-html="title">{{clsName}}</h4>
+      </div>
+      <div ng-if="type==='class'" class="modal-body">
+        <ul class="ace-thumbnails clearfix">
+          <li ng-repeat="img in images">
+            <a href="/assets/images/gallery/{{imgDatabase}}/{{clsName}}/{{img}}" data-rel="colorbox">
+              <img width="100" height="100" alt="100x100" src="/assets/images/gallery/{{imgDatabase}}/{{clsName}}/{{img}}" />
+              <!--<div class="text">
+                <div class="inner">Open</div>
+              </div>-->
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div ng-if="type==='file'" class="modal-body" style="margin: auto; text-align: center; background: none">
+        <img src="/assets/images/gallery/{{imgDatabase}}/{{clsName}}/{{simg}}"/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" ng-click="$hide()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<div ui-view="header" id="navbar" class="navbar navbar-default ace-save-state"> </div>
+
+<div class="main-container ace-save-state" id="main-container">
+
+  <!-- dashboard on the left -->
+  <!--<div ui-view="dashboard" id="sidebar" class="sidebar responsive ace-save-state menu-min"> </div>-->
+  <div ui-view="dashboard" id="sidebar" class="sidebar responsive ace-save-state"> </div>
+
+  <!-- visualization content -->
+  <div ui-view="content" class="main-content"> </div>
+
+  <!-- footer -->
+  <!--<div ui-view="footer" class="footer"> </div>-->
+
+  <!-- scroll btn to top -->
+  <a href="#" class="my-btn-scroll-up btn btn-sm btn-inverse invisible" ng-click="click()">
+    <i class="ace-icon fa fa-angle-double-up bigger-110"></i>
+  </a>
+
+</div>

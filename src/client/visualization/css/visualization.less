@@ -1,0 +1,342 @@
+// ---------- begin of basic utils  --------- //
+body {
+  background: white;
+}
+
+.no-disp {
+  display: none;
+}
+
+.no-padding {
+  padding: 0 0 0 0
+}
+
+.clickable {
+  cursor: pointer;
+}
+// ---------- end of basic utils --------- //
+
+// global variable
+@left-offset: 100px;
+@left-width: 300px;
+
+// ---------- begin of layer.client.view.html  --------- //
+.layer-graph {
+  position: absolute;
+  left: @left-offset;
+  top: 0;
+  width: @left-width;
+}
+
+.layer-chart {
+  position: absolute;
+  left: @left-offset + @left-width;
+  top: 0;
+}
+
+.layerbox {
+  position: relative;
+  padding: 0;
+  border: 1px solid;
+  border-color: #c3c3c3 #FFF #c3c3c3 #FFF;
+  // border-color: rgba(0, 0, 0, .11) transparent transparent
+}
+
+.layerbox:hover {
+    // background-color: #ff6d6d;
+    border: 1px solid;
+    border-color: #f9a814;
+    // border-style: solid;
+    // z-index: 1
+}
+
+.layer-edgebar {
+  height: calc(~"100% - 1px");
+  width: 3px;
+  z-index: 200;
+  position: absolute;
+  top: -1px;
+  left: -6px;
+  background: #72AFE9;
+  // box-shadow: 2px 1px 1px #888888;
+}
+
+// .layerbox:first-child {
+//   border-top-color: #DDD;
+// }
+
+.layer-level1 {
+  position: absolute;
+  left: -14px;
+  width: 13px;
+  top: 0;
+  height: 100%;
+  background: #489ff2;
+}
+
+.layer-level2 {
+  position: absolute;
+  left: -8px;
+  width: 7px;
+  top: 0;
+  height: 100%;
+  background: #489ff2;
+}
+
+.layer-level3 {
+  position: absolute;
+  left: -4px;
+  width: 3px;
+  top: 0;
+  height: 100%;
+  background: #489ff2;
+}
+
+.layer-first-level2 {
+  position: absolute;
+  left: -14px;
+  width: 13px;
+  top: 0;
+  height: 30%;
+  background: #489ff2;
+}
+
+.layer-first-level3 {
+  position: absolute;
+  left: -8px;
+  width: 7px;
+  top: 0;
+  height: 30%;
+  background: #489ff2;
+}
+
+// .layer-level3 {
+// }
+
+// ---------- end of layer.client.view.html  --------- //
+
+// ---------- begin of label.client.view.html  --------- //
+.label-text {
+  position: absolute;
+  left: @left-offset;
+  top: 0;
+  width: @left-width;
+  text-align: center;
+}
+
+.label-chart {
+  position: absolute;
+  left: @left-offset + @left-width;
+  top: 0;
+}
+
+.triangle:hover {
+  opacity: 1;
+}
+
+// ---------- end of label.client.view.html  --------- //
+
+// ---------- begin of timebox.client.view.html  --------- //
+.timebox-chart {
+  position: absolute;
+  left: @left-offset + @left-width;
+  top: 0;
+}
+// ---------- end of timebox.client.view.html  --------- //
+
+// ---------- begin of record.client.view.html  --------- //
+.record-chart {
+  position: absolute;
+  left: @left-offset + @left-width;
+  top: 0;
+}
+// ---------- end of record.client.view.html  --------- //
+
+// ---------- begin of correlation.client.view.html  --------- //
+.correlation-chart {
+  position: absolute;
+  left: @left-offset + @left-width;
+  top: 0;
+}
+// ---------- end of correlation.client.view.html  --------- //
+
+
+
+
+
+.collapse-animation {
+  transition-property: height;
+  transition-duration: 2s;
+  transition-timing-function: ease;
+}
+
+.vl-div {
+  height: 100%;
+  position: absolute;
+  left: 0;
+  border-left: 1px dashed rgba(0, 0, 255, 0.3);
+  // border-left: 1px dashed #ee5f2a;
+  z-index: 99;
+}
+
+.vl-div-pin {
+  height: 100%;
+  position: absolute;
+  border-left: 1px dashed rgba(0, 0, 255, 0.3);
+  // border-left: 1px dashed #ee5f2a;
+  z-index: 99;
+}
+
+.vl-div-pixelchart {
+  opacity: 0.8;
+  top: 9px;
+}
+
+.timebox {
+  margin-top: 10px;
+  width: 757px;
+}
+
+.time-input {
+  width: 95% !important;
+  margin: auto;
+}
+
+.time-axis {
+  shape-rendering: crispEdges;
+}
+
+.time-axis line {
+  stroke: #fff;
+}
+
+
+
+
+@level-offset: 10px;
+
+.level2-off {
+  margin-left: @level-offset;
+}
+
+.level3-off {
+  margin-left: 2*@level-offset;
+}
+
+.tree:before {
+  visibility: hidden;
+}
+
+.no-height {
+  height: 0;
+}
+
+.level1, .level2, .level3 {
+  .collapse-animation;
+}
+
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+.float-right {
+  float: right;
+}
+
+
+
+
+.nv-boxplot-whisker, .nv-boxplot-tick {
+  stroke-width: 2px;
+  stroke-opacity: 0.5;
+}
+
+.nv-boxplot-median {
+  stroke-opacity: 0.5;
+}
+
+.zoombtn {
+  display: none;
+}
+
+
+
+
+
+// layer graph
+.layer {
+  // nothing;
+}
+
+.layer.data {
+  fill: #37A058;
+}
+.layer.conv {
+  fill: #CA5237;
+}
+.layer.conv-left {
+  fill: #CA5237;
+}
+.layer.conv-right {
+  fill: #CA5237;
+}
+.layer.fc {
+  fill: #bd0026;
+}
+.layer.other {
+  // fill: #FFB84D;
+  fill: #984ea3;
+}
+
+
+.bar {
+  cursor: pointer;
+  transition: opacity 1s;
+}
+
+.bar-edge{
+  transition: opacity 1s;
+}
+
+
+// cmatrix
+rect.selection {
+  stroke          : #333;
+  stroke-dasharray: 4px;
+  stroke-opacity  : 0.5;
+  fill            : transparent;
+}
+
+rect.cell-border {
+  stroke: #eee;
+  stroke-width:0.3px;   
+}
+
+rect.cell-selected {
+  stroke: rgb(51,102,153);
+  stroke-width:0.5px;   
+}
+
+rect.cell-hover {
+  stroke: #F00;
+  stroke-width:0.3px;   
+}
+
+text.mono {
+  font-size: 9pt;
+  font-family: Consolas, courier;
+  fill: #aaa;
+}
+
+text.text-selected {
+  fill: #000;
+}
+
+text.text-highlight {
+  fill: #c00;
+}
+text.text-hover {
+  fill: #00C;
+}

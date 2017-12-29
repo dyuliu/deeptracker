@@ -1,0 +1,29 @@
+<div>
+  <div class="row" ng-repeat="imgs in images">
+    <div class="col-xs-12 col-sm-12">
+      <div class="row">
+        <div class="col-xs-1 col-sm-1">
+          <h5>{{imgs.cls}}</h5>
+        </div>
+
+        <div class="col-xs-11 col-sm-11">
+          <ul class="ace-thumbnails clearfix">
+            <li ng-repeat="img in imgs.file">
+              <a href="/assets/images/gallery/{{imgDatabase}}/{{img}}" data-rel="colorbox">
+                <img width="50" height="50" alt="50x50"
+                  src="/assets/images/gallery/{{imgDatabase}}/{{img}}" />
+                <div class="text">
+                  <div class="inner">Open</div>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="hr-div"></div>
+      </div>
+    </div>
+  </div>
+</div>

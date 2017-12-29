@@ -1,0 +1,23 @@
+.header-title {
+  position: relative;
+  top: -3px;
+}
+.nav-list > li > .submenu:before {
+  display: none;
+}
+.sidebar {
+  width: 220px;
+}
+.sidebar + .main-content {
+  margin-left: 220px;
+}
+.timerange {
+  margin-top: 10px;
+}
+.my-btn-scroll-up {
+  border-width: 0;
+  position: fixed;
+  right: 20px;
+  z-index: 99;
+  bottom: 2px;
+}

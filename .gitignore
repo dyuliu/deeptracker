@@ -1,0 +1,11 @@
+app.log
+*.pyc
+__pycache__
+package-lock.json
+/public/lib
+/public/assets/images/gallery
+/node_modules
+/build
+
+
+
